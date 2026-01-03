@@ -298,7 +298,7 @@
             document.getElementById('availabilityToggle').classList.remove('hidden');
 
             if (item.image) {
-                document.getElementById('imagePreview').src = `/storage/${item.image}`;
+                document.getElementById('imagePreview').src = `{{ asset('storage') }}/${item.image}`;
                 document.getElementById('imagePreview').classList.remove('hidden');
                 document.getElementById('uploadPlaceholder').classList.add('hidden');
             } else {
