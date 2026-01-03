@@ -38,6 +38,18 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/tips', [TipController::class, 'store']);
 });
 
+// Manager API Routes
+Route::prefix('v1/manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
+    // Categories
+    Route::apiResource('categories', \App\Http\Controllers\Api\Manager\CategoryController::class);
+    
+    // Menu
+    Route::apiResource('menu', \App\Http\Controllers\Api\Manager\MenuController::class);
+    
+    // Tables
+    Route::apiResource('tables', \App\Http\Controllers\Api\Manager\TableController::class);
+});
+
 // WhatsApp Bot Routes
 Route::prefix('bot')->group(function () {
     Route::get('/verify-restaurant', [App\Http\Controllers\Api\WhatsAppBotController::class, 'verifyRestaurant']);
