@@ -53,7 +53,18 @@
             </div>
             <h3 class="text-2xl font-black text-slate-900 tracking-tighter mb-2">No Bots Configured</h3>
             <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-8">System automation bots will appear here</p>
-            <button class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:shadow-2xl transition-all">Register New Bot</button>
+            <div class="flex flex-col gap-4 mt-8">
+                <button class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:shadow-2xl transition-all">Register New Bot</button>
+                
+                <form action="{{ route('admin.bots.generate-token') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full px-8 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-sm hover:bg-emerald-700 hover:shadow-2xl transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="key" class="w-4 h-4"></i>
+                        Generate & Sync Bot Token
+                    </button>
+                </form>
+                <p class="text-[9px] text-slate-400 text-center font-bold uppercase tracking-widest">This will update BOT_TOKEN in your .env file</p>
+            </div>
         </div>
         @endforelse
     </div>

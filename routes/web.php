@@ -67,6 +67,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Bots
     Route::get('bots', [\App\Http\Controllers\Admin\BotController::class, 'index'])->name('bots.index');
     Route::post('bots/update-endpoint', [\App\Http\Controllers\Admin\BotController::class, 'updateEndpoint'])->name('bots.update-endpoint');
+    Route::post('bots/generate-token', [\App\Http\Controllers\Admin\BotController::class, 'generateToken'])->name('bots.generate-token');
     
     // Notifications
     Route::get('notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');

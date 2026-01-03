@@ -51,7 +51,7 @@ Route::prefix('v1/manager')->middleware(['auth:sanctum', 'role:manager'])->group
 });
 
 // WhatsApp Bot Routes
-Route::prefix('bot')->group(function () {
+Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     Route::get('/verify-restaurant', [App\Http\Controllers\Api\WhatsAppBotController::class, 'verifyRestaurant']);
     Route::get('/search-restaurant', [App\Http\Controllers\Api\WhatsAppBotController::class, 'searchRestaurant']);
     Route::get('/restaurant/{restaurantId}/full-menu', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getFullMenu']);
