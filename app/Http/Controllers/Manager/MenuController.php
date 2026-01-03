@@ -32,7 +32,7 @@ class MenuController extends Controller
 
         $data = $request->all();
         $data['restaurant_id'] = Auth::user()->restaurant_id;
-        $data['is_available'] = $request->has('is_available');
+        $data['is_available'] = $request->has('is_available') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('menu_items', 'public');
@@ -56,7 +56,7 @@ class MenuController extends Controller
         ]);
 
         $data = $request->all();
-        $data['is_available'] = $request->has('is_available');
+        $data['is_available'] = $request->has('is_available') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             if ($menuItem->image) {
