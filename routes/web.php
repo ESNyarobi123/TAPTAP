@@ -85,6 +85,11 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('/menu', [\App\Http\Controllers\Manager\MenuController::class, 'store'])->name('menu.store');
     Route::put('/menu/{menuItem}', [\App\Http\Controllers\Manager\MenuController::class, 'update'])->name('menu.update');
     Route::delete('/menu/{menuItem}', [\App\Http\Controllers\Manager\MenuController::class, 'destroy'])->name('menu.destroy');
+    
+    // Categories
+    Route::post('/categories', [\App\Http\Controllers\Manager\CategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::get('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'index'])->name('waiters.index');
     Route::post('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'store'])->name('waiters.store');
     Route::delete('/waiters/{waiter}', [\App\Http\Controllers\Manager\WaiterController::class, 'destroy'])->name('waiters.destroy');

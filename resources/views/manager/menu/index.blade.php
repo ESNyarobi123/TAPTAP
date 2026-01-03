@@ -4,9 +4,14 @@
             <h2 class="text-3xl font-black text-deep-blue tracking-tight">Menu Management</h2>
             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Manage your categories and dishes</p>
         </div>
-        <button onclick="openAddMenuModal()" class="bg-orange-red text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-orange-red/30 hover:bg-deep-blue transition-all flex items-center gap-3">
-            <i data-lucide="plus" class="w-6 h-6"></i> Add New Item
-        </button>
+        <div class="flex gap-4">
+            <button onclick="openCategoriesModal()" class="bg-white text-deep-blue px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-gray-200 hover:bg-gray-50 transition-all flex items-center gap-3">
+                <i data-lucide="layers" class="w-6 h-6"></i> Manage Categories
+            </button>
+            <button onclick="openAddMenuModal()" class="bg-orange-red text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-orange-red/30 hover:bg-deep-blue transition-all flex items-center gap-3">
+                <i data-lucide="plus" class="w-6 h-6"></i> Add New Item
+            </button>
+        </div>
     </div>
 
     <!-- Categories Tabs -->
@@ -165,6 +170,103 @@
         </div>
     </div>
 
+    <!-- Categories Modal -->
+    <div id="categoriesModal" class="fixed inset-0 bg-deep-blue/40 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300 flex flex-col max-h-[90vh]">
+            <div class="p-8 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10">
+                <div>
+                    <h3 class="text-2xl font-black text-deep-blue tracking-tight">Manage Categories</h3>
+                    <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Add or edit menu categories</p>
+                </div>
+                <button onclick="closeCategoriesModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-all">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-400"></i>
+                </button>
+            </div>
+            
+            <div class="p-8 overflow-y-auto">
+                <!-- Add Category Form -->
+                <form action="{{ route('manager.categories.store') }}" method="POST" enctype="multipart/form-data" class="mb-8 bg-gray-50 p-6 rounded-3xl border border-gray-100">
+                    @csrf
+                    <h4 class="text-lg font-black text-deep-blue mb-4">Add New Category</h4>
+                    <div class="flex gap-4 items-start">
+                        <div class="flex-1 space-y-4">
+                            <input type="text" name="name" required placeholder="Category Name" 
+                                   class="w-full px-6 py-3 bg-white border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                            <input type="file" name="image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-deep-blue file:text-white hover:file:bg-orange-red transition-all">
+                        </div>
+                        <button type="submit" class="bg-deep-blue text-white p-4 rounded-2xl shadow-lg hover:bg-orange-red transition-all">
+                            <i data-lucide="plus" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Categories List -->
+                <div class="space-y-4">
+                    @foreach($categories as $category)
+                        <div class="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-2xl hover:shadow-md transition-all group">
+                            <div class="flex items-center gap-4">
+                                @if($category->image)
+                                    <img src="{{ asset('storage/' . $category->image) }}" class="w-12 h-12 rounded-xl object-cover">
+                                @else
+                                    <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                                        <i data-lucide="layers" class="w-6 h-6 text-gray-400"></i>
+                                    </div>
+                                @endif
+                                <span class="font-bold text-deep-blue text-lg">{{ $category->name }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="editCategory({{ json_encode($category) }})" class="p-2 text-deep-blue hover:bg-gray-100 rounded-xl transition-all">
+                                    <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                </button>
+                                <form action="{{ route('manager.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Delete this category? This will fail if it has items.')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="fixed inset-0 bg-deep-blue/40 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black text-deep-blue">Edit Category</h3>
+                    <button onclick="closeEditCategoryModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-all">
+                        <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+                    </button>
+                </div>
+                
+                <form id="editCategoryForm" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Category Name</label>
+                        <input type="text" name="name" id="editCategoryName" required 
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">New Image (Optional)</label>
+                        <input type="file" name="image" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-deep-blue file:text-white hover:file:bg-orange-red transition-all">
+                    </div>
+
+                    <button type="submit" class="w-full bg-deep-blue text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-deep-blue/20 hover:bg-orange-red transition-all">
+                        Update Category
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         function openAddMenuModal() {
             document.getElementById('modalTitle').innerText = 'Add New Dish';
@@ -212,6 +314,30 @@
         function closeMenuModal() {
             document.getElementById('menuModal').classList.add('hidden');
             document.getElementById('menuModal').classList.remove('flex');
+        }
+
+        function openCategoriesModal() {
+            document.getElementById('categoriesModal').classList.remove('hidden');
+            document.getElementById('categoriesModal').classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeCategoriesModal() {
+            document.getElementById('categoriesModal').classList.add('hidden');
+            document.getElementById('categoriesModal').classList.remove('flex');
+        }
+
+        function editCategory(category) {
+            document.getElementById('editCategoryForm').action = `/manager/categories/${category.id}`;
+            document.getElementById('editCategoryName').value = category.name;
+            
+            document.getElementById('editCategoryModal').classList.remove('hidden');
+            document.getElementById('editCategoryModal').classList.add('flex');
+        }
+
+        function closeEditCategoryModal() {
+            document.getElementById('editCategoryModal').classList.add('hidden');
+            document.getElementById('editCategoryModal').classList.remove('flex');
         }
 
         function previewImage(input) {
