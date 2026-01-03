@@ -10,7 +10,8 @@ class BotController extends Controller
     public function index()
     {
         $bots = \App\Models\Bot::all();
-        return view('admin.bots.index', compact('bots'));
+        $botToken = env('BOT_TOKEN');
+        return view('admin.bots.index', compact('bots', 'botToken'));
     }
 
     public function updateEndpoint(Request $request)

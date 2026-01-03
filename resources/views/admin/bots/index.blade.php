@@ -3,6 +3,25 @@
         Bot Control Center
     </x-slot>
 
+    @if($botToken)
+    <div class="mb-8 bg-white rounded-[2.5rem] p-8 border border-emerald-100 shadow-sm overflow-hidden relative group">
+        <div class="absolute top-0 right-0 p-8">
+            <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
+            </div>
+        </div>
+        <h3 class="text-lg font-black text-slate-900 tracking-tighter mb-2">Active Bot API Token</h3>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-6">Use this token in your bot's .env file as BOT_TOKEN</p>
+        
+        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+            <code class="flex-1 font-mono text-xs text-emerald-700 break-all">{{ $botToken }}</code>
+            <button onclick="navigator.clipboard.writeText('{{ $botToken }}'); alert('Token copied!')" class="p-3 bg-white text-slate-900 rounded-xl shadow-sm hover:shadow-md transition-all border border-slate-100">
+                <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+    @endif
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($bots as $bot)
         <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 hover:shadow-xl transition-all group">
