@@ -184,19 +184,42 @@ class WhatsAppBotController extends Controller
     }
 
     /**
-     * Check Order Status
+     * Check Order & Payment Status (Polling)
      */
     public function getOrderStatus($orderId)
     {
-        $order = Order::with('items.menuItem')->find($orderId);
+        $order = Order::with(['items.menuItem', 'payments'])->find($orderId);
 
         if (!$order) {
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
 
+        $payment = $order->payments()->where('method', 'ussd')->latest()->first();
+        
+        // Polling logic for ZenoPay
+        if ($payment && $payment->status === 'pending') {
+            $restaurant = $order->restaurant;
+            $apiKey = $restaurant->zenopay_api_key;
+
+            if ($apiKey) {
+                $zenoPay = new \App\Services\ZenoPayService();
+                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+
+                if (isset($result['payment_status'])) {
+                    if ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS') {
+                        $payment->update(['status' => 'paid']);
+                        $order->update(['status' => 'paid']);
+                    } elseif ($result['payment_status'] === 'FAILED') {
+                        $payment->update(['status' => 'failed']);
+                    }
+                }
+            }
+        }
+
         return response()->json([
             'success' => true,
             'status' => $order->status,
+            'payment_status' => $payment ? $payment->status : 'unpaid',
             'total' => $order->total_amount,
             'items' => $order->items
         ]);

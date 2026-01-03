@@ -61,32 +61,30 @@ class PaymentController extends Controller
 
     public function status(Order $order)
     {
-        $payment = $order->payments()->latest()->first();
+        $payment = $order->payments()->where('method', 'ussd')->latest()->first();
+        
+        if ($payment && $payment->status === 'pending') {
+            $restaurant = $order->restaurant;
+            $apiKey = $restaurant->zenopay_api_key;
+
+            if ($apiKey) {
+                $zenoPay = new \App\Services\ZenoPayService();
+                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+
+                if (isset($result['payment_status'])) {
+                    if ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS') {
+                        $payment->update(['status' => 'paid']);
+                        $order->update(['status' => 'paid']);
+                    } elseif ($result['payment_status'] === 'FAILED') {
+                        $payment->update(['status' => 'failed']);
+                    }
+                }
+            }
+        }
+
         return response()->json([
             'status' => $payment ? $payment->status : 'unpaid',
             'payment' => $payment
         ]);
-    }
-
-    public function callback(Request $request)
-    {
-        // Handle gateway callback
-        // Example: verify signature, find payment by reference, update status
-        
-        $reference = $request->input('transaction_reference');
-        $status = $request->input('status'); // success, failed
-
-        $payment = Payment::where('transaction_reference', $reference)->first();
-
-        if ($payment) {
-            if ($status === 'success') {
-                $payment->update(['status' => 'paid']);
-                $payment->order->update(['status' => 'paid']);
-            } else {
-                $payment->update(['status' => 'failed']);
-            }
-        }
-
-        return response()->json(['status' => 'received']);
     }
 }

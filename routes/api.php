@@ -53,5 +53,9 @@ Route::prefix('bot')->group(function () {
     Route::post('/tip', [App\Http\Controllers\Api\WhatsAppBotController::class, 'submitTip']);
 });
 
+// WhatsApp Webhook (Meta/WhatsApp Cloud API)
+Route::get('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'verify']);
+Route::post('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'handle']);
+
 // Public callback for payments (no auth required usually, or verify signature)
 Route::post('/v1/payments/callback', [PaymentController::class, 'callback']);
