@@ -100,6 +100,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/tips', [\App\Http\Controllers\Manager\TipController::class, 'index'])->name('tips.index');
     Route::get('/api', [\App\Http\Controllers\Manager\ApiController::class, 'index'])->name('api.index');
     Route::post('/api/zenopay', [\App\Http\Controllers\Manager\ApiController::class, 'updateZenoPayKey'])->name('api.zenopay.update');
+    Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
 });
 
 // Waiter Portal

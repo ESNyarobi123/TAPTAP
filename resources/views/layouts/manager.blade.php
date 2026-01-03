@@ -46,6 +46,11 @@
                     <span class="font-bold text-sm">Waiters & Staff</span>
                 </a>
 
+                <a href="{{ route('manager.tables.index') }}" class="flex items-center gap-4 px-6 py-4 rounded-2xl transition-all {{ request()->routeIs('manager.tables.index') ? 'bg-deep-blue text-white shadow-xl shadow-deep-blue/20' : 'text-gray-400 hover:bg-gray-50 hover:text-deep-blue' }}">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                    <span class="font-bold text-sm">Tables & QR Codes</span>
+                </a>
+
                 <div class="pt-8">
                     <p class="px-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Finance & Feedback</p>
                     
