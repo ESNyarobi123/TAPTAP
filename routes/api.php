@@ -63,6 +63,7 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     Route::post('/payment/ussd', [App\Http\Controllers\Api\WhatsAppBotController::class, 'initiatePayment']);
     Route::post('/feedback', [App\Http\Controllers\Api\WhatsAppBotController::class, 'submitFeedback']);
     Route::post('/tip', [App\Http\Controllers\Api\WhatsAppBotController::class, 'submitTip']);
+    Route::get('/restaurant/{restaurantId}/tables', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getTables']);
 });
 
 // WhatsApp Webhook (Meta/WhatsApp Cloud API)

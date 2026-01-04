@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Activity;
+use App\Models\Table;
 use Illuminate\Support\Facades\DB;
 
 class WhatsAppBotController extends Controller
@@ -65,7 +66,7 @@ class WhatsAppBotController extends Controller
      */
     public function getCategories($restaurantId)
     {
-        $categories = Category::where('restaurant_id', $restaurantId)
+        $categories = Category::withoutGlobalScopes()->where('restaurant_id', $restaurantId)
             ->get(['id', 'name']);
 
         return response()->json([
@@ -79,7 +80,7 @@ class WhatsAppBotController extends Controller
      */
     public function getCategoryItems($categoryId)
     {
-        $items = MenuItem::where('category_id', $categoryId)
+        $items = MenuItem::withoutGlobalScopes()->where('category_id', $categoryId)
             ->where('is_available', true)
             ->get(['id', 'name', 'price', 'description', 'image']);
 
@@ -94,7 +95,9 @@ class WhatsAppBotController extends Controller
      */
     public function getItemDetails($itemId)
     {
-        $item = MenuItem::with('category')->find($itemId);
+        $item = MenuItem::withoutGlobalScopes()->with(['category' => function($query) {
+            $query->withoutGlobalScopes();
+        }])->find($itemId);
 
         if (!$item) {
             return response()->json(['success' => false, 'message' => 'Item not found'], 404);
@@ -111,8 +114,8 @@ class WhatsAppBotController extends Controller
      */
     public function getFullMenu($restaurantId)
     {
-        $categories = Category::with(['menuItems' => function($query) {
-            $query->where('is_available', true);
+        $categories = Category::withoutGlobalScopes()->with(['menuItems' => function($query) {
+            $query->withoutGlobalScopes()->where('is_available', true);
         }])->where('restaurant_id', $restaurantId)->get();
 
         return response()->json([
@@ -141,7 +144,7 @@ class WhatsAppBotController extends Controller
                 $orderItems = [];
 
                 foreach ($request->items as $itemData) {
-                    $menuItem = MenuItem::find($itemData['menu_item_id']);
+                    $menuItem = MenuItem::withoutGlobalScopes()->find($itemData['menu_item_id']);
                     $subtotal = $menuItem->price * $itemData['quantity'];
                     $totalAmount += $subtotal;
 
@@ -149,10 +152,11 @@ class WhatsAppBotController extends Controller
                         'menu_item_id' => $menuItem->id,
                         'quantity' => $itemData['quantity'],
                         'price' => $menuItem->price,
+                        'total' => $subtotal,
                     ];
                 }
 
-                $order = Order::create([
+                $order = Order::withoutGlobalScopes()->create([
                     'restaurant_id' => $request->restaurant_id,
                     'table_number' => $request->table_number,
                     'customer_phone' => $request->customer_phone,
@@ -188,7 +192,9 @@ class WhatsAppBotController extends Controller
      */
     public function getOrderStatus($orderId)
     {
-        $order = Order::with(['items.menuItem', 'payments'])->find($orderId);
+        $order = Order::withoutGlobalScopes()->with(['items.menuItem' => function($query) {
+            $query->withoutGlobalScopes();
+        }, 'payments'])->find($orderId);
 
         if (!$order) {
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
@@ -237,7 +243,7 @@ class WhatsAppBotController extends Controller
             'comment' => 'nullable|string',
         ]);
 
-        $feedback = Feedback::create($request->all());
+        $feedback = Feedback::withoutGlobalScopes()->create($request->all());
 
         return response()->json([
             'success' => true,
@@ -257,10 +263,10 @@ class WhatsAppBotController extends Controller
         ]);
 
         // Get waiter_id from order if exists
-        $order = Order::find($request->order_id);
+        $order = Order::withoutGlobalScopes()->find($request->order_id);
         $waiterId = $order->waiter_id;
 
-        $tip = Tip::create([
+        $tip = Tip::withoutGlobalScopes()->create([
             'restaurant_id' => $request->restaurant_id,
             'order_id' => $request->order_id,
             'waiter_id' => $waiterId,
@@ -299,6 +305,21 @@ class WhatsAppBotController extends Controller
             'success' => true,
             'payment_id' => $payment->id,
             'message' => 'USSD Prompt sent to ' . $request->phone_number
+        ]);
+    }
+
+    /**
+     * Get Tables for a Restaurant
+     */
+    public function getTables($restaurantId)
+    {
+        $tables = Table::withoutGlobalScopes()->where('restaurant_id', $restaurantId)
+            ->where('is_active', true)
+            ->get(['id', 'name', 'capacity']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $tables
         ]);
     }
 }
