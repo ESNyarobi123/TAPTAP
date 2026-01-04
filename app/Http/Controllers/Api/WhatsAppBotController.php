@@ -192,7 +192,7 @@ class WhatsAppBotController extends Controller
      */
     public function getOrderStatus($orderId)
     {
-        $order = Order::withoutGlobalScopes()->with(['items.menuItem' => function($query) {
+        $order = Order::withoutGlobalScopes()->with(['restaurant', 'items.menuItem' => function($query) {
             $query->withoutGlobalScopes();
         }, 'payments'])->find($orderId);
 
@@ -211,13 +211,14 @@ class WhatsAppBotController extends Controller
                 $zenoPay = new \App\Services\ZenoPayService();
                 $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
 
-                if (isset($result['payment_status'])) {
-                    if ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS') {
-                        $payment->update(['status' => 'paid']);
-                        $order->update(['status' => 'paid']);
-                    } elseif ($result['payment_status'] === 'FAILED') {
-                        $payment->update(['status' => 'failed']);
-                    }
+                if (
+                    (isset($result['payment_status']) && ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS')) || 
+                    (isset($result['result']) && $result['result'] === 'SUCCESS')
+                ) {
+                    $payment->update(['status' => 'paid']);
+                    $order->update(['status' => 'paid']);
+                } elseif (isset($result['payment_status']) && $result['payment_status'] === 'FAILED') {
+                    $payment->update(['status' => 'failed']);
                 }
             }
         }
@@ -287,25 +288,64 @@ class WhatsAppBotController extends Controller
         $request->validate([
             'order_id' => 'required|exists:orders,id',
             'phone_number' => 'required',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'network' => 'nullable|string'
         ]);
 
-        // Logic to trigger USSD via Gateway (ZenoPay etc)
-        // For now, we simulate success
+        $order = Order::withoutGlobalScopes()->with('restaurant')->find($request->order_id);
+        $restaurant = $order->restaurant;
+
+        if (!$restaurant || !$restaurant->zenopay_api_key) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Restaurant payment gateway not configured'
+            ], 400);
+        }
+
+        // Prepare data for ZenoPay
+        $transactionId = 'BOT-' . $order->id . '-' . time();
         
-        $payment = Payment::create([
-            'order_id' => $request->order_id,
+        // Map network names if necessary (e.g., tigopesa -> tigo)
+        $network = $request->network;
+        if ($network === 'tigopesa') {
+            $network = 'tigo';
+        } elseif ($network === 'mpesa') {
+            $network = 'voda';
+        } elseif ($network === 'halopesa') {
+            $network = 'halo';
+        }
+
+        $zenoPay = new \App\Services\ZenoPayService();
+        $result = $zenoPay->initiatePayment($restaurant->zenopay_api_key, [
+            'order_id' => $transactionId,
+            'buyer_email' => $order->customer_phone . '@taptap.com', // Placeholder email
+            'buyer_name' => 'WhatsApp Customer',
+            'buyer_phone' => $request->phone_number,
             'amount' => $request->amount,
-            'method' => 'ussd',
-            'status' => 'pending',
-            'transaction_reference' => 'BOT-' . strtoupper(uniqid()),
+            'network' => $network
         ]);
+
+        if (isset($result['status']) && $result['status'] === 'success') {
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'amount' => $request->amount,
+                'method' => 'ussd',
+                'status' => 'pending',
+                'transaction_reference' => $transactionId,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'message' => 'USSD Prompt sent to ' . $request->phone_number
+            ]);
+        }
 
         return response()->json([
-            'success' => true,
-            'payment_id' => $payment->id,
-            'message' => 'USSD Prompt sent to ' . $request->phone_number
-        ]);
+            'success' => false,
+            'message' => $result['message'] ?? 'Failed to initiate payment with ZenoPay',
+            'debug' => $result // Optional: remove in production
+        ], 400);
     }
 
     /**

@@ -21,6 +21,7 @@ class ZenoPayService
                 'buyer_name' => $data['buyer_name'],
                 'buyer_phone' => $data['buyer_phone'],
                 'amount' => $data['amount'],
+                'network' => $data['network'] ?? null,
             ]);
 
             return $response->json();
