@@ -245,7 +245,7 @@
                 <div class="relative" data-aos="zoom-in" data-aos-duration="1200">
                     <div class="relative z-20 animate-float">
                         <div class="bg-white/5 rounded-[3rem] p-4 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border-8 border-white/5">
-                            <img src="https://gemini-user-artifacts.s3.amazonaws.com/artifacts/a5dcb96f-18df-46ab-b822-2fcd7a7946c6/restaurant_ordering_hero_1767515979820.png" alt="TAPTAP Hero" class="rounded-[2.2rem] w-full object-cover aspect-[4/5]">
+                            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000" alt="TAPTAP Hero" class="rounded-[2.2rem] w-full object-cover aspect-[4/5]">
                         </div>
                     </div>
                     
