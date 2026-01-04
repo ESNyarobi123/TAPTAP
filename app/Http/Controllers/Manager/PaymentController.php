@@ -23,11 +23,11 @@ class PaymentController extends Controller
     public function index()
     {
         $today = Carbon::today();
-        $payments = Payment::with('order')->latest()->paginate(15);
+        $payments = Payment::whereHas('order')->with('order')->latest()->paginate(15);
         
-        $cashRevenue = Payment::where('method', 'cash')->whereDate('created_at', $today)->sum('amount');
-        $mobileRevenue = Payment::where('method', 'ussd')->whereDate('created_at', $today)->sum('amount');
-        $cardRevenue = Payment::where('method', 'card')->whereDate('created_at', $today)->sum('amount');
+        $cashRevenue = Payment::whereHas('order')->where('method', 'cash')->whereDate('created_at', $today)->sum('amount');
+        $mobileRevenue = Payment::whereHas('order')->where('method', 'ussd')->whereDate('created_at', $today)->sum('amount');
+        $cardRevenue = Payment::whereHas('order')->where('method', 'card')->whereDate('created_at', $today)->sum('amount');
 
         return view('manager.payments.index', compact('payments', 'cashRevenue', 'mobileRevenue', 'cardRevenue'));
     }

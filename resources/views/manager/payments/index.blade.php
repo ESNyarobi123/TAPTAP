@@ -79,7 +79,7 @@
                 @forelse($payments as $payment)
                     <tr>
                         <td class="px-10 py-6 font-mono text-xs text-gray-500">TXN-{{ $payment->id }}</td>
-                        <td class="px-10 py-6 font-bold text-deep-blue">Table #{{ $payment->order->table_number }}</td>
+                        <td class="px-10 py-6 font-bold text-deep-blue">Table #{{ $payment->order?->table_number ?? 'N/A' }}</td>
                         <td class="px-10 py-6">
                             <span class="bg-blue-50 text-blue-600 text-[10px] font-black px-3 py-1 rounded-full uppercase">{{ $payment->method }}</span>
                         </td>
