@@ -1,29 +1,47 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TAPTAP - Smart Dining & WhatsApp Ordering System</title>
+    <title>TAPTAP - The Future of Smart Dining & WhatsApp Ordering</title>
     
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'Outfit', 'sans-serif'],
                     },
                     colors: {
-                        'primary': '#3B82F6',
+                        'primary': '#6366F1',
                         'secondary': '#0F172A',
                         'accent': '#10B981',
                         'whatsapp': '#25D366',
+                        'premium-gold': '#D4AF37',
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
                     }
                 }
             }
@@ -31,305 +49,809 @@
     </script>
 
     <style>
-        body { font-family: 'Outfit', sans-serif; }
-        .glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .text-gradient {
-            background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+            background: linear-gradient(to right, #6366F1, #10B981, #3B82F6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient 5s linear infinite;
         }
-        .bg-gradient-premium {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent),
+                        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent);
         }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+
+        .bento-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+        .bento-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+            border-color: rgba(99, 102, 241, 0.2);
         }
-        .card-shadow {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+
+        .whatsapp-bubble {
+            position: relative;
+            background: #DCF8C6;
+            border-radius: 18px;
+            padding: 10px 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .whatsapp-glow {
-            box-shadow: 0 0 20px rgba(37, 211, 102, 0.2);
+
+        .whatsapp-bubble::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent #DCF8C6 transparent transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #6366F1;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3.5rem; line-height: 1; }
         }
     </style>
 </head>
-<body class="font-sans antialiased bg-[#F8FAFC] text-slate-900 overflow-x-hidden">
+<body class="bg-[#FAFBFF] text-slate-900 overflow-x-hidden custom-scrollbar">
     
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass transition-all duration-300">
+    <nav class="fixed w-full z-[100] glass-nav transition-all duration-500 py-4" id="navbar">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-24">
+            <div class="flex justify-between items-center">
                 <!-- Logo -->
-                <div class="flex items-center gap-3 group cursor-pointer">
-                    <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 transform group-hover:rotate-6 transition-all">
-                        <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+                <a href="/" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/20 transform group-hover:rotate-12 transition-all duration-500">
+                        <i data-lucide="zap" class="w-7 h-7 text-white fill-white/20"></i>
                     </div>
                     <div>
                         <span class="text-2xl font-black text-secondary tracking-tighter block leading-none">TAP<span class="text-primary">TAP</span></span>
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Smart Dining</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Smart Dining</span>
                     </div>
-                </div>
+                </a>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-10">
-                    <a href="#how-it-helps" class="text-slate-500 hover:text-primary font-bold transition-colors text-sm uppercase tracking-widest">How it Helps</a>
-                    <a href="#whatsapp-bot" class="text-slate-500 hover:text-primary font-bold transition-colors text-sm uppercase tracking-widest">WhatsApp Bot</a>
-                    <a href="#features" class="text-slate-500 hover:text-primary font-bold transition-colors text-sm uppercase tracking-widest">Features</a>
+                <div class="hidden lg:flex items-center space-x-8">
+                    <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">Features</a>
+                    <a href="#how-it-works" class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">How it Works</a>
+                    <a href="#whatsapp-bot" class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">WhatsApp Bot</a>
+                    <a href="#pricing" class="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">Pricing</a>
                     
+                    <div class="h-6 w-px bg-slate-200 mx-2"></div>
+
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/dashboard') }}" class="bg-secondary text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl hover:-translate-y-1 transition-all text-sm uppercase tracking-widest">
+                            <a href="{{ url('/dashboard') }}" class="bg-secondary text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:-translate-y-1 transition-all text-sm">
                                 Dashboard
                             </a>
                         @else
-                            <div class="flex items-center gap-6">
-                                <a href="{{ route('login') }}" class="text-secondary font-black hover:text-primary transition-colors text-sm uppercase tracking-widest">Log in</a>
-                                <a href="{{ route('restaurant.register') }}" class="bg-primary text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-primary/30 hover:bg-secondary hover:shadow-secondary/20 hover:-translate-y-1 transition-all text-sm uppercase tracking-widest">
-                                    Register Restaurant
-                                </a>
-                            </div>
+                            <a href="{{ route('login') }}" class="text-sm font-bold text-secondary hover:text-primary transition-colors">Log in</a>
+                            <a href="{{ route('restaurant.register') }}" class="bg-primary text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-primary/30 hover:bg-secondary hover:shadow-secondary/20 hover:-translate-y-1 transition-all text-sm">
+                                Join Now
+                            </a>
                         @endauth
                     @endif
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button class="p-2 text-slate-600">
-                        <i data-lucide="menu" class="w-8 h-8"></i>
-                    </button>
-                </div>
+                <button class="lg:hidden p-2 text-slate-600" id="mobile-menu-btn">
+                    <i data-lucide="menu" class="w-8 h-8"></i>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-48 pb-32 lg:pt-64 lg:pb-48 overflow-hidden">
-        <div class="absolute top-0 right-0 -mr-40 -mt-40 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-0 left-0 -ml-40 -mb-40 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[100px]"></div>
+    <!-- Mobile Menu Overlay -->
+    <div class="fixed inset-0 z-[110] bg-white hidden flex-col p-8 lg:hidden" id="mobile-menu">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                    <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                </div>
+                <span class="text-xl font-black text-secondary">TAPTAP</span>
+            </div>
+            <button id="close-menu-btn"><i data-lucide="x" class="w-8 h-8"></i></button>
+        </div>
+        <div class="flex flex-col gap-8 text-2xl font-bold text-secondary">
+            <a href="#features" class="hover:text-primary">Features</a>
+            <a href="#how-it-works" class="hover:text-primary">How it Works</a>
+            <a href="#whatsapp-bot" class="hover:text-primary">WhatsApp Bot</a>
+            <a href="#pricing" class="hover:text-primary">Pricing</a>
+            <hr class="border-slate-100">
+            <a href="{{ route('login') }}">Log in</a>
+            <a href="{{ route('restaurant.register') }}" class="bg-primary text-white text-center py-5 rounded-2xl">Get Started</a>
+        </div>
+    </div>
 
+    <!-- Hero Section -->
+    <section class="relative pt-40 pb-20 lg:pt-56 lg:pb-40 overflow-hidden hero-gradient">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
-                <div>
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-whatsapp/10 text-whatsapp text-[10px] font-black uppercase tracking-widest mb-8 border border-whatsapp/10">
-                        <span class="w-2 h-2 bg-whatsapp rounded-full mr-3 animate-pulse"></span>
-                        New: Smart WhatsApp Ordering Bot
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right" data-aos-duration="1000">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-8 border border-primary/10">
+                        <span class="w-2 h-2 bg-primary rounded-full mr-3 animate-pulse"></span>
+                        Reinventing Restaurant Experience
                     </div>
                     
-                    <h1 class="text-6xl md:text-8xl font-black text-secondary tracking-tighter mb-8 leading-[0.85]">
-                        Dining inside <br/>
-                        <span class="text-whatsapp">WhatsApp.</span>
+                    <h1 class="text-6xl lg:text-8xl font-black text-secondary tracking-tighter mb-8 leading-[0.9] hero-title">
+                        Dining <br/>
+                        <span class="text-gradient">Redefined.</span>
                     </h1>
                     
                     <p class="text-xl text-slate-500 mb-12 max-w-xl leading-relaxed font-medium">
-                        TAPTAP brings your restaurant menu directly into your customers' favorite app. No downloads, no friction—just scan, chat, and eat.
+                        Empower your restaurant with a smart WhatsApp ordering system. No apps, no friction—just seamless dining from scan to pay.
                     </p>
                     
                     <div class="flex flex-col sm:flex-row items-center gap-6">
-                        <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-10 py-6 bg-secondary text-white rounded-3xl font-black text-xl shadow-2xl shadow-secondary/20 hover:bg-primary hover:scale-105 transition-all text-center">
-                            Get Started Free
+                        <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-10 py-6 bg-secondary text-white rounded-3xl font-black text-xl shadow-2xl shadow-secondary/20 hover:bg-primary hover:scale-105 transition-all text-center group">
+                            Start Free Trial
+                            <i data-lucide="arrow-right" class="inline-block ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
                         </a>
-                        <a href="#whatsapp-bot" class="w-full sm:w-auto px-10 py-6 bg-white text-secondary border border-slate-200 rounded-3xl font-black text-lg hover:border-whatsapp hover:bg-slate-50 transition-all flex items-center justify-center gap-3">
-                            <i data-lucide="message-circle" class="w-6 h-6 text-whatsapp"></i>
-                            See the Bot
+                        <a href="#whatsapp-bot" class="w-full sm:w-auto px-10 py-6 bg-white text-secondary border border-slate-200 rounded-3xl font-black text-lg hover:border-primary hover:bg-slate-50 transition-all flex items-center justify-center gap-3">
+                            <i data-lucide="play-circle" class="w-6 h-6 text-primary"></i>
+                            Live Demo
                         </a>
+                    </div>
+
+                    <!-- Logo Cloud -->
+                    <div class="mt-20" data-aos="fade-up" data-aos-delay="400">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-8">Powering the best in Tanzania</p>
+                        <div class="flex flex-wrap items-center gap-10 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+                            <span class="text-xl font-black text-secondary tracking-tighter">SAMAKI<span class="text-primary">SAMAKI</span></span>
+                            <span class="text-xl font-black text-secondary tracking-tighter">AKEMI</span>
+                            <span class="text-xl font-black text-secondary tracking-tighter">CTFM</span>
+                            <span class="text-xl font-black text-secondary tracking-tighter">ELEMENTS</span>
+                        </div>
                     </div>
 
                     <div class="mt-16 flex items-center gap-12 border-t border-slate-100 pt-12">
-                        <div>
-                            <div class="text-3xl font-black text-secondary tracking-tighter">100%</div>
-                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">WhatsApp Native</div>
+                        <div class="flex -space-x-3">
+                            <img src="https://i.pravatar.cc/100?u=1" class="w-12 h-12 rounded-full border-4 border-white" alt="User">
+                            <img src="https://i.pravatar.cc/100?u=2" class="w-12 h-12 rounded-full border-4 border-white" alt="User">
+                            <img src="https://i.pravatar.cc/100?u=3" class="w-12 h-12 rounded-full border-4 border-white" alt="User">
+                            <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold border-4 border-white">50+</div>
                         </div>
-                        <div class="w-px h-10 bg-slate-200"></div>
-                        <div>
-                            <div class="text-3xl font-black text-secondary tracking-tighter">3s</div>
-                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Ordering Speed</div>
-                        </div>
-                        <div class="w-px h-10 bg-slate-200"></div>
-                        <div>
-                            <div class="text-3xl font-black text-secondary tracking-tighter">USSD</div>
-                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Instant Pay</div>
-                        </div>
+                        <p class="text-sm text-slate-500 font-semibold">Trusted by <span class="text-secondary">50+ Restaurants</span> in Tanzania</p>
                     </div>
                 </div>
 
-                <div class="relative lg:block hidden">
+                <div class="relative" data-aos="zoom-in" data-aos-duration="1200">
                     <div class="relative z-20 animate-float">
-                        <div class="bg-secondary rounded-[3rem] p-4 shadow-2xl border-8 border-slate-800">
-                            <div class="bg-[#E5DDD5] rounded-[2.2rem] overflow-hidden aspect-[9/16] relative">
-                                <!-- WhatsApp UI Mockup -->
-                                <div class="bg-[#075E54] p-4 flex items-center gap-3">
-                                    <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                                        <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
-                                    </div>
-                                    <div class="text-white">
-                                        <p class="text-xs font-bold leading-none">TAPTAP Bot</p>
-                                        <p class="text-[8px] opacity-70">Online</p>
-                                    </div>
-                                </div>
-                                <div class="p-4 space-y-4">
-                                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%]">
-                                        <p class="text-[10px] text-slate-800">Karibu Samaki Samaki 🍽️<br>Chagua huduma yako:</p>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <div class="bg-white py-2 px-4 rounded-xl border border-primary/20 text-primary text-[10px] font-bold text-center whatsapp-glow">
-                                            🍽️ Menu
-                                        </div>
-                                        <div class="bg-white py-2 px-4 rounded-xl border border-slate-100 text-slate-600 text-[10px] font-bold text-center">
-                                            🛒 Cart / Oda
-                                        </div>
-                                        <div class="bg-white py-2 px-4 rounded-xl border border-slate-100 text-slate-600 text-[10px] font-bold text-center">
-                                            💳 Malipo
-                                        </div>
-                                    </div>
-                                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%]">
-                                        <p class="text-[10px] text-slate-800">Chagua Category:</p>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <div class="bg-whatsapp text-white py-2 px-4 rounded-xl text-[9px] font-bold">🐟 Samaki</div>
-                                        <div class="bg-white py-2 px-4 rounded-xl border border-slate-100 text-slate-600 text-[9px] font-bold">🍗 Kuku</div>
-                                    </div>
-                                </div>
-                                <div class="absolute bottom-0 w-full p-4 bg-white/80 backdrop-blur-sm flex items-center gap-2">
-                                    <div class="flex-1 h-8 bg-white rounded-full border border-slate-200"></div>
-                                    <div class="w-8 h-8 bg-whatsapp rounded-full flex items-center justify-center">
-                                        <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                                    </div>
-                                </div>
+                        <div class="bg-white rounded-[3rem] p-4 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border-8 border-white">
+                            <img src="https://gemini-user-artifacts.s3.amazonaws.com/artifacts/a5dcb96f-18df-46ab-b822-2fcd7a7946c6/restaurant_ordering_hero_1767515979820.png" alt="TAPTAP Hero" class="rounded-[2.2rem] w-full object-cover aspect-[4/5]">
+                        </div>
+                    </div>
+                    
+                    <!-- Floating Elements -->
+                    <div class="absolute -top-10 -right-10 bg-white p-6 rounded-3xl shadow-2xl z-30 animate-pulse-slow">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-whatsapp/10 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="message-square" class="w-6 h-6 text-whatsapp"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">New Order</p>
+                                <p class="text-sm font-black text-secondary">Table #12 - Samaki</p>
                             </div>
                         </div>
                     </div>
-                    <!-- Decorative Blobs -->
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-whatsapp rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+
+                    <div class="absolute -bottom-10 -left-10 bg-white p-6 rounded-3xl shadow-2xl z-30 animate-bounce-slow" style="animation: float 5s ease-in-out infinite reverse;">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="credit-card" class="w-6 h-6 text-primary"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Payment Received</p>
+                                <p class="text-sm font-black text-secondary">TZS 45,000 via TigoPesa</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:block">
+            <div class="w-6 h-10 border-2 border-slate-200 rounded-full flex justify-center p-1">
+                <div class="w-1 h-2 bg-primary rounded-full animate-bounce"></div>
             </div>
         </div>
     </section>
 
-    <!-- WhatsApp Bot Section -->
-    <section id="whatsapp-bot" class="py-32 bg-white relative overflow-hidden">
+    <!-- Stats Section -->
+    <section class="py-20 bg-white border-y border-slate-100">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
-                <div class="order-2 lg:order-1">
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-slate-50 p-8 rounded-[3rem] border border-slate-100 hover:border-whatsapp transition-all group">
-                            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                                <i data-lucide="qr-code" class="w-6 h-6 text-whatsapp"></i>
-                            </div>
-                            <h5 class="text-secondary font-black text-xl mb-2 tracking-tighter">QR to Chat</h5>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed">Scan a table QR and instantly start chatting with the bot. No apps needed.</p>
-                        </div>
-                        <div class="bg-slate-50 p-8 rounded-[3rem] border border-slate-100 hover:border-primary transition-all group">
-                            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                                <i data-lucide="search" class="w-6 h-6 text-primary"></i>
-                            </div>
-                            <h5 class="text-secondary font-black text-xl mb-2 tracking-tighter">Smart Search</h5>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed">Customers can search for your restaurant by name directly in WhatsApp.</p>
-                        </div>
-                        <div class="bg-slate-50 p-8 rounded-[3rem] border border-slate-100 hover:border-accent transition-all group">
-                            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                                <i data-lucide="credit-card" class="w-6 h-6 text-accent"></i>
-                            </div>
-                            <h5 class="text-secondary font-black text-xl mb-2 tracking-tighter">USSD Pay</h5>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed">Integrated mobile money payments. Pay without leaving the chat.</p>
-                        </div>
-                        <div class="bg-slate-50 p-8 rounded-[3rem] border border-slate-100 hover:border-secondary transition-all group">
-                            <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                                <i data-lucide="star" class="w-6 h-6 text-secondary"></i>
-                            </div>
-                            <h5 class="text-secondary font-black text-xl mb-2 tracking-tighter">Feedback & Tips</h5>
-                            <p class="text-slate-500 text-sm font-medium leading-relaxed">Collect ratings and tips for your staff automatically after every meal.</p>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-5xl font-black text-secondary mb-2">30%</div>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Faster Turnover</p>
                 </div>
-                <div class="order-1 lg:order-2">
-                    <h2 class="text-whatsapp font-black tracking-[0.3em] uppercase text-[10px] mb-4">The WhatsApp Experience</h2>
-                    <h3 class="text-4xl md:text-6xl font-black text-secondary tracking-tighter mb-8 leading-none">A Mini-App Inside <br/>WhatsApp.</h3>
-                    <p class="text-slate-500 text-lg mb-10 leading-relaxed font-medium">TAPTAP isn't just a bot; it's a full-featured dining application that lives where your customers already are. From browsing the menu to paying the bill, everything happens in one conversation.</p>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-6 h-6 bg-whatsapp/10 rounded-full flex items-center justify-center">
-                                <i data-lucide="check" class="w-4 h-4 text-whatsapp"></i>
-                            </div>
-                            <span class="text-secondary font-bold">Buttons-first interface for speed</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-6 h-6 bg-whatsapp/10 rounded-full flex items-center justify-center">
-                                <i data-lucide="check" class="w-4 h-4 text-whatsapp"></i>
-                            </div>
-                            <span class="text-secondary font-bold">Real-time order tracking</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-6 h-6 bg-whatsapp/10 rounded-full flex items-center justify-center">
-                                <i data-lucide="check" class="w-4 h-4 text-whatsapp"></i>
-                            </div>
-                            <span class="text-secondary font-bold">Automated USSD payment prompts</span>
-                        </div>
-                    </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-5xl font-black text-secondary mb-2">0</div>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">App Downloads</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-5xl font-black text-secondary mb-2">100%</div>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Digital Accuracy</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-5xl font-black text-secondary mb-2">24/7</div>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">Smart Support</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How it Helps Section -->
-    <section id="how-it-helps" class="py-32 bg-[#F8FAFC] relative">
+    <!-- How it Works -->
+    <section id="how-it-works" class="py-32 bg-[#F8FAFC]">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-24">
-                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-[10px] mb-4">The TAPTAP Advantage</h2>
-                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Why Modern Restaurants Choose TAPTAP</h3>
-                <p class="text-slate-500 font-medium">We don't just provide software; we provide a complete ecosystem to grow your business.</p>
+                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">The Process</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Simple for You, <br/>Magic for Customers.</h3>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Advantage 1 -->
-                <div class="group p-12 rounded-[3rem] bg-white hover:bg-secondary transition-all duration-500 border border-slate-100 card-shadow">
-                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
-                        <i data-lucide="zap" class="w-8 h-8 text-primary"></i>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="relative p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm group hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -top-6 left-12 w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-primary/30">1</div>
+                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                        <i data-lucide="qr-code" class="w-8 h-8 text-primary"></i>
                     </div>
-                    <h4 class="text-2xl font-black text-secondary mb-4 group-hover:text-white transition-colors">Instant Table Turnover</h4>
-                    <p class="text-slate-500 group-hover:text-slate-400 transition-colors leading-relaxed font-medium">Customers scan, order, and pay without waiting for a waiter. Reduce wait times by up to 30%.</p>
+                    <h4 class="text-2xl font-black text-secondary mb-4">Scan QR Code</h4>
+                    <p class="text-slate-500 font-medium leading-relaxed">Customer scans the unique QR code on their table. No app needed, just their camera.</p>
                 </div>
 
-                <!-- Advantage 2 -->
-                <div class="group p-12 rounded-[3rem] bg-white hover:bg-primary transition-all duration-500 border border-slate-100 card-shadow">
-                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
-                        <i data-lucide="users" class="w-8 h-8 text-secondary"></i>
+                <div class="relative p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm group hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute -top-6 left-12 w-12 h-12 bg-whatsapp text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-whatsapp/30">2</div>
+                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                        <i data-lucide="message-circle" class="w-8 h-8 text-whatsapp"></i>
                     </div>
-                    <h4 class="text-2xl font-black text-secondary mb-4 group-hover:text-white transition-colors">Staff Optimization</h4>
-                    <p class="text-slate-500 group-hover:text-blue-50 transition-colors leading-relaxed font-medium">Your waiters focus on delivering food and hospitality, not writing down orders. Do more with fewer staff.</p>
+                    <h4 class="text-2xl font-black text-secondary mb-4">Order on WhatsApp</h4>
+                    <p class="text-slate-500 font-medium leading-relaxed">The menu opens directly in WhatsApp. They browse, customize, and order in seconds.</p>
                 </div>
 
-                <!-- Advantage 3 -->
-                <div class="group p-12 rounded-[3rem] bg-white hover:bg-accent transition-all duration-500 border border-slate-100 card-shadow">
-                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
-                        <i data-lucide="bar-chart-3" class="w-8 h-8 text-secondary"></i>
+                <div class="relative p-12 bg-white rounded-[3rem] border border-slate-100 shadow-sm group hover:shadow-xl transition-all" data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute -top-6 left-12 w-12 h-12 bg-accent text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-accent/30">3</div>
+                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                        <i data-lucide="credit-card" class="w-8 h-8 text-accent"></i>
                     </div>
-                    <h4 class="text-2xl font-black text-secondary mb-4 group-hover:text-white transition-colors">Real-time Insights</h4>
-                    <p class="text-slate-500 group-hover:text-emerald-50 transition-colors leading-relaxed font-medium">Track sales, popular items, and staff performance in real-time from your premium admin dashboard.</p>
+                    <h4 class="text-2xl font-black text-secondary mb-4">Instant USSD Pay</h4>
+                    <p class="text-slate-500 font-medium leading-relaxed">A payment prompt appears on their phone. They enter their PIN and the bill is settled.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section id="features" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+                <div class="max-w-2xl">
+                    <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">Features</h2>
+                    <h3 class="text-4xl md:text-6xl font-black text-secondary tracking-tighter leading-none">Everything you need to <br/>run a modern restaurant.</h3>
+                </div>
+                <a href="{{ route('restaurant.register') }}" class="text-primary font-bold flex items-center gap-2 hover:gap-4 transition-all">
+                    Explore all features <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Large Card -->
+                <div class="md:col-span-8 bento-card rounded-[3rem] p-12 overflow-hidden relative group" data-aos="fade-right">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="layout-dashboard" class="w-7 h-7 text-primary"></i>
+                        </div>
+                        <h4 class="text-3xl font-black text-secondary mb-4 tracking-tighter">Premium Admin Dashboard</h4>
+                        <p class="text-slate-500 font-medium max-w-md mb-8">Manage menus, track real-time orders, and analyze sales data with our sleek, intuitive dashboard built for owners.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <span class="px-4 py-2 bg-slate-50 rounded-full text-xs font-bold text-slate-600">Real-time Analytics</span>
+                            <span class="px-4 py-2 bg-slate-50 rounded-full text-xs font-bold text-slate-600">Inventory Management</span>
+                            <span class="px-4 py-2 bg-slate-50 rounded-full text-xs font-bold text-slate-600">Staff Performance</span>
+                        </div>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-1/2 translate-y-1/4 translate-x-1/4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" alt="Dashboard" class="rounded-tl-3xl shadow-2xl">
+                    </div>
+                </div>
+
+                <!-- Small Card -->
+                <div class="md:col-span-4 bento-card rounded-[3rem] p-12 bg-secondary text-white" data-aos="fade-left">
+                    <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-8">
+                        <i data-lucide="smartphone" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h4 class="text-3xl font-black mb-4 tracking-tighter">WhatsApp Native</h4>
+                    <p class="text-slate-400 font-medium mb-8">No friction. No app fatigue. Just the world's most popular messaging app working for you.</p>
+                    <div class="pt-8 border-t border-white/10">
+                        <div class="flex items-center gap-4 mb-4">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-whatsapp"></i>
+                            <span class="text-sm font-bold">Buttons & Lists UI</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-whatsapp"></i>
+                            <span class="text-sm font-bold">Instant Notifications</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Small Card -->
+                <div class="md:col-span-4 bento-card rounded-[3rem] p-12" data-aos="fade-up">
+                    <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-8">
+                        <i data-lucide="zap" class="w-7 h-7 text-accent"></i>
+                    </div>
+                    <h4 class="text-2xl font-black text-secondary mb-4 tracking-tighter">USSD Payments</h4>
+                    <p class="text-slate-500 font-medium">Integrated with TigoPesa, M-Pesa, and Airtel Money. Instant push-to-pay prompts for customers.</p>
+                </div>
+
+                <!-- Medium Card -->
+                <div class="md:col-span-8 bento-card rounded-[3rem] p-12 flex flex-col md:flex-row items-center gap-12" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex-1">
+                        <div class="w-14 h-14 bg-whatsapp/10 rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="printer" class="w-7 h-7 text-whatsapp"></i>
+                        </div>
+                        <h4 class="text-3xl font-black text-secondary mb-4 tracking-tighter">POS & Printer Ready</h4>
+                        <p class="text-slate-500 font-medium">Connect your thermal printers and POS systems. Orders print automatically in the kitchen as they arrive.</p>
+                    </div>
+                    <div class="flex-1 bg-slate-50 p-8 rounded-3xl border border-slate-100">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm">
+                                <span class="text-xs font-bold text-slate-600">Kitchen Printer</span>
+                                <span class="px-2 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-lg">CONNECTED</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white rounded-xl shadow-sm opacity-50">
+                                <span class="text-xs font-bold text-slate-600">Bar Printer</span>
+                                <span class="px-2 py-1 bg-slate-100 text-slate-400 text-[10px] font-black rounded-lg">OFFLINE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why TAPTAP Comparison -->
+    <section class="py-32 bg-[#F8FAFC]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">The Difference</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Traditional vs. TAPTAP</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm" data-aos="fade-right">
+                    <h4 class="text-2xl font-black text-slate-400 mb-10 uppercase tracking-widest">Traditional Dining</h4>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="x" class="w-4 h-4 text-red-500"></i>
+                            </div>
+                            <p class="text-slate-500 font-medium">Wait for waiter to bring the menu (5-10 mins)</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="x" class="w-4 h-4 text-red-500"></i>
+                            </div>
+                            <p class="text-slate-500 font-medium">Manual order taking (prone to errors)</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="x" class="w-4 h-4 text-red-500"></i>
+                            </div>
+                            <p class="text-slate-500 font-medium">Wait for the bill & payment machine (10-15 mins)</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-secondary p-12 rounded-[3rem] shadow-2xl relative overflow-hidden" data-aos="fade-left">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                    <h4 class="text-2xl font-black text-primary mb-10 uppercase tracking-widest">TAPTAP Experience</h4>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+                            </div>
+                            <p class="text-slate-300 font-medium">Instant menu access via QR Scan (3 seconds)</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+                            </div>
+                            <p class="text-slate-300 font-medium">Direct digital ordering to the kitchen</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+                            </div>
+                            <p class="text-slate-300 font-medium">Instant USSD payment at the table</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-32 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">Testimonials</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Loved by Restaurant Owners.</h3>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-10 bg-slate-50 rounded-[3rem] border border-slate-100" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex gap-1 mb-6">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    <p class="text-slate-600 font-medium italic mb-8">"TAPTAP has completely changed how we handle peak hours. Our waiters are less stressed and customers love the speed of WhatsApp ordering."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full"></div>
+                        <div>
+                            <p class="font-black text-secondary">John M.</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Owner, Samaki Samaki</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-10 bg-slate-50 rounded-[3rem] border border-slate-100" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex gap-1 mb-6">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    <p class="text-slate-600 font-medium italic mb-8">"The USSD payment integration is a game changer. No more carrying around POS machines or waiting for customers to find cash."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full"></div>
+                        <div>
+                            <p class="font-black text-secondary">Sarah K.</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Manager, Akemi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-10 bg-slate-50 rounded-[3rem] border border-slate-100" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex gap-1 mb-6">
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    <p class="text-slate-600 font-medium italic mb-8">"Setup was incredibly fast. We were up and running in less than 24 hours. The dashboard gives me insights I never had before."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-200 rounded-full"></div>
+                        <div>
+                            <p class="font-black text-secondary">David L.</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase">Founder, Cape Town Fish Market</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-32 bg-[#F8FAFC]">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">FAQ</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Got Questions?</h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <button class="w-full p-8 text-left flex justify-between items-center group" onclick="toggleFaq(this)">
+                        <span class="text-lg font-black text-secondary tracking-tight">Do customers need to download an app?</span>
+                        <i data-lucide="chevron-down" class="w-6 h-6 text-slate-400 group-hover:text-primary transition-all"></i>
+                    </button>
+                    <div class="hidden px-8 pb-8 text-slate-500 font-medium leading-relaxed">
+                        No! That's the magic of TAPTAP. Customers simply scan a QR code and it opens directly in WhatsApp, which they already have on their phone.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <button class="w-full p-8 text-left flex justify-between items-center group" onclick="toggleFaq(this)">
+                        <span class="text-lg font-black text-secondary tracking-tight">How do payments work?</span>
+                        <i data-lucide="chevron-down" class="w-6 h-6 text-slate-400 group-hover:text-primary transition-all"></i>
+                    </button>
+                    <div class="hidden px-8 pb-8 text-slate-500 font-medium leading-relaxed">
+                        We integrate with major mobile money providers (TigoPesa, M-Pesa, Airtel Money). When a customer clicks "Pay", they receive a USSD push prompt on their phone to enter their PIN.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <button class="w-full p-8 text-left flex justify-between items-center group" onclick="toggleFaq(this)">
+                        <span class="text-lg font-black text-secondary tracking-tight">Can I use my existing printers?</span>
+                        <i data-lucide="chevron-down" class="w-6 h-6 text-slate-400 group-hover:text-primary transition-all"></i>
+                    </button>
+                    <div class="hidden px-8 pb-8 text-slate-500 font-medium leading-relaxed">
+                        Yes! TAPTAP supports most standard thermal printers. Our system can automatically send orders to the kitchen and bar printers as soon as they are confirmed.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <button class="w-full p-8 text-left flex justify-between items-center group" onclick="toggleFaq(this)">
+                        <span class="text-lg font-black text-secondary tracking-tight">What if I have multiple branches?</span>
+                        <i data-lucide="chevron-down" class="w-6 h-6 text-slate-400 group-hover:text-primary transition-all"></i>
+                    </button>
+                    <div class="hidden px-8 pb-8 text-slate-500 font-medium leading-relaxed">
+                        Our Enterprise plan is built for multi-branch management. You can see consolidated reports or drill down into specific locations from a single master dashboard.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Bot Showcase -->
+    <section id="whatsapp-bot" class="py-32 bg-secondary relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] -mr-96 -mt-96"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-24 items-center">
+                <div data-aos="fade-right">
+                    <h2 class="text-whatsapp font-black tracking-[0.3em] uppercase text-xs mb-4">The Bot Experience</h2>
+                    <h3 class="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 leading-[0.9]">A Restaurant in <br/>their Pocket.</h3>
+                    <p class="text-slate-400 text-xl mb-12 leading-relaxed font-medium">Our WhatsApp bot isn't just a chat—it's a high-performance application. We use the latest WhatsApp Business API features to provide a visual, button-driven experience.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-6">
+                            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
+                                <i data-lucide="mouse-pointer-2" class="w-6 h-6 text-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xl font-bold text-white mb-1">Interactive Buttons</h5>
+                                <p class="text-slate-500">No typing required. Customers just tap buttons to choose categories and items.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6">
+                            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
+                                <i data-lucide="shopping-cart" class="w-6 h-6 text-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xl font-bold text-white mb-1">Smart Cart</h5>
+                                <p class="text-slate-500">Persistent cart management within the chat. Add, remove, or modify items easily.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-6">
+                            <div class="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
+                                <i data-lucide="bell" class="w-6 h-6 text-whatsapp"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-xl font-bold text-white mb-1">Live Status Updates</h5>
+                                <p class="text-slate-500">Customers get notified when their order is accepted, being prepared, and served.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative" data-aos="fade-left">
+                    <div class="max-w-[350px] mx-auto bg-[#0F172A] rounded-[3.5rem] p-4 border-[12px] border-slate-800 shadow-2xl">
+                        <div class="bg-[#E5DDD5] rounded-[2.5rem] overflow-hidden aspect-[9/19] relative flex flex-col">
+                            <!-- WhatsApp Header -->
+                            <div class="bg-[#075E54] p-4 pt-6 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                                    <i data-lucide="zap" class="w-6 h-6 text-[#075E54]"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-bold text-sm">TAPTAP Smart Bot</p>
+                                    <p class="text-[10px] text-white/70">Online</p>
+                                </div>
+                            </div>
+                            <!-- Chat Area -->
+                            <div class="flex-1 p-4 space-y-4 overflow-y-auto custom-scrollbar">
+                                <div class="whatsapp-bubble max-w-[85%] text-xs text-slate-800 font-medium">
+                                    Karibu Samaki Samaki! 🍽️<br>Tafadhali chagua unachotaka kufanya:
+                                </div>
+                                <div class="space-y-2">
+                                    <button class="w-full py-3 bg-white rounded-xl text-primary font-bold text-xs shadow-sm border border-primary/10">📖 Fungua Menu</button>
+                                    <button class="w-full py-3 bg-white rounded-xl text-slate-600 font-bold text-xs shadow-sm">🛒 Angalia Oda Yangu</button>
+                                    <button class="w-full py-3 bg-white rounded-xl text-slate-600 font-bold text-xs shadow-sm">💳 Lipia Bill</button>
+                                </div>
+                                <div class="whatsapp-bubble max-w-[85%] text-xs text-slate-800 font-medium">
+                                    Chagua Category:
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="py-3 bg-whatsapp text-white rounded-xl font-bold text-[10px]">🐟 Samaki</button>
+                                    <button class="py-3 bg-white text-slate-600 rounded-xl font-bold text-[10px]">🍗 Kuku</button>
+                                </div>
+                            </div>
+                            <!-- Input Area -->
+                            <div class="p-3 bg-white/80 backdrop-blur-md flex items-center gap-2">
+                                <div class="flex-1 h-10 bg-white rounded-full border border-slate-200"></div>
+                                <div class="w-10 h-10 bg-whatsapp rounded-full flex items-center justify-center">
+                                    <i data-lucide="send" class="w-5 h-5 text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Dining Intelligence -->
+    <section class="py-32 bg-[#0F172A] relative overflow-hidden">
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-primary/10 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="order-2 lg:order-1" data-aos="fade-right">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all">
+                            <div class="text-primary font-black text-4xl mb-2">AI</div>
+                            <h5 class="text-white font-bold mb-2">Smart Upselling</h5>
+                            <p class="text-slate-400 text-sm">The bot automatically suggests pairings and add-ons based on customer choices.</p>
+                        </div>
+                        <div class="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all mt-8">
+                            <div class="text-accent font-black text-4xl mb-2">Real</div>
+                            <h5 class="text-white font-bold mb-2">Time Sync</h5>
+                            <p class="text-slate-400 text-sm">Menu updates, out-of-stock items, and prices sync instantly across all devices.</p>
+                        </div>
+                        <div class="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all">
+                            <div class="text-whatsapp font-black text-4xl mb-2">Push</div>
+                            <h5 class="text-white font-bold mb-2">Marketing</h5>
+                            <p class="text-slate-400 text-sm">Re-engage customers with personalized offers directly in their WhatsApp inbox.</p>
+                        </div>
+                        <div class="bg-white/5 p-8 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-all mt-8">
+                            <div class="text-premium-gold font-black text-4xl mb-2">Data</div>
+                            <h5 class="text-white font-bold mb-2">Rich Insights</h5>
+                            <p class="text-slate-400 text-sm">Understand your peak hours, best-selling items, and customer preferences.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2" data-aos="fade-left">
+                    <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">Intelligence</h2>
+                    <h3 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-none">Not just a bot. <br/><span class="text-gradient">A Smart Partner.</span></h3>
+                    <p class="text-slate-400 text-xl mb-10 leading-relaxed font-medium">TAPTAP uses data-driven insights to help you sell more and waste less. Our system learns what your customers love and helps you serve them better.</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4 text-white font-bold">
+                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                            Automated stock management
+                        </li>
+                        <li class="flex items-center gap-4 text-white font-bold">
+                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                            Customer loyalty tracking
+                        </li>
+                        <li class="flex items-center gap-4 text-white font-bold">
+                            <div class="w-2 h-2 bg-primary rounded-full"></div>
+                            Dynamic pricing capabilities
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">Pricing</h2>
+                <h3 class="text-4xl md:text-5xl font-black text-secondary tracking-tighter mb-6">Simple, Transparent <br/>Plans for Everyone.</h3>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Basic -->
+                <div class="p-10 rounded-[3rem] border border-slate-100 hover:border-primary transition-all group" data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-xl font-bold text-slate-400 mb-2">Starter</h4>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-4xl font-black text-secondary">Free</span>
+                    </div>
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Up to 5 Tables
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Basic Menu Management
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            WhatsApp Ordering
+                        </li>
+                    </ul>
+                    <a href="{{ route('restaurant.register') }}" class="block w-full py-4 text-center rounded-2xl border-2 border-slate-100 font-bold text-secondary hover:bg-slate-50 transition-all">Get Started</a>
+                </div>
+
+                <!-- Pro -->
+                <div class="p-10 rounded-[3rem] bg-secondary text-white relative overflow-hidden shadow-2xl shadow-secondary/20 scale-105 z-10" data-aos="fade-up">
+                    <div class="absolute top-0 right-0 bg-primary px-6 py-2 rounded-bl-3xl text-xs font-black uppercase tracking-widest">Most Popular</div>
+                    <h4 class="text-xl font-bold text-slate-400 mb-2">Business</h4>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-sm font-bold text-slate-400">TZS</span>
+                        <span class="text-5xl font-black">49k</span>
+                        <span class="text-sm font-bold text-slate-400">/mo</span>
+                    </div>
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center gap-3 text-slate-300 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Unlimited Tables
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            USSD Payment Integration
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Advanced Analytics
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Priority Support
+                        </li>
+                    </ul>
+                    <a href="{{ route('restaurant.register') }}" class="block w-full py-4 text-center rounded-2xl bg-primary font-bold text-white hover:bg-white hover:text-primary transition-all shadow-lg shadow-primary/20">Go Pro Now</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="p-10 rounded-[3rem] border border-slate-100 hover:border-primary transition-all group" data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-xl font-bold text-slate-400 mb-2">Enterprise</h4>
+                    <div class="flex items-baseline gap-1 mb-8">
+                        <span class="text-4xl font-black text-secondary">Custom</span>
+                    </div>
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Multi-branch Support
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Custom API Integration
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-500 font-medium">
+                            <i data-lucide="check" class="w-5 h-5 text-primary"></i>
+                            Dedicated Account Manager
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full py-4 text-center rounded-2xl border-2 border-slate-100 font-bold text-secondary hover:bg-slate-50 transition-all">Contact Sales</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-32 bg-white">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <div class="bg-gradient-premium rounded-[4rem] p-16 md:p-24 relative overflow-hidden shadow-2xl shadow-secondary/30">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-                <div class="relative z-10">
-                    <h2 class="text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-none">Ready to scale your <br/><span class="text-primary">restaurant?</span></h2>
+    <section class="py-32 bg-[#F8FAFC]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="bg-primary rounded-[4rem] p-16 md:p-24 relative overflow-hidden shadow-2xl shadow-primary/30 text-center">
+                <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full -ml-48 -mb-48 blur-3xl"></div>
+                
+                <div class="relative z-10 max-w-3xl mx-auto">
+                    <h2 class="text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-none">Ready to transform your restaurant?</h2>
+                    <p class="text-primary-foreground/80 text-xl mb-12 font-medium text-white/80">Join the hundreds of restaurants already using TAPTAP to increase their revenue and delight their customers.</p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                        <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-12 py-6 bg-primary text-white rounded-3xl font-black text-2xl shadow-2xl shadow-primary/40 hover:bg-white hover:text-primary transition-all transform hover:-translate-y-2">
-                            Start Free Trial
+                        <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-12 py-6 bg-white text-primary rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition-all">
+                            Get Started for Free
                         </a>
-                        <a href="#" class="w-full sm:w-auto px-12 py-6 bg-white/5 text-white border border-white/10 rounded-3xl font-black text-xl hover:bg-white/10 transition-all">
+                        <a href="#" class="w-full sm:w-auto px-12 py-6 bg-primary-dark text-white border border-white/20 rounded-3xl font-black text-xl hover:bg-white/10 transition-all">
                             Talk to an Expert
                         </a>
                     </div>
@@ -341,28 +863,113 @@
     <!-- Footer -->
     <footer class="bg-white py-24 border-t border-slate-100">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center">
-                        <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="/" class="flex items-center gap-3 mb-8">
+                        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                            <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <span class="text-2xl font-black text-secondary tracking-tighter">TAP<span class="text-primary">TAP</span></span>
+                    </a>
+                    <p class="text-slate-500 font-medium leading-relaxed">The future of dining is here. Smart, seamless, and powered by WhatsApp.</p>
+                </div>
+                <div>
+                    <h5 class="font-black text-secondary uppercase tracking-widest text-xs mb-8">Product</h5>
+                    <ul class="space-y-4 text-slate-500 font-bold text-sm">
+                        <li><a href="#features" class="hover:text-primary transition-colors">Features</a></li>
+                        <li><a href="#how-it-works" class="hover:text-primary transition-colors">How it Works</a></li>
+                        <li><a href="#pricing" class="hover:text-primary transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">API Docs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-black text-secondary uppercase tracking-widest text-xs mb-8">Company</h5>
+                    <ul class="space-y-4 text-slate-500 font-bold text-sm">
+                        <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-black text-secondary uppercase tracking-widest text-xs mb-8">Connect</h5>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
                     </div>
-                    <span class="font-black text-2xl text-secondary tracking-tighter">TAP<span class="text-primary">TAP</span></span>
                 </div>
-                <div class="flex flex-wrap justify-center gap-10 text-slate-400 font-black uppercase tracking-widest text-[10px]">
-                    <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-primary transition-colors">Help Center</a>
-                    <a href="#" class="hover:text-primary transition-colors">API Docs</a>
-                </div>
-                <div class="text-slate-400 font-bold text-xs">
-                    &copy; {{ date('Y') }} TAPTAP. Built for the future of food.
+            </div>
+            <div class="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
+                <p class="text-slate-400 font-bold text-xs">&copy; {{ date('Y') }} TAPTAP. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">System Status: All Systems Operational</span>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Floating WhatsApp Support -->
+    <a href="https://wa.me/255XXXXXXXXX" class="fixed bottom-8 right-8 z-[100] w-16 h-16 bg-whatsapp text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all group">
+        <i data-lucide="message-circle" class="w-8 h-8 fill-white/20"></i>
+        <span class="absolute right-full mr-4 bg-white text-secondary px-4 py-2 rounded-xl text-xs font-black shadow-xl opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap border border-slate-100">Chat with Support</span>
+    </a>
+
     <script>
         lucide.createIcons();
+        AOS.init({
+            once: true,
+            offset: 100,
+        });
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+                icon.style.transition = 'all 0.3s ease';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2', 'shadow-xl');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('py-2', 'shadow-xl');
+                nav.classList.add('py-4');
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('flex');
+        });
+
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+        });
     </script>
 </body>
 </html>
