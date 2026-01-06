@@ -32,6 +32,13 @@ class DashboardController extends Controller
 
         // 3. Orders Ready to Serve (High priority)
         $readyToServeOrders = Order::where('status', 'ready')->count();
+
+        // 4. Unassigned Orders (Orders that need a waiter)
+        $unassignedOrders = Order::with('items.menuItem')
+            ->whereNull('waiter_id')
+            ->whereIn('status', ['pending', 'preparing', 'ready'])
+            ->latest()
+            ->get();
         
         // Customer Requests (All pending requests for the restaurant)
         $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->get();
@@ -54,10 +61,24 @@ class DashboardController extends Controller
             'myActiveOrders',
             'restaurantActiveOrders',
             'readyToServeOrders',
+            'unassignedOrders',
             'pendingRequests',
             'recentFeedback',
             'myOrders'
         ));
+    }
+
+    public function claimOrder($id)
+    {
+        $order = Order::findOrFail($id);
+        
+        if ($order->waiter_id) {
+            return back()->with('error', 'This order has already been claimed by another waiter.');
+        }
+
+        $order->update(['waiter_id' => Auth::id()]);
+
+        return back()->with('success', 'Order #' . $order->id . ' is now assigned to you!');
     }
 
     public function completeRequest($id)

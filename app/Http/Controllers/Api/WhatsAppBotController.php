@@ -364,4 +364,27 @@ class WhatsAppBotController extends Controller
             'data' => $tables
         ]);
     }
+    /**
+     * Call Waiter from Bot
+     */
+    public function callWaiter(Request $request)
+    {
+        $request->validate([
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'table_number' => 'required',
+            'type' => 'required|in:call_waiter,request_bill',
+        ]);
+
+        $customerRequest = CustomerRequest::withoutGlobalScopes()->create([
+            'restaurant_id' => $request->restaurant_id,
+            'table_number' => $request->table_number,
+            'type' => $request->type,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $request->type === 'request_bill' ? 'Bill request sent' : 'Waiter called successfully'
+        ]);
+    }
 }

@@ -159,6 +159,52 @@
             </section>
             @endif
 
+            <!-- Unassigned Orders (New) -->
+            @if($unassignedOrders->count() > 0)
+            <section id="unassigned-orders">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-white tracking-tight">Orders Needing Waiter</h3>
+                    <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-1 rounded-md border border-amber-500/20 uppercase tracking-widest">Action Required</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach($unassignedOrders as $order)
+                        <div class="glass-card p-5 rounded-2xl border border-white/5 card-hover group">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center font-bold text-white border border-white/10">
+                                        {{ $order->table_number }}
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white">Order #{{ $order->id }}</h4>
+                                        <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">{{ $order->created_at->diffForHumans() }}</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold text-white/60 bg-white/5 px-2 py-1 rounded-lg border border-white/10 uppercase tracking-widest">{{ $order->status }}</span>
+                            </div>
+                            
+                            <div class="space-y-2 mb-5">
+                                @foreach($order->items->take(2) as $item)
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-white/60">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    </div>
+                                @endforeach
+                                @if($order->items->count() > 2)
+                                    <p class="text-[10px] text-white/30 font-bold italic">+ {{ $order->items->count() - 2 }} more items</p>
+                                @endif
+                            </div>
+
+                            <form action="{{ route('waiter.orders.claim', $order->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full py-3 bg-white text-black rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-violet-500 hover:text-white transition-all shadow-lg shadow-white/5">
+                                    Claim Order
+                                </button>
+                            </form>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+            @endif
+
             <!-- Active Orders List -->
             <section>
                 <div class="flex items-center justify-between mb-4">

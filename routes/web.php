@@ -115,4 +115,5 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/tips', [\App\Http\Controllers\Waiter\DashboardController::class, 'tips'])->name('tips');
     Route::get('/ratings', [\App\Http\Controllers\Waiter\DashboardController::class, 'ratings'])->name('ratings');
     Route::post('/requests/{request}/complete', [\App\Http\Controllers\Waiter\DashboardController::class, 'completeRequest'])->name('requests.complete');
+    Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
 });
