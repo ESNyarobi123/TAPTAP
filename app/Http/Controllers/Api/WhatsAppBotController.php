@@ -376,6 +376,15 @@ class WhatsAppBotController extends Controller
      */
     public function callWaiter(Request $request)
     {
+        // Handle both 'type' and 'request_type' (from bot)
+        $type = $request->input('type') ?? $request->input('request_type');
+        
+        // Map bot values to DB values
+        if ($type === 'Call Waiter') $type = 'call_waiter';
+        if ($type === 'Request Bill') $type = 'request_bill';
+
+        $request->merge(['type' => $type]);
+
         $request->validate([
             'restaurant_id' => 'required|exists:restaurants,id',
             'table_number' => 'required',
@@ -392,6 +401,65 @@ class WhatsAppBotController extends Controller
         return response()->json([
             'success' => true,
             'message' => $request->type === 'request_bill' ? 'Bill request sent' : 'Waiter called successfully'
+        ]);
+    }
+
+    /**
+     * Get Waiters for a Restaurant
+     */
+    public function getWaiters($restaurantId)
+    {
+        $waiters = User::role('waiter')
+            ->where('restaurant_id', $restaurantId)
+            ->get(['id', 'name']);
+        return response()->json([
+            'success' => true,
+            'data' => $waiters
+        ]);
+    }
+
+    /**
+     * Get Active Order (Bill) for a Table
+     */
+    public function getActiveOrder(Request $request)
+    {
+        $request->validate([
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'table_number' => 'required',
+        ]);
+
+        $order = Order::withoutGlobalScopes()
+            ->where('restaurant_id', $request->restaurant_id)
+            ->where('table_number', $request->table_number)
+            ->whereIn('status', ['pending', 'preparing', 'ready'])
+            ->with(['items.menuItem' => function($query) {
+                $query->withoutGlobalScopes();
+            }])
+            ->latest()
+            ->first();
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active order found for this table'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'order_id' => $order->id,
+                'total' => $order->total_amount,
+                'status' => $order->status,
+                'items' => $order->items->map(function($item) {
+                    return [
+                        'name' => $item->menuItem->name,
+                        'quantity' => $item->quantity,
+                        'price' => $item->price,
+                        'subtotal' => $item->total
+                    ];
+                })
+            ]
         ]);
     }
 }
