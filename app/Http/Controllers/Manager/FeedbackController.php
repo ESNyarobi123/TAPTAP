@@ -11,11 +11,13 @@ class FeedbackController extends Controller
 {
     public function index()
     {
-        $feedbacks = Feedback::with('order')->latest()->paginate(10);
-        $avgRating = Feedback::avg('rating') ?? 0;
-        $totalReviews = Feedback::count();
+        $restaurantId = auth()->user()->restaurant_id;
+        $feedbacks = Feedback::with('order')->where('restaurant_id', $restaurantId)->latest()->paginate(10);
+        $avgRating = Feedback::where('restaurant_id', $restaurantId)->avg('rating') ?? 0;
+        $totalReviews = Feedback::where('restaurant_id', $restaurantId)->count();
         
-        $ratingBreakdown = Feedback::select('rating', DB::raw('count(*) as count'))
+        $ratingBreakdown = Feedback::where('restaurant_id', $restaurantId)
+            ->select('rating', DB::raw('count(*) as count'))
             ->groupBy('rating')
             ->pluck('count', 'rating')
             ->all();

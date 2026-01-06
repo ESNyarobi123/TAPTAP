@@ -82,6 +82,9 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/dashboard', [ManagerDashboard::class, 'index'])->name('dashboard');
     Route::get('/live-orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'index'])->name('orders.live');
+    Route::post('/orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'store'])->name('orders.store');
+    Route::put('/orders/{order}', [\App\Http\Controllers\Manager\LiveOrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [\App\Http\Controllers\Manager\LiveOrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/menu', [\App\Http\Controllers\Manager\MenuController::class, 'index'])->name('menu.index');
     Route::post('/menu', [\App\Http\Controllers\Manager\MenuController::class, 'store'])->name('menu.store');
     Route::put('/menu/{menuItem}', [\App\Http\Controllers\Manager\MenuController::class, 'update'])->name('menu.update');
