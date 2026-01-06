@@ -12,6 +12,8 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Activity;
 use App\Models\Table;
+use App\Models\Feedback;
+use App\Models\Tip;
 use Illuminate\Support\Facades\DB;
 
 class WhatsAppBotController extends Controller
