@@ -3,68 +3,70 @@
         My Service History
     </x-slot>
 
-    <div class="bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
-        <table class="w-full text-left">
-            <thead>
-                <tr class="bg-gray-50/50">
-                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Order Details</th>
-                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Items</th>
-                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total</th>
-                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse($orders as $order)
-                    <tr class="hover:bg-gray-50/30 transition-colors">
-                        <td class="px-10 py-8">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center font-black text-deep-blue">
-                                    #{{ $order->table_number }}
-                                </div>
-                                <div>
-                                    <p class="text-xs font-black text-deep-blue">Order #{{ $order->id }}</p>
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ $order->created_at->format('M d, H:i') }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-10 py-8">
-                            <div class="flex -space-x-3">
-                                @foreach($order->items->take(4) as $item)
-                                    <div class="w-10 h-10 rounded-2xl border-4 border-white bg-gray-100 flex items-center justify-center text-[10px] font-black text-deep-blue overflow-hidden shadow-sm">
-                                        @if($item->menuItem->image)
-                                            <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
-                                        @else
-                                            {{ substr($item->menuItem->name, 0, 1) }}
-                                        @endif
-                                    </div>
-                                @endforeach
-                                @if($order->items->count() > 4)
-                                    <div class="w-10 h-10 rounded-2xl border-4 border-white bg-deep-blue flex items-center justify-center text-[10px] font-black text-white shadow-sm">
-                                        +{{ $order->items->count() - 4 }}
-                                    </div>
-                                @endif
-                            </div>
-                        </td>
-                        <td class="px-10 py-8">
-                            <p class="font-black text-deep-blue">Tsh {{ number_format($order->total_amount) }}</p>
-                        </td>
-                        <td class="px-10 py-8">
-                            <span class="px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest 
-                                {{ $order->status == 'paid' ? 'bg-green-50 text-green-500' : 'bg-orange-50 text-orange-red' }}">
-                                {{ $order->status }}
-                            </span>
-                        </td>
+    <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-white/[0.02] border-b border-white/5">
+                        <th class="px-6 py-4 text-[10px] font-bold text-white/40 uppercase tracking-wider">Order Details</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-white/40 uppercase tracking-wider">Items</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-white/40 uppercase tracking-wider">Total</th>
+                        <th class="px-6 py-4 text-[10px] font-bold text-white/40 uppercase tracking-wider">Status</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="px-10 py-20 text-center">
-                            <p class="text-sm text-gray-400 font-bold uppercase tracking-widest">No orders found</p>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-        <div class="px-10 py-6 border-t border-gray-50">
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @forelse($orders as $order)
+                        <tr class="hover:bg-white/[0.02] transition-colors group">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center font-bold text-violet-400 border border-violet-500/20 group-hover:scale-110 transition-transform">
+                                        #{{ $order->table_number }}
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">Order #{{ $order->id }}</p>
+                                        <p class="text-[11px] font-medium text-white/40 uppercase tracking-wider">{{ $order->created_at->format('M d, H:i') }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="flex -space-x-2">
+                                    @foreach($order->items->take(4) as $item)
+                                        <div class="w-10 h-10 rounded-lg border-2 border-surface-900 bg-white/5 flex items-center justify-center text-[10px] font-bold text-white/60 overflow-hidden">
+                                            @if($item->menuItem->image)
+                                                <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
+                                            @else
+                                                {{ substr($item->menuItem->name, 0, 1) }}
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    @if($order->items->count() > 4)
+                                        <div class="w-10 h-10 rounded-lg border-2 border-surface-900 bg-gradient-to-br from-violet-600 to-cyan-600 flex items-center justify-center text-[10px] font-bold text-white">
+                                            +{{ $order->items->count() - 4 }}
+                                        </div>
+                                    @endif
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <p class="font-bold text-white">Tsh {{ number_format($order->total_amount) }}</p>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider 
+                                    {{ $order->status == 'paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/20 text-amber-400 border border-amber-500/20' }}">
+                                    {{ $order->status }}
+                                </span>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-16 text-center">
+                                <p class="text-sm text-white/40 font-medium">No orders found</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <div class="px-6 py-4 border-t border-white/5">
             {{ $orders->links() }}
         </div>
     </div>

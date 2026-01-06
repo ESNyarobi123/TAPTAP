@@ -4,89 +4,122 @@
     </x-slot>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <!-- Stat 1: Orders -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center group-hover:bg-orange-red transition-colors duration-300">
-                    <i data-lucide="shopping-cart" class="w-7 h-7 text-orange-red group-hover:text-white transition-colors"></i>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-violet-500/20 to-violet-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-violet-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                        </svg>
+                    </div>
+                    <span class="px-3 py-1.5 bg-violet-500/10 text-violet-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-violet-500/20">Today</span>
                 </div>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Orders Today</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ number_format($totalOrdersToday) }}</h3>
             </div>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Total Orders Today</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">{{ number_format($totalOrdersToday) }}</h3>
         </div>
 
         <!-- Stat 2: Revenue -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-deep-blue transition-colors duration-300">
-                    <i data-lucide="dollar-sign" class="w-7 h-7 text-deep-blue group-hover:text-white transition-colors"></i>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+                            <line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <span class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-cyan-500/20">Revenue</span>
                 </div>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Revenue Today</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">Tsh {{ number_format($revenueToday) }}</h3>
             </div>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Revenue Today</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">Tsh {{ number_format($revenueToday) }}</h3>
         </div>
 
         <!-- Stat 3: Rating -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-yellow-50 rounded-2xl flex items-center justify-center group-hover:bg-yellow-orange transition-colors duration-300">
-                    <i data-lucide="star" class="w-7 h-7 text-yellow-orange group-hover:text-white transition-colors"></i>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-xl flex items-center justify-center border border-amber-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <span class="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-amber-500/20">Rating</span>
                 </div>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Avg. Rating</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ number_format($avgRating, 1) }}/5.0</h3>
             </div>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Avg. Rating</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">{{ number_format($avgRating, 1) }}/5.0</h3>
         </div>
 
         <!-- Stat 4: Waiters -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center group-hover:bg-purple-600 transition-colors duration-300">
-                    <i data-lucide="users" class="w-7 h-7 text-purple-600 group-hover:text-white transition-colors"></i>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-emerald-500/20 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        Online
+                    </span>
                 </div>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Waiters Online</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $waitersOnline }} Active</h3>
             </div>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Waiters Online</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">{{ $waitersOnline }} Active</h3>
         </div>
     </div>
 
     <!-- Smart Live Order Tracking -->
-    <div class="mb-12">
-        <div class="flex items-center justify-between mb-8">
+    <div class="mb-10">
+        <div class="flex items-center justify-between mb-6">
             <div>
-                <h3 class="text-2xl font-black text-deep-blue tracking-tight">Live Order Tracking</h3>
-                <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Real-time kitchen & service status</p>
+                <h3 class="text-2xl font-bold text-white tracking-tight">Live Order Tracking</h3>
+                <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Real-time kitchen & service status</p>
             </div>
-            <div class="flex gap-4">
-                <button onclick="window.location.reload()" class="bg-white border border-gray-100 px-6 py-3 rounded-2xl font-bold text-gray-600 hover:border-orange-red transition-all flex items-center gap-2">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> Refresh
+            <div class="flex gap-3">
+                <button onclick="window.location.reload()" class="glass px-4 py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
+                    </svg>
+                    Refresh
                 </button>
-                <a href="{{ route('manager.orders.live') }}" class="bg-deep-blue text-white px-6 py-3 rounded-2xl font-bold hover:bg-orange-red transition-all flex items-center gap-2 shadow-lg shadow-deep-blue/20">
-                    <i data-lucide="maximize" class="w-4 h-4"></i> Full Screen
+                <a href="{{ route('manager.orders.live') }}" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    </svg>
+                    Full Screen
                 </a>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <!-- Pending Column -->
-            <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100">
-                <div class="flex items-center justify-between mb-6 px-2">
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center justify-between mb-5 px-1">
                     <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-orange-red rounded-full animate-pulse"></div>
-                        <h4 class="font-black text-deep-blue uppercase tracking-widest text-[10px]">Pending</h4>
+                        <div class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>
+                        <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Pending</h4>
                     </div>
-                    <span class="bg-orange-red/10 text-orange-red text-[10px] font-black px-2 py-0.5 rounded-full">{{ $pendingOrders->count() }}</span>
+                    <span class="bg-rose-500/10 text-rose-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-rose-500/20">{{ $pendingOrders->count() }}</span>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @forelse($pendingOrders->take(3) as $order)
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-xs font-black text-deep-blue">Table #{{ $order->table_number }}</span>
-                                <span class="text-[9px] font-bold text-gray-400">{{ $order->created_at->diffForHumans() }}</span>
+                        <div class="glass p-4 rounded-xl card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                                <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                             </div>
-                            <div class="flex -space-x-2 mb-4">
+                            <div class="flex -space-x-2 mb-3">
                                 @foreach($order->items->take(3) as $item)
-                                    <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center text-[10px] font-black text-deep-blue overflow-hidden" title="{{ $item->menuItem->name }}">
+                                    <div class="w-7 h-7 rounded-full border-2 border-surface-900 bg-white/10 flex items-center justify-center text-[9px] font-bold text-white overflow-hidden" title="{{ $item->menuItem->name }}">
                                         @if($item->menuItem->image)
                                             <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
                                         @else
@@ -95,119 +128,139 @@
                                     </div>
                                 @endforeach
                                 @if($order->items->count() > 3)
-                                    <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-50 flex items-center justify-center text-[8px] font-black text-gray-400">
+                                    <div class="w-7 h-7 rounded-full border-2 border-surface-900 bg-white/5 flex items-center justify-center text-[8px] font-bold text-white/50">
                                         +{{ $order->items->count() - 3 }}
                                     </div>
                                 @endif
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-[10px] font-black text-orange-red">Tsh {{ number_format($order->total_amount) }}</span>
-                                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i>
+                                <span class="text-[11px] font-bold text-rose-400">Tsh {{ number_format($order->total_amount) }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
                             </div>
                         </div>
                     @empty
-                        <div class="py-10 text-center">
-                            <i data-lucide="check-circle-2" class="w-8 h-8 text-gray-200 mx-auto mb-2"></i>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">All Clear</p>
+                        <div class="py-8 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20 mx-auto mb-2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-wider">All Clear</p>
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <!-- Preparing Column -->
-            <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100">
-                <div class="flex items-center justify-between mb-6 px-2">
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center justify-between mb-5 px-1">
                     <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-yellow-orange rounded-full animate-pulse"></div>
-                        <h4 class="font-black text-deep-blue uppercase tracking-widest text-[10px]">Preparing</h4>
+                        <div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                        <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Preparing</h4>
                     </div>
-                    <span class="bg-yellow-orange/10 text-yellow-orange text-[10px] font-black px-2 py-0.5 rounded-full">{{ $preparingOrders->count() }}</span>
+                    <span class="bg-amber-500/10 text-amber-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-amber-500/20">{{ $preparingOrders->count() }}</span>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @forelse($preparingOrders->take(3) as $order)
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-xs font-black text-deep-blue">Table #{{ $order->table_number }}</span>
-                                <div class="flex items-center gap-1">
-                                    <i data-lucide="clock" class="w-3 h-3 text-yellow-orange"></i>
-                                    <span class="text-[9px] font-bold text-yellow-orange">In Kitchen</span>
+                        <div class="glass p-4 rounded-xl card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                                <div class="flex items-center gap-1 text-amber-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    <span class="text-[10px] font-bold">In Kitchen</span>
                                 </div>
                             </div>
-                            <div class="w-full bg-gray-100 h-1.5 rounded-full mb-4 overflow-hidden">
-                                <div class="bg-yellow-orange h-full animate-pulse" style="width: 65%"></div>
+                            <div class="w-full bg-white/5 h-1.5 rounded-full mb-3 overflow-hidden">
+                                <div class="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full animate-pulse" style="width: 65%"></div>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-[10px] font-black text-deep-blue">{{ $order->items->count() }} Items</span>
-                                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i>
+                                <span class="text-[11px] font-bold text-white">{{ $order->items->count() }} Items</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
                             </div>
                         </div>
                     @empty
-                        <div class="py-10 text-center">
-                            <i data-lucide="utensils" class="w-8 h-8 text-gray-200 mx-auto mb-2"></i>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kitchen Empty</p>
+                        <div class="py-8 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20 mx-auto mb-2">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                            </svg>
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-wider">Kitchen Empty</p>
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <!-- Served Column -->
-            <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100">
-                <div class="flex items-center justify-between mb-6 px-2">
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center justify-between mb-5 px-1">
                     <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <h4 class="font-black text-deep-blue uppercase tracking-widest text-[10px]">Served</h4>
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Served</h4>
                     </div>
-                    <span class="bg-green-500/10 text-green-500 text-[10px] font-black px-2 py-0.5 rounded-full">{{ $servedOrders->count() }}</span>
+                    <span class="bg-emerald-500/10 text-emerald-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/20">{{ $servedOrders->count() }}</span>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @forelse($servedOrders->take(3) as $order)
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-xs font-black text-deep-blue">Table #{{ $order->table_number }}</span>
-                                <span class="bg-green-50 text-green-500 text-[8px] font-black px-2 py-0.5 rounded-full uppercase">Ready to Pay</span>
+                        <div class="glass p-4 rounded-xl card-hover">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                                <span class="bg-emerald-500/10 text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase border border-emerald-500/20">Ready to Pay</span>
                             </div>
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="w-8 h-8 bg-purple-50 rounded-xl flex items-center justify-center">
-                                    <i data-lucide="credit-card" class="w-4 h-4 text-purple-600"></i>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-7 h-7 bg-violet-500/20 rounded-lg flex items-center justify-center border border-violet-500/20">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                                        <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+                                    </svg>
                                 </div>
-                                <p class="text-[10px] font-bold text-gray-400">Waiting for payment</p>
+                                <p class="text-[11px] font-medium text-white/40">Waiting for payment</p>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-[10px] font-black text-deep-blue">Tsh {{ number_format($order->total_amount) }}</span>
-                                <i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i>
+                                <span class="text-[11px] font-bold text-white">Tsh {{ number_format($order->total_amount) }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
                             </div>
                         </div>
                     @empty
-                        <div class="py-10 text-center">
-                            <i data-lucide="smile" class="w-8 h-8 text-gray-200 mx-auto mb-2"></i>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">No Served Orders</p>
+                        <div class="py-8 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20 mx-auto mb-2">
+                                <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/>
+                            </svg>
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-wider">No Served Orders</p>
                         </div>
                     @endforelse
                 </div>
             </div>
 
             <!-- Paid Column -->
-            <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100">
-                <div class="flex items-center justify-between mb-6 px-2">
+            <div class="glass-card p-5 rounded-2xl">
+                <div class="flex items-center justify-between mb-5 px-1">
                     <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <h4 class="font-black text-deep-blue uppercase tracking-widest text-[10px]">Completed</h4>
+                        <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                        <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Completed</h4>
                     </div>
-                    <span class="bg-blue-500/10 text-blue-500 text-[10px] font-black px-2 py-0.5 rounded-full">{{ $paidOrders->count() }}</span>
+                    <span class="bg-cyan-500/10 text-cyan-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-cyan-500/20">{{ $paidOrders->count() }}</span>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     @forelse($paidOrders->take(3) as $order)
-                        <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 opacity-60">
+                        <div class="glass p-4 rounded-xl opacity-60">
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-black text-deep-blue">Table #{{ $order->table_number }}</span>
-                                <i data-lucide="check-circle-2" class="w-3 h-3 text-green-500"></i>
+                                <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
                             </div>
-                            <p class="text-[10px] font-bold text-gray-400">Completed {{ $order->updated_at->diffForHumans() }}</p>
+                            <p class="text-[11px] font-medium text-white/40">Completed {{ $order->updated_at->diffForHumans() }}</p>
                         </div>
                     @empty
-                        <div class="py-10 text-center">
-                            <i data-lucide="history" class="w-8 h-8 text-gray-200 mx-auto mb-2"></i>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">No History</p>
+                        <div class="py-8 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20 mx-auto mb-2">
+                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            <p class="text-[11px] font-bold text-white/40 uppercase tracking-wider">No History</p>
                         </div>
                     @endforelse
                 </div>
@@ -216,64 +269,66 @@
     </div>
 
     <!-- Recent Feedback & Messages -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Customer Feedback -->
-        <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-xl font-black text-deep-blue tracking-tight">Recent Feedback</h3>
-                <a href="{{ route('manager.feedback.index') }}" class="text-xs font-bold text-orange-red hover:underline">View All</a>
+        <div class="glass-card p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white tracking-tight">Recent Feedback</h3>
+                <a href="{{ route('manager.feedback.index') }}" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 uppercase tracking-wider">View All</a>
             </div>
-            <div class="space-y-6">
+            <div class="space-y-4">
                 @forelse($recentFeedback as $feedback)
-                    <div class="flex gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-all">
-                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center font-black text-orange-red">
+                    <div class="flex gap-4 p-4 glass rounded-xl card-hover">
+                        <div class="w-11 h-11 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center font-bold text-violet-400 border border-violet-500/20">
                             {{ substr($feedback->order->customer_name ?? 'C', 0, 1) }}
                         </div>
                         <div class="flex-1">
                             <div class="flex justify-between mb-1">
-                                <h5 class="font-bold text-deep-blue">{{ $feedback->order->customer_name ?? 'Customer' }}</h5>
-                                <div class="flex text-yellow-orange">
+                                <h5 class="font-semibold text-white">{{ $feedback->order->customer_name ?? 'Customer' }}</h5>
+                                <div class="flex text-amber-400">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <i data-lucide="star" class="w-3 h-3 {{ $i <= $feedback->rating ? 'fill-current' : '' }}"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="{{ $i <= $feedback->rating ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ $i <= $feedback->rating ? '' : 'text-white/20' }}">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
                                     @endfor
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-500 italic">"{{ $feedback->comment }}"</p>
+                            <p class="text-sm text-white/60 italic">"{{ $feedback->comment }}"</p>
                         </div>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No feedback yet</p>
+                    <p class="text-sm text-white/40 text-center py-8">No feedback yet</p>
                 @endforelse
             </div>
         </div>
 
         <!-- Waiter Performance / Tips -->
-        <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-gray-100">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-xl font-black text-deep-blue tracking-tight">Waiter Tips Today</h3>
-                <a href="{{ route('manager.tips.index') }}" class="text-xs font-bold text-orange-red hover:underline">View All</a>
+        <div class="glass-card p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white tracking-tight">Waiter Tips Today</h3>
+                <a href="{{ route('manager.tips.index') }}" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 uppercase tracking-wider">View All</a>
             </div>
-            <div class="space-y-6">
+            <div class="space-y-4">
                 @forelse($waiterTips as $tip)
-                    <div class="flex items-center justify-between p-4 rounded-2xl hover:bg-gray-50 transition-all">
+                    <div class="flex items-center justify-between p-4 glass rounded-xl card-hover">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center font-black text-purple-600">
+                            <div class="w-11 h-11 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center font-bold text-emerald-400 border border-emerald-500/20">
                                 {{ substr($tip->waiter->name, 0, 1) }}
                             </div>
                             <div>
-                                <h5 class="font-bold text-deep-blue">{{ $tip->waiter->name }}</h5>
-                                <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">Active Waiter</p>
+                                <h5 class="font-semibold text-white">{{ $tip->waiter->name }}</h5>
+                                <p class="text-[11px] text-white/40 font-medium uppercase tracking-wider">Active Waiter</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="font-black text-deep-blue">Tsh {{ number_format($tip->total_amount) }}</p>
+                            <p class="font-bold text-white">Tsh {{ number_format($tip->total_amount) }}</p>
                             @if($loop->first)
-                                <p class="text-[10px] font-bold text-green-500 uppercase tracking-widest">Top Earner</p>
+                                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Top Earner</p>
                             @endif
                         </div>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No tips recorded today</p>
+                    <p class="text-sm text-white/40 text-center py-8">No tips recorded today</p>
                 @endforelse
             </div>
         </div>

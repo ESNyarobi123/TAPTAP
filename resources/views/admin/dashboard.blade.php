@@ -6,62 +6,73 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <!-- Total Restaurants -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 card-shadow relative overflow-hidden group hover:border-blue-200 transition-all stat-card-blue">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform"></div>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-violet-500/20 to-violet-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
             <div class="relative z-10">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100 group-hover:scale-110 transition-transform">
-                        <i data-lucide="utensils" class="w-6 h-6 text-blue-600"></i>
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-violet-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                        </svg>
                     </div>
-                    <span class="px-3 py-1 bg-blue-100 text-blue-600 text-[9px] font-black rounded-full uppercase tracking-widest">Growth</span>
+                    <span class="px-3 py-1.5 bg-violet-500/10 text-violet-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-violet-500/20">Growth</span>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Restaurants</p>
-                <h3 class="text-4xl font-black text-slate-900 tracking-tighter">{{ $stats['total_restaurants'] }}</h3>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Restaurants</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['total_restaurants'] }}</h3>
             </div>
         </div>
 
         <!-- Active Orders -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 card-shadow relative overflow-hidden group hover:border-emerald-200 transition-all stat-card-emerald">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform"></div>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
             <div class="relative z-10">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center border border-emerald-100 group-hover:scale-110 transition-transform">
-                        <i data-lucide="shopping-bag" class="w-6 h-6 text-emerald-600"></i>
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center border border-emerald-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
                     </div>
-                    <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-[9px] font-black rounded-full uppercase tracking-widest">Live</span>
+                    <span class="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-emerald-500/20 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                        Live
+                    </span>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Active Orders</p>
-                <h3 class="text-4xl font-black text-slate-900 tracking-tighter">{{ $stats['active_orders'] }}</h3>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Active Orders</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['active_orders'] }}</h3>
             </div>
         </div>
 
         <!-- Total Revenue -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 card-shadow relative overflow-hidden group hover:border-purple-200 transition-all stat-card-purple">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform"></div>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
             <div class="relative z-10">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center border border-purple-100 group-hover:scale-110 transition-transform">
-                        <i data-lucide="banknote" class="w-6 h-6 text-purple-600"></i>
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+                            <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+                        </svg>
                     </div>
-                    <span class="px-3 py-1 bg-purple-100 text-purple-600 text-[9px] font-black rounded-full uppercase tracking-widest">Revenue</span>
+                    <span class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-cyan-500/20">Revenue</span>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Revenue</p>
-                <h3 class="text-4xl font-black text-slate-900 tracking-tighter">Tsh {{ number_format($stats['total_revenue'] / 1000, 1) }}K</h3>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Revenue</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">Tsh {{ number_format($stats['total_revenue'] / 1000, 1) }}K</h3>
             </div>
         </div>
 
         <!-- Pending Withdrawals -->
-        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 card-shadow relative overflow-hidden group hover:border-orange-200 transition-all stat-card-orange">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 opacity-50 group-hover:scale-110 transition-transform"></div>
+        <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
             <div class="relative z-10">
-                <div class="flex justify-between items-start mb-6">
-                    <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center border border-orange-100 group-hover:scale-110 transition-transform">
-                        <i data-lucide="wallet" class="w-6 h-6 text-orange-600"></i>
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-xl flex items-center justify-center border border-amber-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400">
+                            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+                        </svg>
                     </div>
-                    <span class="px-3 py-1 bg-orange-100 text-orange-600 text-[9px] font-black rounded-full uppercase tracking-widest">Pending</span>
+                    <span class="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-amber-500/20">Pending</span>
                 </div>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Withdrawals</p>
-                <h3 class="text-4xl font-black text-slate-900 tracking-tighter">{{ $stats['pending_withdrawals'] }}</h3>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Withdrawals</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['pending_withdrawals'] }}</h3>
             </div>
         </div>
     </div>
@@ -69,49 +80,53 @@
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Recent Restaurants Table -->
-        <div class="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-100 card-shadow overflow-hidden group">
-            <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-gradient-to-r from-white to-slate-50">
+        <div class="lg:col-span-2 glass-card rounded-2xl overflow-hidden">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center">
                 <div>
-                    <h3 class="text-xl font-black text-slate-900 tracking-tighter">Newest Partners</h3>
-                    <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-1">Recently registered restaurants</p>
+                    <h3 class="text-xl font-bold text-white tracking-tight">Newest Partners</h3>
+                    <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-wider mt-1">Recently registered restaurants</p>
                 </div>
-                <a href="{{ route('admin.restaurants.index') }}" class="px-4 py-2 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-600 hover:text-white transition-all">View All</a>
+                <a href="{{ route('admin.restaurants.index') }}" class="px-4 py-2 bg-violet-500/10 text-violet-400 text-[11px] font-bold uppercase tracking-wider rounded-xl hover:bg-violet-500 hover:text-white transition-all border border-violet-500/20 hover:border-violet-500">View All</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-slate-50/50">
-                            <th class="px-8 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-widest">Restaurant</th>
-                            <th class="px-8 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-widest">Location</th>
-                            <th class="px-8 py-4 text-left text-[9px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-                            <th class="px-8 py-4 text-right text-[9px] font-black text-slate-400 uppercase tracking-widest">Action</th>
+                        <tr class="bg-white/[0.02]">
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Restaurant</th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Location</th>
+                            <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-right text-[10px] font-bold text-white/40 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-50">
+                    <tbody class="divide-y divide-white/5">
                         @foreach($recent_restaurants as $restaurant)
-                        <tr class="hover:bg-blue-50/30 transition-all group/row">
-                            <td class="px-8 py-6">
+                        <tr class="hover:bg-white/[0.02] transition-all group">
+                            <td class="px-6 py-5">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl flex items-center justify-center text-blue-600 font-black text-sm border border-slate-100 group-hover/row:scale-110 transition-transform">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center text-violet-400 font-bold text-sm border border-violet-500/20 group-hover:scale-110 transition-transform">
                                         {{ substr($restaurant->name, 0, 1) }}
                                     </div>
-                                    <span class="text-sm font-bold text-slate-900">{{ $restaurant->name }}</span>
+                                    <span class="text-sm font-semibold text-white">{{ $restaurant->name }}</span>
                                 </div>
                             </td>
-                            <td class="px-8 py-6">
-                                <span class="text-xs font-medium text-slate-500 flex items-center gap-2">
-                                    <i data-lucide="map-pin" class="w-3 h-3 text-blue-400"></i>
+                            <td class="px-6 py-5">
+                                <span class="text-sm font-medium text-white/60 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+                                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+                                    </svg>
                                     {{ $restaurant->location }}
                                 </span>
                             </td>
-                            <td class="px-8 py-6">
-                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-full uppercase tracking-widest border border-emerald-100">
+                            <td class="px-6 py-5">
+                                <span class="px-3 py-1.5 {{ $restaurant->is_active ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20' }} text-[10px] font-bold rounded-full uppercase tracking-wider border">
                                     {{ $restaurant->is_active ? 'Active' : 'Blocked' }}
                                 </span>
                             </td>
-                            <td class="px-8 py-6 text-right">
-                                <a href="{{ route('admin.restaurants.show', $restaurant) }}" class="w-8 h-8 inline-flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
-                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <td class="px-6 py-5 text-right">
+                                <a href="{{ route('admin.restaurants.show', $restaurant) }}" class="w-8 h-8 inline-flex items-center justify-center rounded-lg bg-white/5 text-white/40 hover:bg-violet-500 hover:text-white transition-all border border-white/10 hover:border-violet-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m9 18 6-6-6-6"/>
+                                    </svg>
                                 </a>
                             </td>
                         </tr>
@@ -122,27 +137,31 @@
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white rounded-[2.5rem] border border-slate-100 card-shadow p-8 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mt-16 opacity-20"></div>
-            <h3 class="text-xl font-black text-slate-900 tracking-tighter mb-8 relative z-10">Recent Activity</h3>
-            <div class="space-y-8 relative z-10">
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
+            <h3 class="text-xl font-bold text-white tracking-tight mb-6 relative z-10">Recent Activity</h3>
+            <div class="space-y-5 relative z-10">
                 @forelse($recent_activities as $activity)
-                <div class="flex gap-4 relative group/act">
-                    <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100 group-hover/act:bg-blue-600 transition-all">
-                        <i data-lucide="activity" class="w-5 h-5 text-blue-600 group-hover/act:text-white"></i>
+                <div class="flex gap-4 relative group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center shrink-0 border border-violet-500/20 group-hover:bg-gradient-to-br group-hover:from-violet-600 group-hover:to-cyan-600 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400 group-hover:text-white">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-bold text-slate-900 leading-tight mb-1 group-hover/act:text-blue-600 transition-colors">{{ $activity->description }}</p>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ $activity->created_at->diffForHumans() }}</p>
+                        <p class="text-sm font-medium text-white leading-tight mb-1 group-hover:text-violet-400 transition-colors">{{ $activity->description }}</p>
+                        <p class="text-[11px] text-white/40 font-medium uppercase tracking-wider">{{ $activity->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
                 @empty
                 <div class="flex flex-col items-center justify-center py-12 text-center">
-                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mb-4 border-4 border-white shadow-inner">
-                        <i data-lucide="activity" class="w-10 h-10"></i>
+                    <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-white/20 mb-4 border border-white/5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
                     </div>
-                    <p class="text-sm font-bold text-slate-900">No recent activity</p>
-                    <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-1">System is quiet</p>
+                    <p class="text-sm font-semibold text-white/60">No recent activity</p>
+                    <p class="text-[11px] text-violet-400 font-medium uppercase tracking-wider mt-1">System is quiet</p>
                 </div>
                 @endforelse
             </div>

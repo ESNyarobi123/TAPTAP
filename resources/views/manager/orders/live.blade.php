@@ -1,187 +1,217 @@
 <x-manager-layout>
-    <div class="flex items-center justify-between mb-12">
+    <x-slot name="header">
+        Live Orders
+    </x-slot>
+
+    <div class="flex items-center justify-between mb-8">
         <div>
-            <h2 class="text-3xl font-black text-deep-blue tracking-tight">Live Orders</h2>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Real-time order management</p>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Live Orders</h2>
+            <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Real-time order management</p>
         </div>
-        <div class="flex gap-4">
-            <div class="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-xl border border-green-100">
-                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span class="text-xs font-black text-green-600 uppercase tracking-widest">Live Sync Active</span>
+        <div class="flex gap-3">
+            <div class="flex items-center gap-2 glass px-4 py-2.5 rounded-xl">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Live Sync Active</span>
             </div>
-            <button onclick="window.location.reload()" class="bg-white border border-gray-100 px-6 py-4 rounded-2xl font-bold text-gray-600 hover:border-orange-red transition-all flex items-center gap-2">
-                <i data-lucide="refresh-cw" class="w-5 h-5"></i> Refresh
+            <button onclick="window.location.reload()" class="glass px-5 py-3 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
+                </svg>
+                Refresh
             </button>
         </div>
     </div>
 
     <!-- Live Kanban Board -->
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <!-- Pending -->
-        <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100 min-h-[600px]">
-            <div class="flex items-center justify-between mb-8 px-2">
-                <h4 class="font-black text-deep-blue uppercase tracking-widest text-xs">Pending</h4>
-                <span class="bg-orange-red text-white text-[10px] font-black px-2.5 py-1 rounded-full">{{ $pendingOrders->count() }}</span>
+        <div class="glass-card p-5 rounded-2xl min-h-[500px]">
+            <div class="flex items-center justify-between mb-5 px-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Pending</h4>
+                </div>
+                <span class="bg-rose-500/20 text-rose-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-rose-500/20">{{ $pendingOrders->count() }}</span>
             </div>
-            <div class="space-y-6">
+            <div class="space-y-3">
                 @forelse($pendingOrders as $order)
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-orange-50 text-orange-red px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">Table #{{ $order->table_number }}</div>
-                            <span class="text-[10px] font-bold text-gray-400">{{ $order->created_at->diffForHumans() }}</span>
+                    <div class="glass p-4 rounded-xl card-hover group">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-rose-500/20">Table #{{ $order->table_number }}</span>
+                            <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
-                        <div class="space-y-2 mb-6">
+                        <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-bold text-deep-blue">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
-                                    <span class="text-gray-400">Tsh {{ number_format($item->total) }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="text-white/40">Tsh {{ number_format($item->total) }}</span>
                                 </div>
                             @endforeach
                         </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-                            <span class="font-black text-deep-blue">Tsh {{ number_format($order->total_amount) }}</span>
-                            <button class="bg-deep-blue text-white p-2 rounded-xl hover:bg-orange-red transition-all">
-                                <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                            <span class="font-bold text-white">Tsh {{ number_format($order->total_amount) }}</span>
+                            <button class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white p-2 rounded-lg hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No pending orders</p>
+                    <p class="text-sm text-white/30 text-center py-8">No pending orders</p>
                 @endforelse
             </div>
         </div>
 
         <!-- Preparing -->
-        <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100 min-h-[600px]">
-            <div class="flex items-center justify-between mb-8 px-2">
-                <h4 class="font-black text-deep-blue uppercase tracking-widest text-xs">Preparing</h4>
-                <span class="bg-yellow-orange text-white text-[10px] font-black px-2.5 py-1 rounded-full">{{ $preparingOrders->count() }}</span>
+        <div class="glass-card p-5 rounded-2xl min-h-[500px]">
+            <div class="flex items-center justify-between mb-5 px-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Preparing</h4>
+                </div>
+                <span class="bg-amber-500/20 text-amber-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-amber-500/20">{{ $preparingOrders->count() }}</span>
             </div>
-            <div class="space-y-6">
+            <div class="space-y-3">
                 @forelse($preparingOrders as $order)
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-yellow-50 text-yellow-orange px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">Table #{{ $order->table_number }}</div>
-                            <span class="text-[10px] font-bold text-gray-400">{{ $order->created_at->diffForHumans() }}</span>
+                    <div class="glass p-4 rounded-xl card-hover">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-amber-500/20">Table #{{ $order->table_number }}</span>
+                            <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
-                        <div class="space-y-2 mb-6">
+                        <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-bold text-deep-blue">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
-                                    <span class="text-gray-400">Tsh {{ number_format($item->total) }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="text-white/40">Tsh {{ number_format($item->total) }}</span>
                                 </div>
                             @endforeach
                         </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                        <div class="flex items-center justify-between pt-3 border-t border-white/5">
                             <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 bg-yellow-orange rounded-full animate-ping"></span>
-                                <span class="text-[10px] font-black text-yellow-orange uppercase tracking-widest">In Kitchen</span>
+                                <span class="w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping"></span>
+                                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">In Kitchen</span>
                             </div>
-                            <button class="bg-green-500 text-white p-2 rounded-xl hover:bg-deep-blue transition-all">
-                                <i data-lucide="check" class="w-4 h-4"></i>
+                            <button class="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-600 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
                             </button>
                         </div>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No orders in kitchen</p>
+                    <p class="text-sm text-white/30 text-center py-8">No orders in kitchen</p>
                 @endforelse
             </div>
         </div>
 
         <!-- Ready / Served -->
-        <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100 min-h-[600px]">
-            <div class="flex items-center justify-between mb-8 px-2">
-                <h4 class="font-black text-deep-blue uppercase tracking-widest text-xs">Served</h4>
-                <span class="bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full">{{ $servedOrders->count() }}</span>
+        <div class="glass-card p-5 rounded-2xl min-h-[500px]">
+            <div class="flex items-center justify-between mb-5 px-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Served</h4>
+                </div>
+                <span class="bg-emerald-500/20 text-emerald-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/20">{{ $servedOrders->count() }}</span>
             </div>
-            <div class="space-y-6">
+            <div class="space-y-3">
                 @forelse($servedOrders as $order)
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all group">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="bg-green-50 text-green-500 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">Table #{{ $order->table_number }}</div>
-                            <span class="text-[10px] font-bold text-gray-400">{{ $order->created_at->diffForHumans() }}</span>
+                    <div class="glass p-4 rounded-xl card-hover">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">Table #{{ $order->table_number }}</span>
+                            <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
-                        <div class="space-y-2 mb-6">
+                        <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-bold text-deep-blue">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
                                 </div>
                             @endforeach
                         </div>
                         <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})" 
-                                class="w-full bg-purple-600 text-white py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-purple-200 hover:bg-deep-blue transition-all">
+                                class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                             Process Payment
                         </button>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No served orders</p>
+                    <p class="text-sm text-white/30 text-center py-8">No served orders</p>
                 @endforelse
             </div>
         </div>
 
         <!-- Completed -->
-        <div class="bg-gray-50/50 p-6 rounded-[2.5rem] border border-gray-100 min-h-[600px]">
-            <div class="flex items-center justify-between mb-8 px-2">
-                <h4 class="font-black text-deep-blue uppercase tracking-widest text-xs">Completed</h4>
-                <span class="bg-blue-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full">{{ $paidOrders->count() }}</span>
+        <div class="glass-card p-5 rounded-2xl min-h-[500px]">
+            <div class="flex items-center justify-between mb-5 px-1">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Completed</h4>
+                </div>
+                <span class="bg-cyan-500/20 text-cyan-400 text-[11px] font-bold px-2.5 py-1 rounded-full border border-cyan-500/20">{{ $paidOrders->count() }}</span>
             </div>
-            <div class="space-y-6 opacity-60">
+            <div class="space-y-3 opacity-60">
                 @forelse($paidOrders as $order)
-                    <div class="bg-white p-6 rounded-3xl border border-gray-100">
+                    <div class="glass p-4 rounded-xl">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="text-[10px] font-black text-deep-blue">Table #{{ $order->table_number }}</span>
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+                            <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
                         </div>
-                        <p class="text-xs font-bold text-gray-400">Tsh {{ number_format($order->total_amount) }} • Paid</p>
+                        <p class="text-[11px] font-medium text-white/40">Tsh {{ number_format($order->total_amount) }} • Paid</p>
                     </div>
                 @empty
-                    <p class="text-xs text-gray-400 text-center py-8">No completed orders today</p>
+                    <p class="text-sm text-white/30 text-center py-8">No completed orders today</p>
                 @endforelse
             </div>
         </div>
     </div>
 
     <!-- Payment Modal -->
-    <div id="paymentModal" class="fixed inset-0 bg-deep-blue/40 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-md rounded-[3rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
-            <div class="p-10">
-                <div class="flex justify-between items-start mb-8">
+    <div id="paymentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-surface-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h3 class="text-2xl font-black text-deep-blue tracking-tight">Process Payment</h3>
-                        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">ZenoPay USSD Push</p>
+                        <h3 class="text-xl font-bold text-white tracking-tight">Process Payment</h3>
+                        <p class="text-sm font-medium text-white/40">ZenoPay USSD Push</p>
                     </div>
-                    <button onclick="closePaymentModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-all">
-                        <i data-lucide="x" class="w-6 h-6 text-gray-400"></i>
+                    <button onclick="closePaymentModal()" class="p-2 hover:bg-white/10 rounded-xl transition-all text-white/40 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        </svg>
                     </button>
                 </div>
 
-                <div class="bg-gray-50 p-6 rounded-3xl mb-8 flex justify-between items-center">
-                    <span class="font-bold text-gray-500">Total Amount</span>
-                    <span id="modalAmount" class="text-2xl font-black text-orange-red">Tsh 0</span>
+                <div class="glass p-5 rounded-xl mb-6 flex justify-between items-center">
+                    <span class="font-medium text-white/60">Total Amount</span>
+                    <span id="modalAmount" class="text-2xl font-bold text-white">Tsh 0</span>
                 </div>
 
-                <form id="zenoPayForm" class="space-y-6">
+                <form id="zenoPayForm" class="space-y-4">
                     <input type="hidden" id="modalOrderId">
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Customer Phone (07XXXXXXXX)</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Customer Phone (07XXXXXXXX)</label>
                         <input type="text" id="customerPhone" required placeholder="e.g. 0744963858" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                               class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Customer Name</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Customer Name</label>
                         <input type="text" id="customerName" required placeholder="e.g. John Doe" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                               class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
-                    <button type="submit" id="payButton" class="w-full bg-deep-blue text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-deep-blue/20 hover:bg-orange-red transition-all flex items-center justify-center gap-3">
-                        <i data-lucide="smartphone" class="w-6 h-6"></i> Send USSD Push
+                    <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
+                        </svg>
+                        Send USSD Push
                     </button>
                 </form>
 
-                <div id="pollingStatus" class="hidden mt-8 p-6 bg-blue-50 rounded-3xl border border-blue-100 text-center">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                        <p class="text-sm font-bold text-blue-900">Waiting for customer to enter PIN...</p>
-                        <p class="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Do not close this window</p>
+                <div id="pollingStatus" class="hidden mt-6 p-5 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-center">
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="w-8 h-8 border-3 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-sm font-semibold text-cyan-400">Waiting for customer to enter PIN...</p>
+                        <p class="text-[10px] text-white/40 font-medium uppercase tracking-wider">Do not close this window</p>
                     </div>
                 </div>
             </div>
@@ -196,7 +226,6 @@
             document.getElementById('modalAmount').innerText = 'Tsh ' + new Intl.NumberFormat().format(amount);
             document.getElementById('paymentModal').classList.remove('hidden');
             document.getElementById('paymentModal').classList.add('flex');
-            lucide.createIcons();
         }
 
         function closePaymentModal() {
@@ -215,8 +244,7 @@
             const name = document.getElementById('customerName').value;
 
             payButton.disabled = true;
-            payButton.innerHTML = '<i class="w-6 h-6 animate-spin" data-lucide="loader-2"></i> Processing...';
-            lucide.createIcons();
+            payButton.innerHTML = '<svg class="w-5 h-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
 
             try {
                 const response = await fetch('{{ route("manager.payments.zenopay.initiate") }}', {
@@ -229,7 +257,7 @@
                         order_id: orderId,
                         phone: phone,
                         name: name,
-                        email: 'customer@taptap.com' // Default email
+                        email: 'customer@taptap.com'
                     })
                 });
 
@@ -242,14 +270,12 @@
                 } else {
                     alert('Error: ' + (result.message || 'Failed to initiate payment'));
                     payButton.disabled = false;
-                    payButton.innerHTML = '<i data-lucide="smartphone" class="w-6 h-6"></i> Send USSD Push';
-                    lucide.createIcons();
+                    payButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Send USSD Push';
                 }
             } catch (error) {
                 alert('Connection error. Please try again.');
                 payButton.disabled = false;
-                payButton.innerHTML = '<i data-lucide="smartphone" class="w-6 h-6"></i> Send USSD Push';
-                lucide.createIcons();
+                payButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg> Send USSD Push';
             }
         });
 
@@ -267,7 +293,7 @@
                 } catch (error) {
                     console.error('Polling error:', error);
                 }
-            }, 5000); // Poll every 5 seconds
+            }, 5000);
         }
     </script>
 </x-manager-layout>

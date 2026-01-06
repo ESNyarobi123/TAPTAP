@@ -1,71 +1,84 @@
 <x-manager-layout>
-    <div class="mb-12">
-        <h2 class="text-3xl font-black text-deep-blue tracking-tight">QR & Mobile API</h2>
-        <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Connect your restaurant to the TAPTAP network</p>
+    <x-slot name="header">
+        QR & Mobile API
+    </x-slot>
+
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-white tracking-tight">QR & Mobile API</h2>
+        <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Connect your restaurant to the TAPTAP network</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- QR Code Generator -->
-        <div class="bg-white p-12 rounded-[3rem] shadow-sm border border-gray-100">
-            <div class="flex items-center gap-4 mb-10">
-                <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center">
-                    <i data-lucide="qr-code" class="w-6 h-6 text-orange-red"></i>
+        <div class="glass-card p-8 rounded-2xl">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center border border-violet-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                        <rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/>
+                    </svg>
                 </div>
-                <h3 class="text-2xl font-black text-deep-blue tracking-tight">Table QR Codes</h3>
+                <h3 class="text-xl font-bold text-white tracking-tight">Table QR Codes</h3>
             </div>
             
-            <div class="bg-gray-50 p-10 rounded-[2rem] flex flex-col items-center justify-center mb-8 border-2 border-dashed border-gray-200">
-                <div class="w-48 h-48 bg-white p-4 rounded-2xl shadow-xl mb-6 flex items-center justify-center">
-                    <!-- Placeholder for QR -->
-                    <i data-lucide="qr-code" class="w-32 h-32 text-deep-blue opacity-20"></i>
+            <div class="glass p-8 rounded-xl flex flex-col items-center justify-center mb-6 border border-dashed border-white/20">
+                <div class="w-40 h-40 bg-white p-3 rounded-xl shadow-xl mb-5 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-surface-900 opacity-30">
+                        <rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/>
+                    </svg>
                 </div>
-                <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Table #05 QR Code</p>
-                <button class="bg-deep-blue text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-red transition-all">Download PDF Pack</button>
+                <p class="text-sm font-medium text-white/40 uppercase tracking-wider mb-5">Table #05 QR Code</p>
+                <button class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Download PDF Pack</button>
             </div>
 
-            <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-                    <span class="font-bold text-deep-blue">Total Tables</span>
-                    <span class="font-black text-orange-red">24 Tables</span>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 glass rounded-xl">
+                    <span class="font-medium text-white/70">Total Tables</span>
+                    <span class="font-bold text-white">24 Tables</span>
                 </div>
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-                    <span class="font-bold text-deep-blue">Active Scans Today</span>
-                    <span class="font-black text-orange-red">156 Scans</span>
+                <div class="flex items-center justify-between p-4 glass rounded-xl">
+                    <span class="font-medium text-white/70">Active Scans Today</span>
+                    <span class="font-bold text-white">156 Scans</span>
                 </div>
             </div>
         </div>
 
         <!-- ZenoPay Integration -->
-        <div class="bg-white p-12 rounded-[3rem] shadow-sm border border-gray-100">
-            <div class="flex items-center gap-4 mb-10">
-                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
-                    <i data-lucide="smartphone" class="w-6 h-6 text-blue-600"></i>
+        <div class="glass-card p-8 rounded-2xl">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-cyan-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400">
+                        <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
+                    </svg>
                 </div>
-                <h3 class="text-2xl font-black text-deep-blue tracking-tight">ZenoPay Mobile Money</h3>
+                <h3 class="text-xl font-bold text-white tracking-tight">ZenoPay Mobile Money</h3>
             </div>
 
-            <form action="{{ route('manager.api.zenopay.update') }}" method="POST" class="space-y-8">
+            <form action="{{ route('manager.api.zenopay.update') }}" method="POST" class="space-y-6">
                 @csrf
                 <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4 block">ZenoPay API Key</label>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-3 block">ZenoPay API Key</label>
                     <div class="relative">
-                        <i data-lucide="key" class="w-5 h-5 absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                            <circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/>
+                        </svg>
                         <input type="password" name="zenopay_api_key" value="{{ $restaurant->zenopay_api_key }}" placeholder="Enter your ZenoPay API Key" 
-                               class="w-full pl-14 pr-6 py-5 bg-gray-50 border-none rounded-[1.5rem] font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                               class="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                 </div>
 
-                <div class="p-6 bg-blue-50 rounded-3xl border border-blue-100">
+                <div class="p-5 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
                     <div class="flex gap-4">
-                        <i data-lucide="info" class="w-6 h-6 text-blue-600 shrink-0"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400 shrink-0">
+                            <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                        </svg>
                         <div>
-                            <p class="text-xs font-bold text-blue-900 mb-1">How to get your API Key?</p>
-                            <p class="text-[10px] text-blue-700 leading-relaxed font-medium">Log in to your ZenoPay dashboard, go to Settings > API Keys, and copy your production key here. This enables USSD push payments for your customers.</p>
+                            <p class="text-sm font-semibold text-cyan-400 mb-1">How to get your API Key?</p>
+                            <p class="text-[11px] text-white/60 leading-relaxed">Log in to your ZenoPay dashboard, go to Settings > API Keys, and copy your production key here. This enables USSD push payments for your customers.</p>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-deep-blue text-white py-5 rounded-[1.5rem] font-black text-lg shadow-xl shadow-deep-blue/20 hover:bg-orange-red transition-all">
+                <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                     Save ZenoPay Settings
                 </button>
             </form>
@@ -73,39 +86,51 @@
     </div>
 
     <!-- API Access -->
-    <div class="bg-deep-blue p-12 rounded-[3rem] shadow-xl text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-orange-red/10 rounded-full blur-3xl"></div>
+    <div class="glass-card p-8 rounded-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded-full blur-3xl"></div>
         
-        <div class="flex items-center gap-4 mb-10 relative z-10">
-            <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                <i data-lucide="key" class="w-6 h-6 text-orange-red"></i>
+        <div class="flex items-center gap-4 mb-8 relative z-10">
+            <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-xl flex items-center justify-center border border-violet-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                    <circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/>
+                </svg>
             </div>
-            <h3 class="text-2xl font-black tracking-tight">Mobile API Access</h3>
+            <h3 class="text-xl font-bold text-white tracking-tight">Mobile API Access</h3>
         </div>
 
-        <p class="text-blue-100 mb-10 relative z-10 leading-relaxed">Use these credentials to connect your Node.js bot or custom mobile application to the TAPTAP API.</p>
+        <p class="text-white/60 mb-8 relative z-10 leading-relaxed">Use these credentials to connect your Node.js bot or custom mobile application to the TAPTAP API.</p>
 
-        <div class="space-y-6 relative z-10">
+        <div class="space-y-4 relative z-10">
             <div>
-                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Restaurant ID</label>
+                <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Restaurant ID</label>
                 <div class="flex gap-2">
-                    <input type="text" readonly value="RES-{{ Auth::user()->restaurant_id }}-TAPTAP" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm">
-                    <button class="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                    <input type="text" readonly value="RES-{{ Auth::user()->restaurant_id }}-TAPTAP" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm text-white">
+                    <button class="p-3 glass rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div>
-                <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">API Secret Token</label>
+                <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">API Secret Token</label>
                 <div class="flex gap-2">
-                    <input type="password" readonly value="••••••••••••••••••••••••" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm">
-                    <button class="p-3 bg-white/10 rounded-xl hover:bg-white/20 transition-all"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                    <input type="password" readonly value="••••••••••••••••••••••••" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm text-white">
+                    <button class="p-3 glass rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="mt-12 p-6 bg-orange-red/20 rounded-2xl border border-orange-red/30 relative z-10">
+        <div class="mt-8 p-5 bg-rose-500/10 rounded-xl border border-rose-500/20 relative z-10">
             <div class="flex gap-4">
-                <i data-lucide="alert-circle" class="w-6 h-6 text-orange-red shrink-0"></i>
-                <p class="text-xs font-bold leading-relaxed">Keep your API keys secret. Anyone with these keys can manage your restaurant orders and menu.</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-rose-400 shrink-0">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+                </svg>
+                <p class="text-sm font-medium text-white/80">Keep your API keys secret. Anyone with these keys can manage your restaurant orders and menu.</p>
             </div>
         </div>
     </div>

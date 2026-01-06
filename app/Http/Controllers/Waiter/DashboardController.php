@@ -23,10 +23,17 @@ class DashboardController extends Controller
         $tipsToday = Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount');
         $tipsThisWeek = Tip::where('waiter_id', $waiter->id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
 
-        // Orders
-        $activeOrders = Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'served'])->count();
+        // Orders Stats
+        // 1. My Active Orders (Assigned to me)
+        $myActiveOrders = Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count();
         
-        // Customer Requests
+        // 2. All Active Restaurant Orders (To show workload)
+        $restaurantActiveOrders = Order::whereIn('status', ['pending', 'preparing', 'ready'])->count();
+
+        // 3. Orders Ready to Serve (High priority)
+        $readyToServeOrders = Order::where('status', 'ready')->count();
+        
+        // Customer Requests (All pending requests for the restaurant)
         $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->get();
 
         // Recent Feedback
@@ -34,7 +41,7 @@ class DashboardController extends Controller
             $query->where('waiter_id', $waiter->id);
         })->latest()->take(5)->get();
 
-        // My Orders Today
+        // My Orders Today (History)
         $myOrders = Order::with('items.menuItem')
             ->where('waiter_id', $waiter->id)
             ->whereDate('created_at', $today)
@@ -44,7 +51,9 @@ class DashboardController extends Controller
         return view('waiter.dashboard', compact(
             'tipsToday',
             'tipsThisWeek',
-            'activeOrders',
+            'myActiveOrders',
+            'restaurantActiveOrders',
+            'readyToServeOrders',
             'pendingRequests',
             'recentFeedback',
             'myOrders'

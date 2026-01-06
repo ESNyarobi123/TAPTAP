@@ -3,175 +3,214 @@
         Dashboard
     </x-slot>
 
-    <!-- Quick Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        <!-- Tips Today -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center group-hover:bg-orange-red transition-colors duration-300">
-                    <i data-lucide="coins" class="w-7 h-7 text-orange-red group-hover:text-white transition-colors"></i>
+    <!-- Welcome Hero -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-white tracking-tight">Hello, {{ Auth::user()->name }}! 👋</h2>
+        <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
+    </div>
+
+    <!-- Bento Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        
+        <!-- 1. Tips Card -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600 to-orange-700 p-5 text-white shadow-lg shadow-amber-500/20 group card-hover">
+            <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 transition-transform duration-500 group-hover:scale-150"></div>
+            <div class="absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-white/5 transition-transform duration-700 group-hover:scale-150"></div>
+            <div class="relative z-10 flex flex-col justify-between h-full">
+                <div class="flex items-start justify-between">
+                    <div class="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>
+                        </svg>
+                    </div>
+                    <span class="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">Today</span>
                 </div>
-                <span class="text-[10px] font-black text-green-500 bg-green-50 px-2 py-1 rounded-lg">+12%</span>
+                <div class="mt-4">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-amber-100/80">Total Tips</p>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight">Tsh {{ number_format($tipsToday) }}</h3>
+                </div>
             </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Tips Today</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">Tsh {{ number_format($tipsToday) }}</h3>
         </div>
 
-        <!-- Active Orders -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
-                    <i data-lucide="shopping-bag" class="w-7 h-7 text-blue-600 group-hover:text-white transition-colors"></i>
-                </div>
-                <span class="text-[10px] font-black text-blue-500 bg-blue-50 px-2 py-1 rounded-lg">Live</span>
-            </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Active Orders</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">{{ $activeOrders }}</h3>
-        </div>
-
-        <!-- Pending Requests -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center group-hover:bg-red-500 transition-colors duration-300">
-                    <i data-lucide="bell" class="w-7 h-7 text-red-500 group-hover:text-white transition-colors"></i>
-                </div>
-                @if($pendingRequests->count() > 0)
-                    <span class="flex h-3 w-3 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+        <!-- 2. Active Orders -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-700 p-5 text-white shadow-lg shadow-violet-500/20 group card-hover">
+            <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 transition-transform duration-500 group-hover:scale-150"></div>
+            <div class="absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-white/5 transition-transform duration-700 group-hover:scale-150"></div>
+            <div class="relative z-10 flex flex-col justify-between h-full">
+                <div class="flex items-start justify-between">
+                    <div class="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <span class="rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-sm flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                        Live
                     </span>
-                @endif
-            </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Customer Calls</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">{{ $pendingRequests->count() }}</h3>
-        </div>
-
-        <!-- Weekly Tips -->
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-6">
-                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center group-hover:bg-purple-600 transition-colors duration-300">
-                    <i data-lucide="trending-up" class="w-7 h-7 text-purple-600 group-hover:text-white transition-colors"></i>
+                </div>
+                <div class="mt-4">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-violet-100/80">My Orders</p>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $myActiveOrders }}</h3>
                 </div>
             </div>
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">This Week</p>
-            <h3 class="text-3xl font-black text-deep-blue tracking-tight">Tsh {{ number_format($tipsThisWeek) }}</h3>
+        </div>
+
+        <!-- 3. Ready to Serve -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 p-5 text-white shadow-lg shadow-emerald-500/20 group card-hover">
+            <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 transition-transform duration-500 group-hover:scale-150"></div>
+            <div class="absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-white/5 transition-transform duration-700 group-hover:scale-150"></div>
+            <div class="relative z-10 flex flex-col justify-between h-full">
+                <div class="flex items-start justify-between">
+                    <div class="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
+                        </svg>
+                    </div>
+                    @if($readyToServeOrders > 0)
+                        <span class="flex h-3 w-3 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                        </span>
+                    @endif
+                </div>
+                <div class="mt-4">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-100/80">Ready Now</p>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $readyToServeOrders }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Pending Calls -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 p-5 text-white shadow-lg shadow-rose-500/20 group card-hover">
+            <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/10 transition-transform duration-500 group-hover:scale-150"></div>
+            <div class="absolute -bottom-10 -left-10 h-24 w-24 rounded-full bg-white/5 transition-transform duration-700 group-hover:scale-150"></div>
+            <div class="relative z-10 flex flex-col justify-between h-full">
+                <div class="flex items-start justify-between">
+                    <div class="rounded-xl bg-white/20 p-2.5 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                        </svg>
+                    </div>
+                    @if($pendingRequests->count() > 0)
+                        <span class="flex h-3 w-3 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                        </span>
+                    @endif
+                </div>
+                <div class="mt-4">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-rose-100/80">Calls</p>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $pendingRequests->count() }}</h3>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <!-- Main Content (Left) -->
-        <div class="lg:col-span-2 space-y-12">
-            <!-- Customer Requests Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Left Column: Active Orders & Requests -->
+        <div class="xl:col-span-2 space-y-6">
+            
+            <!-- Urgent Requests -->
+            @if($pendingRequests->count() > 0)
             <section id="requests">
-                <div class="flex items-center justify-between mb-8">
-                    <div>
-                        <h3 class="text-2xl font-black text-deep-blue tracking-tight">Urgent Requests</h3>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Customers waiting for attention</p>
-                    </div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-white tracking-tight">Urgent Attention Needed</h3>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @forelse($pendingRequests as $request)
-                        <div class="bg-white p-8 rounded-[3rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all group relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-orange-red/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
-                            
-                            <div class="flex justify-between items-start mb-6 relative z-10">
-                                <div class="w-16 h-16 {{ $request->type == 'request_bill' ? 'bg-blue-50' : 'bg-orange-50' }} rounded-[1.5rem] flex items-center justify-center">
-                                    <i data-lucide="{{ $request->type == 'request_bill' ? 'receipt' : 'bell-ring' }}" class="w-8 h-8 {{ $request->type == 'request_bill' ? 'text-blue-600' : 'text-orange-red' }} {{ $request->type != 'request_bill' ? 'animate-bounce' : '' }}"></i>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach($pendingRequests as $request)
+                        <div class="relative overflow-hidden rounded-2xl glass-card p-5 border {{ $request->type == 'request_bill' ? 'border-violet-500/20' : 'border-rose-500/20' }} card-hover">
+                            <div class="absolute -top-10 -right-10 w-24 h-24 {{ $request->type == 'request_bill' ? 'bg-violet-500/10' : 'bg-rose-500/10' }} rounded-full blur-2xl"></div>
+                            <div class="flex items-start justify-between mb-4 relative z-10">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex h-11 w-11 items-center justify-center rounded-xl {{ $request->type == 'request_bill' ? 'bg-violet-500/20 text-violet-400 border border-violet-500/20' : 'bg-rose-500/20 text-rose-400 border border-rose-500/20' }}">
+                                        @if($request->type == 'request_bill')
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+                                            </svg>
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="animate-bounce">
+                                                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M22 8c0-2.3-.8-4.3-2-6"/>
+                                            </svg>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <h4 class="text-lg font-bold text-white">Table #{{ $request->table_number }}</h4>
+                                        <p class="text-[10px] font-medium uppercase tracking-widest text-white/40">{{ $request->created_at->diffForHumans() }}</p>
+                                    </div>
                                 </div>
-                                <span class="text-[10px] font-black text-gray-300 bg-gray-50 px-3 py-1 rounded-full uppercase">{{ $request->created_at->diffForHumans() }}</span>
                             </div>
-
-                            <div class="relative z-10 mb-8">
-                                <h4 class="text-3xl font-black text-deep-blue mb-1">Table #{{ $request->table_number }}</h4>
-                                <p class="text-sm font-bold {{ $request->type == 'request_bill' ? 'text-blue-500' : 'text-orange-red' }} uppercase tracking-widest">
-                                    {{ $request->type == 'request_bill' ? 'Requesting Bill' : 'Calling Waiter' }}
+                            <div class="mb-5 relative z-10">
+                                <p class="text-sm font-semibold {{ $request->type == 'request_bill' ? 'text-violet-400' : 'text-rose-400' }}">
+                                    {{ $request->type == 'request_bill' ? 'Requesting Bill Payment' : 'Calling for Waiter Assistance' }}
                                 </p>
                             </div>
-
                             <form action="{{ route('waiter.requests.complete', $request->id) }}" method="POST" class="relative z-10">
                                 @csrf
-                                <button type="submit" class="w-full bg-deep-blue text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-orange-red transition-all shadow-lg shadow-deep-blue/10 flex items-center justify-center gap-3">
-                                    <i data-lucide="check" class="w-4 h-4"></i> Mark as Attended
+                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 py-3 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:shadow-lg hover:shadow-violet-500/25">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 6 9 17l-5-5"/>
+                                    </svg>
+                                    Mark Done
                                 </button>
                             </form>
                         </div>
-                    @empty
-                        <div class="col-span-full bg-gray-50/30 border-2 border-dashed border-gray-100 rounded-[3rem] py-20 text-center">
-                            <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-                                <i data-lucide="coffee" class="w-10 h-10 text-gray-200"></i>
-                            </div>
-                            <h4 class="text-xl font-black text-gray-300">No pending requests</h4>
-                            <p class="text-sm text-gray-400 font-medium">All tables are currently served!</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
             </section>
+            @endif
 
-            <!-- My Orders Section -->
+            <!-- Active Orders List -->
             <section>
-                <div class="flex items-center justify-between mb-8">
-                    <div>
-                        <h3 class="text-2xl font-black text-deep-blue tracking-tight">My Orders Today</h3>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Your service history for today</p>
-                    </div>
-                    <a href="#" class="bg-white px-6 py-3 rounded-xl border border-gray-100 text-xs font-black text-deep-blue hover:border-orange-red transition-all">View All History</a>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-white tracking-tight">Active Orders</h3>
+                    <a href="{{ route('waiter.orders') }}" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 uppercase tracking-widest">View All</a>
                 </div>
-
-                <div class="bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+                
+                <div class="rounded-2xl glass-card overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead>
-                                <tr class="bg-gray-50/50">
-                                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Table</th>
-                                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Items</th>
-                                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Amount</th>
-                                    <th class="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
+                            <thead class="bg-white/[0.02]">
+                                <tr>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Table</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Order Info</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Status</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Total</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-50">
+                            <tbody class="divide-y divide-white/5">
                                 @forelse($myOrders as $order)
-                                    <tr class="hover:bg-gray-50/30 transition-colors group">
-                                        <td class="px-10 py-8">
-                                            <div class="flex items-center gap-4">
-                                                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center font-black text-deep-blue group-hover:bg-deep-blue group-hover:text-white transition-all">
-                                                    #{{ $order->table_number }}
-                                                </div>
-                                                <span class="text-[10px] font-bold text-gray-300">{{ $order->created_at->format('H:i') }}</span>
+                                    <tr class="group hover:bg-white/[0.02] transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 font-bold text-violet-400 transition-all group-hover:from-violet-600 group-hover:to-cyan-600 group-hover:text-white text-sm border border-violet-500/20 group-hover:border-transparent">
+                                                {{ $order->table_number }}
                                             </div>
                                         </td>
-                                        <td class="px-10 py-8">
-                                            <div class="flex -space-x-3">
-                                                @foreach($order->items->take(4) as $item)
-                                                    <div class="w-10 h-10 rounded-2xl border-4 border-white bg-gray-100 flex items-center justify-center text-[10px] font-black text-deep-blue overflow-hidden shadow-sm" title="{{ $item->menuItem->name }}">
-                                                        @if($item->menuItem->image)
-                                                            <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
-                                                        @else
-                                                            {{ substr($item->menuItem->name, 0, 1) }}
-                                                        @endif
-                                                    </div>
-                                                @endforeach
-                                                @if($order->items->count() > 4)
-                                                    <div class="w-10 h-10 rounded-2xl border-4 border-white bg-deep-blue flex items-center justify-center text-[10px] font-black text-white shadow-sm">
-                                                        +{{ $order->items->count() - 4 }}
-                                                    </div>
-                                                @endif
+                                        <td class="px-6 py-4">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-white">Order #{{ $order->id }}</span>
+                                                <span class="text-[10px] font-medium text-white/40">{{ $order->items->count() }} Items • {{ $order->created_at->format('H:i') }}</span>
                                             </div>
                                         </td>
-                                        <td class="px-10 py-8">
-                                            <p class="font-black text-deep-blue">Tsh {{ number_format($order->total_amount) }}</p>
-                                        </td>
-                                        <td class="px-10 py-8">
-                                            <span class="px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest 
-                                                {{ $order->status == 'paid' ? 'bg-green-50 text-green-500' : 'bg-orange-50 text-orange-red' }}">
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest 
+                                                {{ $order->status == 'ready' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 
+                                                  ($order->status == 'served' ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20') }}">
                                                 {{ $order->status }}
                                             </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="font-bold text-sm text-white">Tsh {{ number_format($order->total_amount) }}</span>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-10 py-20 text-center">
-                                            <p class="text-sm text-gray-400 font-bold uppercase tracking-widest">No orders taken yet today</p>
+                                        <td colspan="4" class="py-12 text-center">
+                                            <div class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white/5 border border-white/5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20">
+                                                    <path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/>
+                                                </svg>
+                                            </div>
+                                            <p class="text-sm font-semibold text-white/50">No active orders</p>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -182,97 +221,64 @@
             </section>
         </div>
 
-        <!-- Sidebar Content (Right) -->
-        <div class="space-y-12">
-            <!-- Earnings Card -->
-            <div class="bg-deep-blue p-10 rounded-[3.5rem] shadow-2xl shadow-deep-blue/40 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-orange-red/20 rounded-full blur-[80px] -mr-32 -mt-32"></div>
-                <div class="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] -ml-24 -mb-24"></div>
+        <!-- Right Column: Stats & Pulse -->
+        <div class="space-y-6">
+            <!-- Restaurant Pulse (Dark Card) -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-surface-900 to-surface-800 p-6 text-white shadow-xl border border-white/5">
+                <div class="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-violet-500/10 blur-3xl"></div>
+                <div class="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-cyan-500/10 blur-3xl"></div>
                 
                 <div class="relative z-10">
-                    <div class="flex justify-between items-center mb-10">
-                        <h3 class="text-xl font-black tracking-tight">Earnings Summary</h3>
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
-                            <i data-lucide="wallet" class="w-5 h-5 text-blue-300"></i>
-                        </div>
+                    <div class="mb-6 flex items-center justify-between">
+                        <h3 class="text-lg font-bold tracking-tight">Restaurant Pulse</h3>
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
                     </div>
                     
-                    <div class="space-y-10">
-                        <div>
-                            <p class="text-[10px] font-black text-blue-300/60 uppercase tracking-[0.2em] mb-2">Today's Tips</p>
-                            <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-black">Tsh {{ number_format($tipsToday) }}</span>
-                                <span class="text-xs font-bold text-green-400">Good job!</span>
-                            </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/5">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Orders</p>
+                            <p class="mt-1 text-2xl font-bold">{{ $restaurantActiveOrders }}</p>
                         </div>
-                        
-                        <div class="h-px bg-white/10"></div>
-                        
-                        <div>
-                            <p class="text-[10px] font-black text-blue-300/60 uppercase tracking-[0.2em] mb-6">Weekly Performance</p>
-                            <div class="flex items-end gap-3 h-32">
-                                @foreach([30, 50, 40, 80, 60, 90, 70] as $height)
-                                    <div class="flex-1 bg-white/10 rounded-t-xl hover:bg-orange-red transition-all cursor-pointer group relative" style="height: {{ $height }}%">
-                                        <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-deep-blue text-[9px] font-black px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-xl whitespace-nowrap">
-                                            Tsh {{ number_format($height * 200) }}
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="flex justify-between mt-4">
-                                <span class="text-[8px] font-black text-blue-400 uppercase tracking-widest">Mon</span>
-                                <span class="text-[8px] font-black text-blue-400 uppercase tracking-widest">Sun</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/5 p-6 rounded-[2rem] border border-white/10 flex justify-between items-center">
-                            <div>
-                                <p class="text-[9px] font-black text-blue-300/60 uppercase tracking-widest mb-1">Total This Week</p>
-                                <p class="text-2xl font-black">Tsh {{ number_format($tipsThisWeek) }}</p>
-                            </div>
-                            <div class="w-12 h-12 bg-orange-red rounded-2xl flex items-center justify-center shadow-lg shadow-orange-red/20">
-                                <i data-lucide="arrow-up-right" class="w-6 h-6"></i>
-                            </div>
+                        <div class="rounded-xl bg-gradient-to-br from-violet-600 to-cyan-600 p-4 shadow-lg shadow-violet-500/20">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-white/80">Ready</p>
+                            <p class="mt-1 text-2xl font-bold">{{ $readyToServeOrders }}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Ratings Section -->
-            <div class="bg-white p-10 rounded-[3.5rem] shadow-sm border border-gray-100">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-xl font-black text-deep-blue tracking-tight">Customer Ratings</h3>
-                    <div class="flex items-center gap-1 text-yellow-orange">
-                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                        <span class="text-sm font-black">4.8</span>
+            <!-- Recent Ratings -->
+            <div class="rounded-2xl glass-card p-6">
+                <div class="mb-5 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white tracking-tight">Recent Feedback</h3>
+                    <div class="flex items-center gap-1.5 rounded-lg bg-amber-500/10 px-2.5 py-1.5 text-amber-400 border border-amber-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        <span class="text-sm font-bold">4.8</span>
                     </div>
                 </div>
-                
-                <div class="space-y-6">
+                <div class="space-y-3">
                     @forelse($recentFeedback as $feedback)
-                        <div class="p-6 rounded-[2rem] bg-gray-50/50 border border-transparent hover:border-gray-100 transition-all group">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="flex text-yellow-orange">
+                        <div class="rounded-xl glass p-4 transition-colors hover:bg-white/[0.03]">
+                            <div class="mb-2 flex items-center justify-between">
+                                <div class="flex text-amber-400">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <i data-lucide="star" class="w-3 h-3 {{ $i <= $feedback->rating ? 'fill-current' : '' }}"></i>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="{{ $i <= $feedback->rating ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ $i <= $feedback->rating ? '' : 'text-white/20' }}">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                        </svg>
                                     @endfor
                                 </div>
-                                <span class="text-[9px] font-bold text-gray-300 uppercase">{{ $feedback->created_at->diffForHumans() }}</span>
+                                <span class="text-[9px] font-medium uppercase text-white/40">{{ $feedback->created_at->diffForHumans() }}</span>
                             </div>
-                            <p class="text-sm text-gray-600 italic font-medium leading-relaxed">"{{ $feedback->comment }}"</p>
-                            <div class="mt-4 flex items-center justify-between">
-                                <span class="text-[9px] font-black text-deep-blue uppercase tracking-widest">Table #{{ $feedback->order->table_number }}</span>
-                                <div class="w-6 h-6 bg-white rounded-lg flex items-center justify-center text-gray-300 group-hover:text-orange-red transition-colors">
-                                    <i data-lucide="heart" class="w-3 h-3"></i>
-                                </div>
-                            </div>
+                            <p class="text-sm font-medium italic text-white/60">"{{ $feedback->comment }}"</p>
                         </div>
                     @empty
-                        <div class="text-center py-16">
-                            <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                <i data-lucide="star" class="w-8 h-8 text-gray-200"></i>
-                            </div>
-                            <p class="text-xs text-gray-400 font-bold uppercase tracking-widest">No ratings yet</p>
+                        <div class="py-8 text-center">
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-white/40">No ratings yet</p>
                         </div>
                     @endforelse
                 </div>

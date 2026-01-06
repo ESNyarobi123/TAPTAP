@@ -1,109 +1,132 @@
 <x-manager-layout>
-    <div class="flex items-center justify-between mb-12">
+    <x-slot name="header">
+        Table Management
+    </x-slot>
+
+    <div class="flex items-center justify-between mb-8">
         <div>
-            <h2 class="text-3xl font-black text-deep-blue tracking-tight">Table Management</h2>
-            <p class="text-sm font-bold text-gray-400 uppercase tracking-widest">Manage your restaurant tables and QR codes</p>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Table Management</h2>
+            <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Manage your tables and QR codes</p>
         </div>
-        <button onclick="openAddTableModal()" class="bg-orange-red text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-orange-red/30 hover:bg-deep-blue transition-all flex items-center gap-3">
-            <i data-lucide="plus" class="w-6 h-6"></i> Add New Table
+        <button onclick="openAddTableModal()" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="M12 5v14"/>
+            </svg>
+            Add New Table
         </button>
     </div>
 
     <!-- Tables Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         @forelse($tables as $table)
-            <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all group">
-                <div class="p-8 pb-0">
+            <div class="glass-card rounded-2xl overflow-hidden card-hover group">
+                <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center">
-                            <span class="text-2xl font-black text-deep-blue">{{ $loop->iteration }}</span>
+                        <div class="w-14 h-14 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center border border-violet-500/20 group-hover:scale-110 transition-transform">
+                            <span class="text-2xl font-bold text-violet-400">{{ $loop->iteration }}</span>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openEditTableModal({{ json_encode($table) }})" class="p-2 text-gray-400 hover:text-deep-blue hover:bg-gray-50 rounded-xl transition-all">
-                                <i data-lucide="edit-3" class="w-5 h-5"></i>
+                        <div class="flex gap-1">
+                            <button onclick="openEditTableModal({{ json_encode($table) }})" class="p-2 text-white/40 hover:text-violet-400 hover:bg-white/5 rounded-lg transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+                                </svg>
                             </button>
                             <form action="{{ route('manager.tables.destroy', $table->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                <button type="submit" class="p-2 text-white/40 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                    </svg>
                                 </button>
                             </form>
                         </div>
                     </div>
-                    <h4 class="text-xl font-black text-deep-blue mb-1">{{ $table->name }}</h4>
-                    <p class="text-sm font-bold text-gray-400 mb-6">{{ $table->capacity }} Seats</p>
+                    <h4 class="text-lg font-bold text-white mb-1">{{ $table->name }}</h4>
+                    <p class="text-sm font-medium text-white/40">{{ $table->capacity }} Seats</p>
                 </div>
                 
-                <div class="bg-gray-50 p-8 flex flex-col items-center gap-4">
-                    <div class="bg-white p-2 rounded-xl shadow-sm">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($table->qr_code) }}" alt="QR Code" class="w-32 h-32">
+                <div class="bg-white/5 p-6 flex flex-col items-center gap-4 border-t border-white/5">
+                    <div class="bg-white p-2 rounded-xl">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($table->qr_code) }}" alt="QR Code" class="w-28 h-28">
                     </div>
                     <div class="flex gap-2 w-full">
-                        <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode($table->qr_code) }}" download="table-{{ $table->id }}-qr.png" target="_blank" class="flex-1 bg-white text-deep-blue py-3 rounded-xl font-bold text-sm shadow-sm hover:bg-deep-blue hover:text-white transition-all flex items-center justify-center gap-2">
-                            <i data-lucide="download" class="w-4 h-4"></i> Download
+                        <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode($table->qr_code) }}" download="table-{{ $table->id }}-qr.png" target="_blank" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-violet-600 transition-all flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+                            </svg>
+                            Download
                         </a>
-                        <button onclick="copyLink('{{ $table->qr_code }}')" class="flex-1 bg-white text-deep-blue py-3 rounded-xl font-bold text-sm shadow-sm hover:bg-deep-blue hover:text-white transition-all flex items-center justify-center gap-2">
-                            <i data-lucide="link" class="w-4 h-4"></i> Copy Link
+                        <button onclick="copyLink('{{ $table->qr_code }}')" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-cyan-600 transition-all flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            Copy Link
                         </button>
                     </div>
                 </div>
             </div>
         @empty
-            <div class="col-span-full py-20 text-center">
-                <div class="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                    <i data-lucide="layout-grid" class="w-10 h-10 text-gray-300"></i>
+            <div class="col-span-full glass-card py-16 text-center rounded-2xl">
+                <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/20">
+                        <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
+                    </svg>
                 </div>
-                <h3 class="text-xl font-black text-deep-blue mb-2">No tables found</h3>
-                <p class="text-gray-400">Start by adding your first table.</p>
+                <h3 class="text-xl font-bold text-white mb-2">No tables found</h3>
+                <p class="text-white/40">Start by adding your first table.</p>
             </div>
         @endforelse
 
         <!-- Add New Card -->
-        <button onclick="openAddTableModal()" class="bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center p-12 hover:border-orange-red hover:bg-orange-50 transition-all group min-h-[400px]">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-4">
-                <i data-lucide="plus" class="w-8 h-8 text-gray-400 group-hover:text-orange-red"></i>
+        <button onclick="openAddTableModal()" class="glass rounded-2xl border border-dashed border-white/20 flex flex-col items-center justify-center p-8 hover:border-violet-500 hover:bg-violet-500/10 transition-all group min-h-[320px]">
+            <div class="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center group-hover:bg-violet-500/20 group-hover:scale-110 transition-all mb-4 border border-white/10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/40 group-hover:text-violet-400">
+                    <path d="M5 12h14"/><path d="M12 5v14"/>
+                </svg>
             </div>
-            <span class="font-black text-gray-400 group-hover:text-orange-red uppercase tracking-widest text-xs">Add New Table</span>
+            <span class="font-semibold text-white/40 group-hover:text-violet-400 uppercase tracking-wider text-sm">Add New Table</span>
         </button>
     </div>
 
     <!-- Table Modal -->
-    <div id="tableModal" class="fixed inset-0 bg-deep-blue/40 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
-            <div class="p-8">
+    <div id="tableModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
+        <div class="bg-surface-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+            <div class="p-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 id="modalTitle" class="text-xl font-black text-deep-blue">Add New Table</h3>
-                    <button onclick="closeTableModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-all">
-                        <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+                    <h3 id="modalTitle" class="text-xl font-bold text-white">Add New Table</h3>
+                    <button onclick="closeTableModal()" class="p-2 hover:bg-white/10 rounded-xl transition-all text-white/40 hover:text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        </svg>
                     </button>
                 </div>
                 
-                <form id="tableForm" action="{{ route('manager.tables.store') }}" method="POST" class="space-y-6">
+                <form id="tableForm" action="{{ route('manager.tables.store') }}" method="POST" class="space-y-4">
                     @csrf
                     <input type="hidden" name="_method" id="formMethod" value="POST">
                     
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Table Name</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Table Name</label>
                         <input type="text" name="name" id="tableName" required placeholder="e.g. Table 1" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                               class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                     
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Capacity (Seats)</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Capacity (Seats)</label>
                         <input type="number" name="capacity" id="tableCapacity" placeholder="e.g. 4" 
-                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl font-bold text-deep-blue focus:ring-2 focus:ring-orange-red transition-all">
+                               class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
 
-                    <div id="statusToggle" class="hidden flex items-center gap-3">
+                    <div id="statusToggle" class="hidden flex items-center gap-3 p-3 bg-white/5 rounded-xl">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_active" id="tableActive" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                         </label>
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Active</span>
+                        <span class="text-sm font-medium text-white/60">Active</span>
                     </div>
 
-                    <button type="submit" class="w-full bg-deep-blue text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-deep-blue/20 hover:bg-orange-red transition-all">
+                    <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all mt-2">
                         Save Table
                     </button>
                 </form>
