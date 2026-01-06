@@ -265,21 +265,28 @@ class WhatsAppBotController extends Controller
             'amount' => 'required|numeric|min:0',
         ]);
 
-        // Get waiter_id from order if exists
-        $order = Order::withoutGlobalScopes()->find($request->order_id);
-        $waiterId = $order->waiter_id;
+        try {
+            // Get waiter_id from order if exists
+            $order = Order::withoutGlobalScopes()->find($request->order_id);
+            $waiterId = $order ? $order->waiter_id : null;
 
-        $tip = Tip::withoutGlobalScopes()->create([
-            'restaurant_id' => $request->restaurant_id,
-            'order_id' => $request->order_id,
-            'waiter_id' => $waiterId,
-            'amount' => $request->amount,
-        ]);
+            $tip = Tip::withoutGlobalScopes()->create([
+                'restaurant_id' => $request->restaurant_id,
+                'order_id' => $request->order_id,
+                'waiter_id' => $waiterId,
+                'amount' => $request->amount,
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Tip submitted successfully'
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Tip submitted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to submit tip: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

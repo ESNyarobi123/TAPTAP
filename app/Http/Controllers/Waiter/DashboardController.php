@@ -76,7 +76,13 @@ class DashboardController extends Controller
             return back()->with('error', 'This order has already been claimed by another waiter.');
         }
 
-        $order->update(['waiter_id' => Auth::id()]);
+        $waiterId = Auth::id();
+        $order->update(['waiter_id' => $waiterId]);
+
+        // Also assign any existing tips for this order to this waiter
+        Tip::where('order_id', $order->id)
+            ->whereNull('waiter_id')
+            ->update(['waiter_id' => $waiterId]);
 
         return back()->with('success', 'Order #' . $order->id . ' is now assigned to you!');
     }
