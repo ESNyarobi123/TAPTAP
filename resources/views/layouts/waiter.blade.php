@@ -21,7 +21,7 @@
         }
         
         body { 
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background: #0f0a1e;
             min-height: 100vh;
         }
 
@@ -50,19 +50,19 @@
         }
         
         .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            background: rgba(28, 22, 51, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .bg-surface-900 {
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            background: #0f0a1e;
         }
 
         /* Sidebar Styling */
         .sidebar-gradient {
-            background: linear-gradient(180deg, rgba(15, 15, 35, 0.98) 0%, rgba(26, 26, 46, 0.98) 100%);
+            background: #0f0a1e;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -73,12 +73,12 @@
         }
         
         .sidebar-link:hover {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.15) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
             color: #fff;
         }
         
         .sidebar-link-active {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.25) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
             color: #fff !important;
         }
         
@@ -123,6 +123,7 @@
         .card-hover:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            background: rgba(35, 28, 64, 0.8);
         }
 
         /* Hide scrollbar utility */
