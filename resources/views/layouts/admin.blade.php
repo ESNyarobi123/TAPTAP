@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'TIPTAP Admin') }}</title>
+    <title>TIPTAP Admin</title>
     
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -200,7 +200,7 @@
                         </svg>
                     </div>
                     <div>
-                        <span class="text-xl font-black text-white tracking-tight block leading-none">TAP<span class="gradient-text">TAP</span></span>
+                        <span class="text-xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
                         <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Super Admin</span>
                     </div>
                 </div>
@@ -331,7 +331,7 @@
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
                     </button>
-                    <span class="font-bold text-white/90 text-lg tracking-tight">TAP<span class="gradient-text">TAP</span></span>
+                    <span class="font-bold text-white/90 text-lg tracking-tight">TIP<span class="gradient-text">TAP</span></span>
                 </div>
                 <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-violet-500/25">
                     {{ substr(Auth::user()->name, 0, 1) }}
