@@ -37,4 +37,8 @@ class Order extends Model
     {
         return $this->hasOne(Tip::class);
     }
+    public function waiter()
+    {
+        return $this->belongsTo(User::class, 'waiter_id');
+    }
 }
