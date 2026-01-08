@@ -8,63 +8,63 @@
             @csrf
             
             <!-- General Settings -->
-            <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100">
-                <div class="mb-10">
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tighter">General Configuration</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Basic system parameters and branding</p>
+            <div class="glass-card rounded-2xl p-8">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black text-white tracking-tight">General Configuration</h3>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Basic system parameters and branding</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">System Name</label>
-                        <input type="text" name="system_name" value="{{ $settings['general']['system_name']->value ?? 'TAPTAP' }}" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-slate-900 transition-all">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">System Name</label>
+                        <input type="text" name="system_name" value="{{ $settings['general']['system_name']->value ?? 'TIPTAP' }}" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Support Email</label>
-                        <input type="email" name="support_email" value="{{ $settings['general']['support_email']->value ?? 'support@taptap.com' }}" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-slate-900 transition-all">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Support Email</label>
+                        <input type="email" name="support_email" value="{{ $settings['general']['support_email']->value ?? 'support@tiptap.com' }}" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                 </div>
             </div>
 
             <!-- Financial Settings -->
-            <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100">
-                <div class="mb-10">
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tighter">Financial Parameters</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Commission rates and withdrawal limits</p>
+            <div class="glass-card rounded-2xl p-8">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black text-white tracking-tight">Financial Parameters</h3>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Commission rates and withdrawal limits</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">System Commission (%)</label>
-                        <input type="number" name="commission_rate" value="{{ $settings['financial']['commission_rate']->value ?? '5' }}" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-slate-900 transition-all">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">System Commission (%)</label>
+                        <input type="number" name="commission_rate" value="{{ $settings['financial']['commission_rate']->value ?? '5' }}" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Min. Withdrawal (Tsh)</label>
-                        <input type="number" name="min_withdrawal" value="{{ $settings['financial']['min_withdrawal']->value ?? '50000' }}" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-slate-900 transition-all">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Min. Withdrawal (Tsh)</label>
+                        <input type="number" name="min_withdrawal" value="{{ $settings['financial']['min_withdrawal']->value ?? '50000' }}" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                 </div>
             </div>
 
             <!-- Bot & API Settings -->
-            <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100">
-                <div class="mb-10">
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tighter">System Automation</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Global bot endpoints and API settings</p>
+            <div class="glass-card rounded-2xl p-8">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black text-white tracking-tight">System Automation</h3>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Global bot endpoints and API settings</p>
                 </div>
 
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Global Webhook Secret</label>
-                        <input type="text" name="webhook_secret" value="{{ $settings['api']['webhook_secret']->value ?? '' }}" class="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-mono focus:ring-2 focus:ring-slate-900 transition-all" placeholder="sk_live_xxxxxxxxxxxx">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Global Webhook Secret</label>
+                        <input type="text" name="webhook_secret" value="{{ $settings['api']['webhook_secret']->value ?? '' }}" class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl text-sm font-mono text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all" placeholder="sk_live_xxxxxxxxxxxx">
                     </div>
                 </div>
             </div>
 
             <div class="flex items-center justify-end gap-4 pt-4">
-                <button type="reset" class="px-8 py-4 bg-slate-50 text-slate-400 rounded-2xl font-bold text-sm hover:bg-slate-100 transition-all">Reset Changes</button>
-                <button type="submit" class="px-10 py-4 bg-slate-900 text-white rounded-2xl font-bold text-sm hover:shadow-2xl hover:shadow-slate-900/20 transition-all">Save All Settings</button>
+                <button type="reset" class="px-8 py-4 glass text-white/60 rounded-xl font-bold text-sm hover:bg-white/10 transition-all">Reset Changes</button>
+                <button type="submit" class="px-10 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">Save All Settings</button>
             </div>
         </form>
     </div>

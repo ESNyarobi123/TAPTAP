@@ -94,7 +94,7 @@
                     </div>
                     <div>
                         <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Email Address</label>
-                        <input type="email" name="email" required placeholder="e.g. john@taptap.com" 
+                        <input type="email" name="email" required placeholder="e.g. john@tiptap.com" 
                                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
                     <div>

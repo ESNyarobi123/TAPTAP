@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TAPTAP - The Future of Smart Dining & WhatsApp Ordering</title>
+    <title>TIPTAP - The Future of Smart Dining & WhatsApp Ordering</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -132,7 +132,7 @@
                         <i data-lucide="zap" class="w-7 h-7 text-white fill-white/20"></i>
                     </div>
                     <div>
-                        <span class="text-2xl font-black text-white tracking-tighter block leading-none">TAP<span class="text-primary">TAP</span></span>
+                        <span class="text-2xl font-black text-white tracking-tighter block leading-none">TIP<span class="text-primary">TAP</span></span>
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Smart Dining</span>
                     </div>
                 </a>
@@ -175,7 +175,7 @@
                 <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                     <i data-lucide="zap" class="w-6 h-6 text-white"></i>
                 </div>
-                <span class="text-xl font-black text-white">TAPTAP</span>
+                <span class="text-xl font-black text-white">TIPTAP</span>
             </div>
             <button id="close-menu-btn" class="text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
@@ -245,7 +245,7 @@
                 <div class="relative" data-aos="zoom-in" data-aos-duration="1200">
                     <div class="relative z-20 animate-float">
                         <div class="bg-white/5 rounded-[3rem] p-4 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border-8 border-white/5">
-                            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000" alt="TAPTAP Hero" class="rounded-[2.2rem] w-full object-cover aspect-[4/5]">
+                            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1000" alt="TIPTAP Hero" class="rounded-[2.2rem] w-full object-cover aspect-[4/5]">
                         </div>
                     </div>
                     
@@ -435,12 +435,12 @@
         </div>
     </section>
 
-    <!-- Why TAPTAP Comparison -->
+    <!-- Why TIPTAP Comparison -->
     <section class="py-32 bg-[#0B0F1A]">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-20">
                 <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">The Difference</h2>
-                <h3 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6">Traditional vs. TAPTAP</h3>
+                <h3 class="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6">Traditional vs. TIPTAP</h3>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
@@ -470,7 +470,7 @@
 
                 <div class="bg-primary p-12 rounded-[3rem] shadow-2xl relative overflow-hidden" data-aos="fade-left">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                    <h4 class="text-2xl font-black text-white mb-10 uppercase tracking-widest">TAPTAP Experience</h4>
+                    <h4 class="text-2xl font-black text-white mb-10 uppercase tracking-widest">TIPTAP Experience</h4>
                     <ul class="space-y-6">
                         <li class="flex items-start gap-4">
                             <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0 mt-1">
@@ -513,7 +513,7 @@
                         <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
                         <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
                     </div>
-                    <p class="text-slate-400 font-medium italic mb-8">"TAPTAP has completely changed how we handle peak hours. Our waiters are less stressed and customers love the speed of WhatsApp ordering."</p>
+                    <p class="text-slate-400 font-medium italic mb-8">"TIPTAP has completely changed how we handle peak hours. Our waiters are less stressed and customers love the speed of WhatsApp ordering."</p>
                     <div class="flex items-center gap-4">
                         <div class="w-12 h-12 bg-white/10 rounded-full"></div>
                         <div>
@@ -577,7 +577,7 @@
                         <i data-lucide="chevron-down" class="w-6 h-6 text-slate-500 group-hover:text-primary transition-all"></i>
                     </button>
                     <div class="hidden px-8 pb-8 text-slate-400 font-medium leading-relaxed">
-                        No! That's the magic of TAPTAP. Customers simply scan a QR code and it opens directly in WhatsApp, which they already have on their phone.
+                        No! That's the magic of TIPTAP. Customers simply scan a QR code and it opens directly in WhatsApp, which they already have on their phone.
                     </div>
                 </div>
 
@@ -597,7 +597,7 @@
                         <i data-lucide="chevron-down" class="w-6 h-6 text-slate-500 group-hover:text-primary transition-all"></i>
                     </button>
                     <div class="hidden px-8 pb-8 text-slate-400 font-medium leading-relaxed">
-                        Yes! TAPTAP supports most standard thermal printers. Our system can automatically send orders to the kitchen and bar printers as soon as they are confirmed.
+                        Yes! TIPTAP supports most standard thermal printers. Our system can automatically send orders to the kitchen and bar printers as soon as they are confirmed.
                     </div>
                 </div>
 
@@ -664,7 +664,7 @@
                                     <i data-lucide="zap" class="w-6 h-6 text-[#075E54]"></i>
                                 </div>
                                 <div>
-                                    <p class="text-white font-bold text-sm">TAPTAP Smart Bot</p>
+                                    <p class="text-white font-bold text-sm">TIPTAP Smart Bot</p>
                                     <p class="text-[10px] text-white/70">Online</p>
                                 </div>
                             </div>
@@ -744,7 +744,7 @@
                 <div class="order-1 lg:order-2" data-aos="fade-left">
                     <h2 class="text-primary font-black tracking-[0.3em] uppercase text-xs mb-4">Intelligence</h2>
                     <h3 class="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 leading-[0.9]">Smart Dining <br/>Intelligence.</h3>
-                    <p class="text-slate-400 text-xl mb-12 leading-relaxed font-medium">TAPTAP isn't just a tool—it's your restaurant's brain. We use data to help you sell more, waste less, and keep customers coming back.</p>
+                    <p class="text-slate-400 text-xl mb-12 leading-relaxed font-medium">TIPTAP isn't just a tool—it's your restaurant's brain. We use data to help you sell more, waste less, and keep customers coming back.</p>
                     
                     <div class="flex flex-wrap gap-4">
                         <div class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10">
@@ -865,7 +865,7 @@
                 
                 <div class="relative z-10 max-w-3xl mx-auto">
                     <h2 class="text-4xl md:text-7xl font-black text-white mb-10 tracking-tighter leading-none">Ready to transform your restaurant?</h2>
-                    <p class="text-xl mb-12 font-medium text-white/80">Join the hundreds of restaurants already using TAPTAP to increase their revenue and delight their customers.</p>
+                    <p class="text-xl mb-12 font-medium text-white/80">Join the hundreds of restaurants already using TIPTAP to increase their revenue and delight their customers.</p>
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
                         <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-12 py-6 bg-white text-primary rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition-all">
                             Get Started for Free
@@ -888,7 +888,7 @@
                         <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
                             <i data-lucide="zap" class="w-6 h-6 text-white"></i>
                         </div>
-                        <span class="text-xl font-black text-white">TAPTAP</span>
+                        <span class="text-xl font-black text-white">TIPTAP</span>
                     </a>
                     <p class="text-slate-500 font-medium max-w-xs mb-8">The smartest way to run your restaurant in the digital age. Built for Tanzania, loved by everyone.</p>
                     <div class="flex gap-4">
@@ -929,7 +929,7 @@
                 </div>
             </div>
             <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                <p class="text-slate-600 text-sm font-bold">© {{ date('Y') }} TAPTAP Smart Dining. All rights reserved.</p>
+                <p class="text-slate-600 text-sm font-bold">© {{ date('Y') }} TIPTAP Smart Dining. All rights reserved.</p>
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
                     <span class="text-slate-600 text-xs font-black uppercase tracking-widest">System Operational</span>

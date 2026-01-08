@@ -3,7 +3,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <span class="text-xl font-bold text-orange-red">TAPTAP</span>
+                    <span class="text-xl font-bold text-orange-red">TIPTAP</span>
                 </div>
             </div>
         </div>

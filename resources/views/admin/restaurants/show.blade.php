@@ -6,24 +6,24 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Details -->
         <div class="lg:col-span-2 space-y-8">
-            <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100">
-                <div class="flex justify-between items-start mb-10">
+            <div class="glass-card rounded-2xl p-8">
+                <div class="flex justify-between items-start mb-8">
                     <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-slate-900 rounded-[2rem] flex items-center justify-center text-white text-3xl font-black shadow-2xl shadow-slate-900/20">
+                        <div class="w-20 h-20 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-violet-500/20">
                             {{ substr($restaurant->name, 0, 1) }}
                         </div>
                         <div>
-                            <h2 class="text-3xl font-black text-slate-900 tracking-tighter">{{ $restaurant->name }}</h2>
-                            <p class="text-slate-400 font-bold uppercase tracking-[0.2em] text-xs mt-1">{{ $restaurant->location ?? 'No location set' }}</p>
+                            <h2 class="text-3xl font-black text-white tracking-tight">{{ $restaurant->name }}</h2>
+                            <p class="text-white/40 font-bold uppercase tracking-widest text-xs mt-1">{{ $restaurant->location ?? 'No location set' }}</p>
                         </div>
                     </div>
                     <div class="flex gap-3">
-                        <a href="{{ route('admin.restaurants.edit', $restaurant) }}" class="px-6 py-3 bg-slate-50 text-slate-900 rounded-2xl font-bold text-sm hover:bg-slate-900 hover:text-white transition-all flex items-center gap-2">
+                        <a href="{{ route('admin.restaurants.edit', $restaurant) }}" class="px-6 py-3 glass text-white rounded-xl font-bold text-sm hover:bg-violet-600 transition-all flex items-center gap-2">
                             <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Details
                         </a>
                         <form action="{{ route('admin.restaurants.toggle-status', $restaurant) }}" method="POST">
                             @csrf
-                            <button type="submit" class="px-6 py-3 {{ $restaurant->is_active ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600' }} rounded-2xl font-bold text-sm hover:opacity-80 transition-all flex items-center gap-2">
+                            <button type="submit" class="px-6 py-3 {{ $restaurant->is_active ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' }} rounded-xl font-bold text-sm hover:opacity-80 transition-all flex items-center gap-2 border">
                                 <i data-lucide="{{ $restaurant->is_active ? 'slash' : 'check-circle' }}" class="w-4 h-4"></i>
                                 {{ $restaurant->is_active ? 'Block Restaurant' : 'Unblock Restaurant' }}
                             </button>
@@ -31,30 +31,30 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-8 py-8 border-t border-slate-50">
+                <div class="grid grid-cols-2 gap-8 py-8 border-t border-white/10">
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Phone Number</p>
-                        <p class="text-slate-900 font-bold">{{ $restaurant->phone ?? 'N/A' }}</p>
+                        <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Phone Number</p>
+                        <p class="text-white font-bold">{{ $restaurant->phone ?? 'N/A' }}</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Joined Date</p>
-                        <p class="text-slate-900 font-bold">{{ $restaurant->created_at->format('M d, Y') }}</p>
+                        <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Joined Date</p>
+                        <p class="text-white font-bold">{{ $restaurant->created_at->format('M d, Y') }}</p>
                     </div>
                 </div>
 
-                <div class="mt-8 p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
+                <div class="mt-6 p-6 bg-white/5 rounded-xl border border-white/10">
                     <div class="flex items-center justify-between mb-6">
-                        <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest">Payment API Configuration</h4>
-                        <span class="px-3 py-1 bg-blue-100 text-blue-600 text-[9px] font-black rounded-full uppercase tracking-widest">ZenoPay</span>
+                        <h4 class="text-sm font-black text-white uppercase tracking-widest">Payment API Configuration</h4>
+                        <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-[9px] font-black rounded-full uppercase tracking-widest border border-cyan-500/30">ZenoPay</span>
                     </div>
                     <div class="space-y-4">
                         <div>
-                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">API Key</p>
+                            <p class="text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">API Key</p>
                             <div class="flex items-center gap-3">
-                                <code class="flex-1 bg-white p-3 rounded-xl border border-slate-200 text-xs font-mono text-slate-600 truncate">
+                                <code class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10 text-xs font-mono text-white/60 truncate">
                                     {{ $restaurant->zenopay_api_key ?? 'Not Configured' }}
                                 </code>
-                                <button class="p-3 bg-white border border-slate-200 rounded-xl text-slate-400 hover:text-slate-900 transition-all">
+                                <button class="p-3 glass text-white/40 border border-white/10 rounded-xl hover:text-white hover:bg-white/10 transition-all">
                                     <i data-lucide="copy" class="w-4 h-4"></i>
                                 </button>
                             </div>
@@ -64,27 +64,27 @@
             </div>
 
             <!-- Staff Management -->
-            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
-                <div class="p-8 border-b border-slate-50">
-                    <h3 class="text-xl font-black text-slate-900 tracking-tighter">Staff Management</h3>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Managers and Waiters</p>
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-white/5">
+                    <h3 class="text-xl font-black text-white tracking-tight">Staff Management</h3>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Managers and Waiters</p>
                 </div>
                 
-                <div class="p-8 space-y-8">
+                <div class="p-6 space-y-8">
                     <!-- Managers -->
                     <div>
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <i data-lucide="user-check" class="w-3 h-3 text-blue-500"></i> Managers ({{ $managers->count() }})
+                        <h4 class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <i data-lucide="user-check" class="w-3 h-3 text-blue-400"></i> Managers ({{ $managers->count() }})
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($managers as $manager)
-                            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-black text-xs">
+                            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                <div class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center font-black text-xs border border-blue-500/20">
                                     {{ substr($manager->name, 0, 1) }}
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">{{ $manager->name }}</p>
-                                    <p class="text-[10px] text-slate-400 font-medium">{{ $manager->email }}</p>
+                                    <p class="text-sm font-bold text-white">{{ $manager->name }}</p>
+                                    <p class="text-[10px] text-white/40 font-medium">{{ $manager->email }}</p>
                                 </div>
                             </div>
                             @endforeach
@@ -93,18 +93,18 @@
 
                     <!-- Waiters -->
                     <div>
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                            <i data-lucide="user" class="w-3 h-3 text-orange-500"></i> Waiters ({{ $waiters->count() }})
+                        <h4 class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <i data-lucide="user" class="w-3 h-3 text-orange-400"></i> Waiters ({{ $waiters->count() }})
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($waiters as $waiter)
-                            <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center font-black text-xs">
+                            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10">
+                                <div class="w-10 h-10 bg-orange-500/20 text-orange-400 rounded-xl flex items-center justify-center font-black text-xs border border-orange-500/20">
                                     {{ substr($waiter->name, 0, 1) }}
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">{{ $waiter->name }}</p>
-                                    <p class="text-[10px] text-slate-400 font-medium">{{ $waiter->email }}</p>
+                                    <p class="text-sm font-bold text-white">{{ $waiter->name }}</p>
+                                    <p class="text-[10px] text-white/40 font-medium">{{ $waiter->email }}</p>
                                 </div>
                             </div>
                             @endforeach
@@ -116,46 +116,46 @@
 
         <!-- Sidebar Stats -->
         <div class="space-y-8">
-            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
-                <h3 class="text-xl font-black text-slate-900 tracking-tighter mb-6">Financial Overview</h3>
-                <div class="space-y-6">
-                    <div class="p-6 bg-emerald-50 rounded-[2rem] border border-emerald-100">
-                        <p class="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Total Earnings</p>
-                        <p class="text-3xl font-black text-emerald-700 tracking-tighter">Tsh 1.2M</p>
+            <div class="glass-card rounded-2xl p-6">
+                <h3 class="text-xl font-black text-white tracking-tight mb-6">Financial Overview</h3>
+                <div class="space-y-4">
+                    <div class="p-5 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+                        <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">Total Earnings</p>
+                        <p class="text-3xl font-black text-emerald-400 tracking-tight">Tsh 1.2M</p>
                     </div>
-                    <div class="p-6 bg-blue-50 rounded-[2rem] border border-blue-100">
-                        <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Total Orders</p>
-                        <p class="text-3xl font-black text-blue-700 tracking-tighter">156</p>
+                    <div class="p-5 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                        <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Total Orders</p>
+                        <p class="text-3xl font-black text-blue-400 tracking-tight">156</p>
                     </div>
-                    <div class="p-6 bg-purple-50 rounded-[2rem] border border-purple-100">
-                        <p class="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-1">Avg. Rating</p>
+                    <div class="p-5 bg-purple-500/10 rounded-xl border border-purple-500/20">
+                        <p class="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-1">Avg. Rating</p>
                         <div class="flex items-center gap-2">
-                            <p class="text-3xl font-black text-purple-700 tracking-tighter">4.8</p>
+                            <p class="text-3xl font-black text-purple-400 tracking-tight">4.8</p>
                             <i data-lucide="star" class="w-5 h-5 text-purple-400 fill-purple-400"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-slate-900/20">
-                <h3 class="text-xl font-black tracking-tighter mb-6">Quick Actions</h3>
-                <div class="space-y-4">
-                    <button class="w-full flex items-center gap-4 p-4 bg-white/10 rounded-2xl hover:bg-white/20 transition-all group border border-white/5">
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all">
+            <div class="glass-card rounded-2xl p-6 border border-violet-500/20">
+                <h3 class="text-xl font-black text-white tracking-tight mb-6">Quick Actions</h3>
+                <div class="space-y-3">
+                    <button class="w-full flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-all group">
+                        <div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all text-white/60">
                             <i data-lucide="mail" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
-                            <p class="font-bold text-sm">Email Manager</p>
-                            <p class="text-[10px] text-white/50 font-medium">Send direct message</p>
+                            <p class="font-bold text-sm text-white">Email Manager</p>
+                            <p class="text-[10px] text-white/40 font-medium">Send direct message</p>
                         </div>
                     </button>
-                    <button class="w-full flex items-center gap-4 p-4 bg-white/10 rounded-2xl hover:bg-white/20 transition-all group border border-white/5">
-                        <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all">
+                    <button class="w-full flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-all group">
+                        <div class="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all text-white/60">
                             <i data-lucide="file-text" class="w-5 h-5"></i>
                         </div>
                         <div class="text-left">
-                            <p class="font-bold text-sm">View Reports</p>
-                            <p class="text-[10px] text-white/50 font-medium">Download performance</p>
+                            <p class="font-bold text-sm text-white">View Reports</p>
+                            <p class="text-[10px] text-white/40 font-medium">Download performance</p>
                         </div>
                     </button>
                 </div>

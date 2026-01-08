@@ -492,7 +492,7 @@
                         order_id: orderId,
                         phone: phone,
                         name: name,
-                        email: 'customer@taptap.com'
+                        email: 'customer@tiptap.com'
                     })
                 });
 

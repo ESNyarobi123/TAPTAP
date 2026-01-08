@@ -5,7 +5,7 @@
 
     <div class="mb-8">
         <h2 class="text-3xl font-bold text-white tracking-tight">QR & Mobile API</h2>
-        <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Connect your restaurant to the TAPTAP network</p>
+        <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Connect your restaurant to the TIPTAP network</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
@@ -98,13 +98,13 @@
             <h3 class="text-xl font-bold text-white tracking-tight">Mobile API Access</h3>
         </div>
 
-        <p class="text-white/60 mb-8 relative z-10 leading-relaxed">Use these credentials to connect your Node.js bot or custom mobile application to the TAPTAP API.</p>
+        <p class="text-white/60 mb-8 relative z-10 leading-relaxed">Use these credentials to connect your Node.js bot or custom mobile application to the TIPTAP API.</p>
 
         <div class="space-y-4 relative z-10">
             <div>
                 <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Restaurant ID</label>
                 <div class="flex gap-2">
-                    <input type="text" readonly value="RES-{{ Auth::user()->restaurant_id }}-TAPTAP" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm text-white">
+                    <input type="text" readonly value="RES-{{ Auth::user()->restaurant_id }}-TIPTAP" class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex-1 font-mono text-sm text-white">
                     <button class="p-3 glass rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
