@@ -12,7 +12,7 @@ use App\Models\Tip;
 
 class Restaurant extends Model
 {
-    protected $fillable = ['name', 'location', 'phone', 'logo', 'is_active', 'zenopay_api_key'];
+    protected $fillable = ['name', 'location', 'phone', 'logo', 'is_active', 'zenopay_api_key', 'kitchen_token', 'kitchen_token_generated_at'];
 
     public function users()
     {

@@ -117,3 +117,20 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::post('/requests/{request}/complete', [\App\Http\Controllers\Waiter\DashboardController::class, 'completeRequest'])->name('requests.complete');
     Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
 });
+
+// Kitchen Display System (KDS) - Secret URL Access
+Route::prefix('kitchen')->name('kitchen.')->group(function () {
+    // Public KDS display (accessed via secret token)
+    Route::get('/display/{token}', [\App\Http\Controllers\KitchenController::class, 'display'])->name('display');
+    
+    // API endpoints for real-time updates (no auth, uses token)
+    Route::get('/api/{token}/orders', [\App\Http\Controllers\KitchenController::class, 'getOrders'])->name('api.orders');
+    Route::post('/api/{token}/order/status', [\App\Http\Controllers\KitchenController::class, 'updateStatus'])->name('api.order.status');
+    Route::post('/api/{token}/item/status', [\App\Http\Controllers\KitchenController::class, 'updateItemStatus'])->name('api.item.status');
+});
+
+// Manager KDS Token Management
+Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::post('/kitchen/generate-token', [\App\Http\Controllers\KitchenController::class, 'generateToken'])->name('kitchen.generate');
+    Route::post('/kitchen/revoke-token', [\App\Http\Controllers\KitchenController::class, 'revokeToken'])->name('kitchen.revoke');
+});
