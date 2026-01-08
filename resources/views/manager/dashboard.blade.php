@@ -18,7 +18,7 @@
                     <span class="px-3 py-1.5 bg-violet-500/10 text-violet-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-violet-500/20">Today</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Orders Today</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ number_format($totalOrdersToday) }}</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-total-orders">{{ number_format($totalOrdersToday) }}</h3>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
                     <span class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-cyan-500/20">Revenue</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Revenue Today</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">Tsh {{ number_format($revenueToday) }}</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-revenue-today">Tsh {{ number_format($revenueToday) }}</h3>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                     <span class="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-amber-500/20">Rating</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Avg. Rating</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ number_format($avgRating, 1) }}/5.0</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-avg-rating">{{ number_format($avgRating, 1) }}/5.0</h3>
             </div>
         </div>
 
@@ -72,7 +72,7 @@
                     </span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Waiters Online</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $waitersOnline }} Active</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-waiters-online">{{ $waitersOnline }} Active</h3>
             </div>
         </div>
     </div>
@@ -333,4 +333,18 @@
             </div>
         </div>
     </div>
+    <script>
+        // Auto-refresh stats every 30 seconds
+        setInterval(function() {
+            fetch('{{ route("manager.dashboard.stats") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('stat-total-orders').textContent = new Intl.NumberFormat().format(data.total_orders_today);
+                    document.getElementById('stat-revenue-today').textContent = 'Tsh ' + new Intl.NumberFormat().format(data.revenue_today);
+                    document.getElementById('stat-avg-rating').textContent = data.avg_rating + '/5.0';
+                    document.getElementById('stat-waiters-online').textContent = data.waiters_online + ' Active';
+                })
+                .catch(error => console.error('Error fetching stats:', error));
+        }, 30000); // 30 seconds
+    </script>
 </x-manager-layout>

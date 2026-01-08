@@ -711,7 +711,9 @@
 
     <script>
         const token = "{{ $restaurant->kitchen_token }}";
-        const apiUrl = `/kitchen/api/${token}/orders`;
+        const apiUrl = "{{ route('kitchen.api.orders', $restaurant->kitchen_token) }}";
+        const apiOrderStatusUrl = "{{ route('kitchen.api.order.status', $restaurant->kitchen_token) }}";
+        const apiItemStatusUrl = "{{ route('kitchen.api.item.status', $restaurant->kitchen_token) }}";
         let previousOrderCount = 0;
 
         // Update current time
@@ -743,6 +745,7 @@
 
                     // Update connection status
                     document.getElementById('connection-status').classList.remove('disconnected');
+                    document.querySelector('.connection-text').textContent = 'Live Updates Active';
                 }
             } catch (error) {
                 console.error('Failed to fetch orders:', error);
@@ -823,7 +826,7 @@
         // Update order status
         async function updateOrderStatus(orderId, status) {
             try {
-                const response = await fetch(`/kitchen/api/${token}/order/status`, {
+                const response = await fetch(apiOrderStatusUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -848,7 +851,7 @@
             const newStatus = statusFlow[currentStatus] || 'cooking';
 
             try {
-                const response = await fetch(`/kitchen/api/${token}/item/status`, {
+                const response = await fetch(apiItemStatusUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

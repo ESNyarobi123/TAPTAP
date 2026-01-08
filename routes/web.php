@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Admin Portal
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [AdminDashboard::class, 'getStats'])->name('dashboard.stats');
     
     // Restaurants
     Route::resource('restaurants', \App\Http\Controllers\Admin\RestaurantController::class);
@@ -81,6 +82,7 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
 // Manager Portal
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/dashboard', [ManagerDashboard::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [ManagerDashboard::class, 'getStats'])->name('dashboard.stats');
     Route::get('/live-orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'index'])->name('orders.live');
     Route::post('/orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'store'])->name('orders.store');
     Route::put('/orders/{order}', [\App\Http\Controllers\Manager\LiveOrderController::class, 'update'])->name('orders.update');
@@ -110,6 +112,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 // Waiter Portal
 Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Waiter\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
     Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');
     Route::get('/orders', [\App\Http\Controllers\Waiter\DashboardController::class, 'orders'])->name('orders');
     Route::get('/tips', [\App\Http\Controllers\Waiter\DashboardController::class, 'tips'])->name('tips');

@@ -124,4 +124,18 @@ class DashboardController extends Controller
         
         return view('waiter.ratings.index', compact('feedbacks'));
     }
+    public function getStats()
+    {
+        $waiter = Auth::user();
+        $today = Carbon::today();
+
+        $stats = [
+            'tips_today' => Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount'),
+            'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
+            'ready_to_serve' => Order::where('status', 'ready')->count(),
+            'pending_requests' => CustomerRequest::where('status', 'pending')->count(),
+        ];
+
+        return response()->json($stats);
+    }
 }

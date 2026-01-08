@@ -18,7 +18,7 @@
                     <span class="px-3 py-1.5 bg-violet-500/10 text-violet-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-violet-500/20">Growth</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Restaurants</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['total_restaurants'] }}</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-total-restaurants">{{ $stats['total_restaurants'] }}</h3>
             </div>
         </div>
 
@@ -38,7 +38,7 @@
                     </span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Active Orders</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['active_orders'] }}</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-active-orders">{{ $stats['active_orders'] }}</h3>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
                     <span class="px-3 py-1.5 bg-cyan-500/10 text-cyan-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-cyan-500/20">Revenue</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Revenue</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">Tsh {{ number_format($stats['total_revenue'] / 1000, 1) }}K</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-total-revenue">Tsh {{ number_format($stats['total_revenue'] / 1000, 1) }}K</h3>
             </div>
         </div>
 
@@ -72,7 +72,7 @@
                     <span class="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-amber-500/20">Pending</span>
                 </div>
                 <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Withdrawals</p>
-                <h3 class="text-3xl font-bold text-white tracking-tight">{{ $stats['pending_withdrawals'] }}</h3>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-pending-withdrawals">{{ $stats['pending_withdrawals'] }}</h3>
             </div>
         </div>
     </div>
@@ -167,4 +167,19 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-refresh stats every 30 seconds
+        setInterval(function() {
+            fetch('{{ route("admin.dashboard.stats") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('stat-total-restaurants').textContent = data.total_restaurants;
+                    document.getElementById('stat-active-orders').textContent = data.active_orders;
+                    document.getElementById('stat-total-revenue').textContent = 'Tsh ' + (data.total_revenue / 1000).toFixed(1) + 'K';
+                    document.getElementById('stat-pending-withdrawals').textContent = data.pending_withdrawals;
+                })
+                .catch(error => console.error('Error fetching stats:', error));
+        }, 30000); // 30 seconds
+    </script>
 </x-admin-layout>

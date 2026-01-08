@@ -27,7 +27,7 @@
                 </div>
                 <div class="mt-4">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-amber-100/80">Total Tips</p>
-                    <h3 class="mt-1 text-2xl font-bold tracking-tight">Tsh {{ number_format($tipsToday) }}</h3>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight" id="stat-tips-today">Tsh {{ number_format($tipsToday) }}</h3>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="mt-4">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-violet-100/80">My Orders</p>
-                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $myActiveOrders }}</h3>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight" id="stat-my-active-orders">{{ $myActiveOrders }}</h3>
                 </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="mt-4">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-100/80">Ready Now</p>
-                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $readyToServeOrders }}</h3>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight" id="stat-ready-to-serve">{{ $readyToServeOrders }}</h3>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="mt-4">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-rose-100/80">Calls</p>
-                    <h3 class="mt-1 text-2xl font-bold tracking-tight">{{ $pendingRequests->count() }}</h3>
+                    <h3 class="mt-1 text-2xl font-bold tracking-tight" id="stat-pending-requests">{{ $pendingRequests->count() }}</h3>
                 </div>
             </div>
         </div>
@@ -331,4 +331,18 @@
             </div>
         </div>
     </div>
+    <script>
+        // Auto-refresh stats every 30 seconds
+        setInterval(function() {
+            fetch('{{ route("waiter.dashboard.stats") }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('stat-tips-today').textContent = 'Tsh ' + new Intl.NumberFormat().format(data.tips_today);
+                    document.getElementById('stat-my-active-orders').textContent = data.my_active_orders;
+                    document.getElementById('stat-ready-to-serve').textContent = data.ready_to_serve;
+                    document.getElementById('stat-pending-requests').textContent = data.pending_requests;
+                })
+                .catch(error => console.error('Error fetching stats:', error));
+        }, 30000); // 30 seconds
+    </script>
 </x-waiter-layout>

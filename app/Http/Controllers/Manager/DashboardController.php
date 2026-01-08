@@ -55,4 +55,18 @@ class DashboardController extends Controller
             'waiterTips'
         ));
     }
+    public function getStats()
+    {
+        $restaurantId = Auth::user()->restaurant_id;
+        $today = Carbon::today();
+
+        $stats = [
+            'total_orders_today' => Order::whereDate('created_at', $today)->count(),
+            'revenue_today' => Order::whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount'),
+            'avg_rating' => number_format(Feedback::avg('rating') ?? 0, 1),
+            'waiters_online' => User::role('waiter')->where('restaurant_id', $restaurantId)->count(),
+        ];
+
+        return response()->json($stats);
+    }
 }
