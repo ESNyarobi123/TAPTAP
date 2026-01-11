@@ -67,6 +67,11 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     Route::post('/call-waiter', [App\Http\Controllers\Api\WhatsAppBotController::class, 'callWaiter']);
     Route::get('/restaurant/{restaurantId}/waiters', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getWaiters']);
     Route::get('/active-order', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getActiveOrder']);
+    Route::get('/restaurant/{restaurantId}/menu-image', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getMenuImage']);
+    
+    // Quick Payment Routes (payment without order)
+    Route::post('/payment/quick', [App\Http\Controllers\Api\WhatsAppBotController::class, 'initiateQuickPayment']);
+    Route::get('/payment/quick/{paymentId}/status', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getQuickPaymentStatus']);
 });
 
 // WhatsApp Webhook (Meta/WhatsApp Cloud API)

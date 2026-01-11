@@ -87,4 +87,63 @@ class PaymentController extends Controller
             'payment' => $payment
         ]);
     }
+
+    /**
+     * Handle ZenoPay Callback/Webhook
+     * This endpoint receives payment status updates from ZenoPay
+     */
+    public function callback(Request $request)
+    {
+        // Log incoming callback for debugging
+        \Illuminate\Support\Facades\Log::info('ZenoPay Callback Received', $request->all());
+
+        // Get the transaction reference from the callback
+        $orderId = $request->input('order_id'); // This is our transaction_reference
+        $status = $request->input('payment_status') ?? $request->input('status');
+        $resultCode = $request->input('result') ?? $request->input('result_code');
+
+        if (!$orderId) {
+            return response()->json(['success' => false, 'message' => 'Order ID missing'], 400);
+        }
+
+        // Find the payment by transaction reference
+        $payment = Payment::where('transaction_reference', $orderId)->first();
+
+        if (!$payment) {
+            \Illuminate\Support\Facades\Log::warning('Payment not found for order_id: ' . $orderId);
+            return response()->json(['success' => false, 'message' => 'Payment not found'], 404);
+        }
+
+        // Determine payment status
+        $isPaid = false;
+        $isFailed = false;
+
+        if ($status === 'COMPLETED' || $status === 'SUCCESS' || $resultCode === 'SUCCESS') {
+            $isPaid = true;
+        } elseif ($status === 'FAILED' || $resultCode === 'FAILED') {
+            $isFailed = true;
+        }
+
+        // Update payment status
+        if ($isPaid) {
+            $payment->update(['status' => 'paid']);
+            
+            // If this is an order payment, update the order status too
+            if ($payment->order_id && $payment->order) {
+                $payment->order->update(['status' => 'paid']);
+            }
+
+            \Illuminate\Support\Facades\Log::info('Payment marked as paid: ' . $payment->id);
+        } elseif ($isFailed) {
+            $payment->update(['status' => 'failed']);
+            \Illuminate\Support\Facades\Log::info('Payment marked as failed: ' . $payment->id);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Callback processed successfully',
+            'payment_id' => $payment->id,
+            'status' => $payment->status
+        ]);
+    }
 }

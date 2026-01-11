@@ -106,6 +106,12 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/tips', [\App\Http\Controllers\Manager\TipController::class, 'index'])->name('tips.index');
     Route::get('/api', [\App\Http\Controllers\Manager\ApiController::class, 'index'])->name('api.index');
     Route::post('/api/zenopay', [\App\Http\Controllers\Manager\ApiController::class, 'updateZenoPayKey'])->name('api.zenopay.update');
+    
+    // Menu Image Upload
+    Route::get('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'index'])->name('menu-image.index');
+    Route::post('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'store'])->name('menu-image.store');
+    Route::delete('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'destroy'])->name('menu-image.destroy');
+    
     Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
 });
 

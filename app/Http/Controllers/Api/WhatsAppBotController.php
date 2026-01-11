@@ -360,6 +360,136 @@ class WhatsAppBotController extends Controller
     }
 
     /**
+     * Initiate Quick Payment (without order)
+     * Allows payment of any amount with a description
+     */
+    public function initiateQuickPayment(Request $request)
+    {
+        $request->validate([
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'phone_number' => 'required',
+            'amount' => 'required|numeric|min:100',
+            'description' => 'required|string|max:500',
+            'network' => 'nullable|string'
+        ]);
+
+        $restaurant = Restaurant::find($request->restaurant_id);
+
+        if (!$restaurant || !$restaurant->zenopay_api_key) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Restaurant payment gateway not configured'
+            ], 400);
+        }
+
+        // Prepare data for ZenoPay
+        $transactionId = 'QUICK-' . $restaurant->id . '-' . time();
+        
+        // Map network names if necessary (e.g., tigopesa -> tigo)
+        $network = $request->network;
+        if ($network === 'tigopesa') {
+            $network = 'tigo';
+        } elseif ($network === 'mpesa') {
+            $network = 'voda';
+        } elseif ($network === 'halopesa') {
+            $network = 'halo';
+        }
+
+        $zenoPay = new \App\Services\ZenoPayService();
+        $result = $zenoPay->initiatePayment($restaurant->zenopay_api_key, [
+            'order_id' => $transactionId,
+            'buyer_email' => $request->phone_number . '@taptap.com', // Placeholder email
+            'buyer_name' => 'WhatsApp Customer',
+            'buyer_phone' => $request->phone_number,
+            'amount' => $request->amount,
+            'network' => $network
+        ]);
+
+        if (isset($result['status']) && $result['status'] === 'success') {
+            $payment = Payment::create([
+                'restaurant_id' => $restaurant->id,
+                'customer_phone' => $request->phone_number,
+                'amount' => $request->amount,
+                'method' => 'ussd',
+                'payment_type' => 'quick',
+                'status' => 'pending',
+                'transaction_reference' => $transactionId,
+                'description' => $request->description,
+            ]);
+
+            // Log Activity
+            Activity::create([
+                'description' => "Quick payment initiated: Tsh " . number_format($request->amount) . " from {$request->phone_number}",
+                'type' => 'quick_payment',
+                'properties' => [
+                    'payment_id' => $payment->id, 
+                    'source' => 'whatsapp',
+                    'description' => $request->description
+                ]
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'message' => 'USSD Prompt sent to ' . $request->phone_number,
+                'description' => $request->description
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $result['message'] ?? 'Failed to initiate payment with ZenoPay',
+            'debug' => $result
+        ], 400);
+    }
+
+    /**
+     * Check Quick Payment Status (Polling)
+     */
+    public function getQuickPaymentStatus($paymentId)
+    {
+        $payment = Payment::where('id', $paymentId)
+            ->where('payment_type', 'quick')
+            ->first();
+
+        if (!$payment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment not found'
+            ], 404);
+        }
+
+        // Polling logic for ZenoPay
+        if ($payment->status === 'pending' && $payment->restaurant) {
+            $restaurant = $payment->restaurant;
+            $apiKey = $restaurant->zenopay_api_key;
+
+            if ($apiKey) {
+                $zenoPay = new \App\Services\ZenoPayService();
+                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+
+                if (
+                    (isset($result['payment_status']) && ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS')) || 
+                    (isset($result['result']) && $result['result'] === 'SUCCESS')
+                ) {
+                    $payment->update(['status' => 'paid']);
+                } elseif (isset($result['payment_status']) && $result['payment_status'] === 'FAILED') {
+                    $payment->update(['status' => 'failed']);
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'payment_id' => $payment->id,
+            'status' => $payment->status,
+            'amount' => $payment->amount,
+            'description' => $payment->description,
+            'created_at' => $payment->created_at->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /**
      * Get Tables for a Restaurant
      */
     public function getTables($restaurantId)
@@ -461,6 +591,40 @@ class WhatsAppBotController extends Controller
                         'subtotal' => $item->total
                     ];
                 })
+            ]
+        ]);
+    }
+
+    /**
+     * Get Menu Image for a Restaurant
+     */
+    public function getMenuImage($restaurantId)
+    {
+        $restaurant = Restaurant::find($restaurantId);
+
+        if (!$restaurant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Restaurant not found'
+            ], 404);
+        }
+
+        if (!$restaurant->menu_image) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No menu image available for this restaurant'
+            ], 404);
+        }
+
+        // Return the full URL to the menu image
+        $imageUrl = asset('storage/' . $restaurant->menu_image);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'restaurant_id' => $restaurant->id,
+                'restaurant_name' => $restaurant->name,
+                'menu_image_url' => $imageUrl
             ]
         ]);
     }
