@@ -1,4 +1,4 @@
-e and payment<?php
+<?php
 
 namespace App\Http\Controllers;
 
