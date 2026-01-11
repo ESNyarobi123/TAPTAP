@@ -628,4 +628,109 @@ class WhatsAppBotController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Create Order from Text (Natural Language)
+     */
+    public function createOrderByText(Request $request)
+    {
+        $request->validate([
+            'restaurant_id' => 'required|exists:restaurants,id',
+            'table_number' => 'required',
+            'customer_phone' => 'required',
+            'order_text' => 'required|string',
+        ]);
+
+        $text = $request->order_text;
+        $restaurantId = $request->restaurant_id;
+
+        // Fetch all available items for this restaurant
+        $menuItems = MenuItem::withoutGlobalScopes()
+            ->where('restaurant_id', $restaurantId)
+            ->where('is_available', true)
+            ->get();
+
+        // Sort by name length descending to match longest names first (e.g. "Chips Mayai" before "Chips")
+        $sortedItems = $menuItems->sortByDesc(function($item) {
+            return strlen($item->name);
+        });
+
+        $matchedItems = [];
+        $totalAmount = 0;
+
+        foreach ($sortedItems as $item) {
+            // Escape special characters in item name for regex
+            $escapedName = preg_quote($item->name, '/');
+            
+            // Regex to find item name, optionally preceded OR followed by a number (quantity)
+            // Matches: "2 Chips", "Chips 2", "2x Chips", "Chips x2"
+            $regex = '/(?:(\d+)\s*[xX]?\s*)?\b' . $escapedName . '\b(?:\s*[xX]?\s*(\d+))?/i';
+            
+            if (preg_match($regex, $text, $matches)) {
+                $q1 = isset($matches[1]) && $matches[1] !== '' ? (int)$matches[1] : 0;
+                $q2 = isset($matches[2]) && $matches[2] !== '' ? (int)$matches[2] : 0;
+                $quantity = max($q1, $q2, 1);
+                
+                $matchedItems[] = [
+                    'menu_item_id' => $item->id,
+                    'quantity' => $quantity,
+                    'price' => $item->price,
+                    'name' => $item->name, // For response
+                    'subtotal' => $item->price * $quantity
+                ];
+                
+                $totalAmount += $item->price * $quantity;
+                
+                // Remove the matched part from text to prevent double matching
+                // We replace with spaces to preserve word boundaries for other matches
+                $text = str_replace($matches[0], str_repeat(' ', strlen($matches[0])), $text);
+            }
+        }
+
+        if (empty($matchedItems)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, we could not identify any menu items in your message. Please try using the exact names from the menu.'
+            ], 400);
+        }
+
+        // Create Order
+        try {
+            return DB::transaction(function () use ($request, $matchedItems, $totalAmount) {
+                $order = Order::withoutGlobalScopes()->create([
+                    'restaurant_id' => $request->restaurant_id,
+                    'table_number' => $request->table_number,
+                    'customer_phone' => $request->customer_phone,
+                    'total_amount' => $totalAmount,
+                    'status' => 'pending',
+                ]);
+
+                foreach ($matchedItems as $item) {
+                    $order->items()->create([
+                        'menu_item_id' => $item['menu_item_id'],
+                        'quantity' => $item['quantity'],
+                        'price' => $item['price'],
+                        'total' => $item['subtotal'],
+                    ]);
+                }
+
+                // Log Activity
+                Activity::create([
+                    'description' => "New WhatsApp text order #{$order->id} from {$request->customer_phone}: \"{$request->order_text}\"",
+                    'type' => 'order_created',
+                    'properties' => ['order_id' => $order->id, 'source' => 'whatsapp_text']
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'order_id' => $order->id,
+                    'total' => $totalAmount,
+                    'items' => $matchedItems,
+                    'message' => 'Order created successfully'
+                ]);
+            });
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

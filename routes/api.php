@@ -59,6 +59,7 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     Route::get('/category/{categoryId}/items', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getCategoryItems']);
     Route::get('/item/{itemId}', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getItemDetails']);
     Route::post('/order', [App\Http\Controllers\Api\WhatsAppBotController::class, 'createOrder']);
+    Route::post('/order/text', [App\Http\Controllers\Api\WhatsAppBotController::class, 'createOrderByText']);
     Route::get('/order/{orderId}/status', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getOrderStatus']);
     Route::post('/payment/ussd', [App\Http\Controllers\Api\WhatsAppBotController::class, 'initiatePayment']);
     Route::post('/feedback', [App\Http\Controllers\Api\WhatsAppBotController::class, 'submitFeedback']);
