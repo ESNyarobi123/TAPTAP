@@ -16,7 +16,48 @@
         </button>
     </div>
 
-    <!-- Tables Grid -->
+    <!-- Official Restaurant QR -->
+    <div class="glass-card rounded-2xl p-8 mb-12 border-violet-500/30 bg-violet-500/5 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-violet-400">
+                <path d="M3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+        </div>
+        
+        <div class="flex flex-col md:flex-row items-center gap-10 relative z-10">
+            <div class="bg-white p-4 rounded-[2rem] shadow-2xl shadow-violet-500/20">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ urlencode(Auth::user()->restaurant->whatsapp_qr_url) }}" alt="Official QR" class="w-40 h-40">
+            </div>
+            
+            <div class="flex-1 text-center md:text-left">
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-violet-500/20 text-violet-400 text-[10px] font-bold uppercase tracking-widest mb-4">
+                    Official Restaurant QR
+                </div>
+                <h3 class="text-3xl font-black text-white mb-4 tracking-tight">Main Entrance QR Code</h3>
+                <p class="text-white/50 max-w-xl mb-8 font-medium">This is your restaurant's official QR code. Place this at the entrance or on marketing materials. When scanned, it opens the WhatsApp bot directly to your restaurant's menu.</p>
+                
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data={{ urlencode(Auth::user()->restaurant->whatsapp_qr_url) }}" download="official-qr.png" target="_blank" class="px-8 py-4 bg-violet-600 text-white rounded-2xl font-bold shadow-xl shadow-violet-600/20 hover:bg-violet-500 transition-all flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+                        </svg>
+                        Download High-Res
+                    </a>
+                    <button onclick="copyLink('{{ Auth::user()->restaurant->whatsapp_qr_url }}')" class="px-8 py-4 glass text-white rounded-2xl font-bold hover:bg-white/10 transition-all flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                        </svg>
+                        Copy Bot Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-8">
+        <h3 class="text-xl font-bold text-white">Table Specific QR Codes</h3>
+        <p class="text-sm text-white/40">QR codes for individual tables to track orders automatically.</p>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         @forelse($tables as $table)
             <div class="glass-card rounded-2xl overflow-hidden card-hover group">
@@ -48,16 +89,16 @@
                 
                 <div class="bg-white/5 p-6 flex flex-col items-center gap-4 border-t border-white/5">
                     <div class="bg-white p-2 rounded-xl">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($table->qr_code) }}" alt="QR Code" class="w-28 h-28">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($table->whatsapp_qr_url) }}" alt="QR Code" class="w-28 h-28">
                     </div>
                     <div class="flex gap-2 w-full">
-                        <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode($table->qr_code) }}" download="table-{{ $table->id }}-qr.png" target="_blank" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-violet-600 transition-all flex items-center justify-center gap-2">
+                        <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode($table->whatsapp_qr_url) }}" download="table-{{ $table->id }}-qr.png" target="_blank" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-violet-600 transition-all flex items-center justify-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
                             </svg>
                             Download
                         </a>
-                        <button onclick="copyLink('{{ $table->qr_code }}')" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-cyan-600 transition-all flex items-center justify-center gap-2">
+                        <button onclick="copyLink('{{ $table->whatsapp_qr_url }}')" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-cyan-600 transition-all flex items-center justify-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                             </svg>

@@ -146,7 +146,7 @@
             <!-- Logo Area -->
             <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                    <div class="w-11 h-11 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                     </div>
                     <div>
@@ -284,7 +284,7 @@
                     </button>
                     <span class="font-bold text-white/90 text-lg tracking-tight">TIP<span class="gradient-text">TAP</span></span>
                 </div>
-                    <div class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                    <div class="w-9 h-9 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                     </div>
             </div>

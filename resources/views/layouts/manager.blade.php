@@ -145,7 +145,7 @@
             <!-- Logo Area -->
             <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                    <div class="w-11 h-11 flex items-center justify-center overflow-hidden">
                         <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                     </div>
                     <div>
@@ -291,15 +291,14 @@
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <button onclick="openSidebar()" class="flex items-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
                     </button>
                     <span class="font-bold text-white/90 text-lg tracking-tight">TIP<span class="gradient-text">TAP</span></span>
                 </div>
-                    <div class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                        <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
-                    </div>
+                <div class="w-9 h-9 flex items-center justify-center overflow-hidden">
+                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                </div>
             </div>
 
             <!-- Desktop Header & Content -->

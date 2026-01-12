@@ -31,9 +31,8 @@ class TableController extends Controller
             'is_active' => true,
         ]);
 
-        // Generate QR Code content URL
-        $qrContent = config('app.url') . "/menu/" . $restaurant->id . "?table=" . $table->id;
-        $table->update(['qr_code' => $qrContent]);
+        // Generate QR Code content URL (WhatsApp format)
+        $table->update(['qr_code' => $table->whatsapp_qr_url]);
 
         return back()->with('success', 'Table created successfully!');
     }

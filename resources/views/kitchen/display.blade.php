@@ -636,8 +636,8 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <div class="logo-icon" style="overflow: hidden; background: white/10;">
-                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" style="width: 100%; height: 100%; object-cover: cover;">
+                <div class="logo-icon" style="overflow: hidden;">
+                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <div class="logo-text">
                     <h1>Kitchen Display</h1>

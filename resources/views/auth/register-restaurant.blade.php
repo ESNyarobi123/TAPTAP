@@ -8,7 +8,7 @@
         <div id="chat-container" class="flex flex-col min-h-[400px]">
             <!-- Chat Header -->
             <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30 overflow-hidden">
+                <div class="w-12 h-12 flex items-center justify-center overflow-hidden">
                     <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                 </div>
                 <div>

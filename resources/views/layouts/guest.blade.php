@@ -78,7 +78,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-8 sm:pt-0 px-4 relative z-10">
             <!-- Logo -->
             <a href="/" class="flex items-center gap-3 group mb-8">
-                <div class="w-14 h-14 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/30 overflow-hidden transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
+                <div class="w-14 h-14 flex items-center justify-center overflow-hidden transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
                     <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
