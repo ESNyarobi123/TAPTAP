@@ -99,13 +99,13 @@
                     <div class="flex gap-5">
                         <div class="shrink-0">
                             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center border border-white/10 group-hover:border-white/20 transition-all">
-                                <span class="text-lg font-black text-white/80">{{ substr($feedback->order->customer_name ?? 'C', 0, 1) }}</span>
+                                <span class="text-lg font-black text-white/80">{{ substr($feedback->order->customer_name ?? $feedback->waiter->name ?? 'C', 0, 1) }}</span>
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex justify-between items-start mb-1">
                                 <div>
-                                    <h5 class="font-bold text-white truncate">{{ $feedback->order->customer_name ?? 'Anonymous Guest' }}</h5>
+                                    <h5 class="font-bold text-white truncate">{{ $feedback->order->customer_name ?? 'Feedback for ' . ($feedback->waiter->name ?? 'Service') }}</h5>
                                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">{{ $feedback->created_at->diffForHumans() }} • Table #{{ $feedback->order->table_number ?? 'N/A' }}</p>
                                 </div>
                                 <div class="flex gap-0.5">

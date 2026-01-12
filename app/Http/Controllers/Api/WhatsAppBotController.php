@@ -245,11 +245,22 @@ class WhatsAppBotController extends Controller
         $request->validate([
             'restaurant_id' => 'required|exists:restaurants,id',
             'order_id' => 'nullable|exists:orders,id',
+            'waiter_id' => 'nullable|exists:users,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string',
         ]);
 
-        $feedback = Feedback::withoutGlobalScopes()->create($request->all());
+        $data = $request->all();
+
+        // If waiter_id is not provided but order_id is, try to get waiter_id from order
+        if (empty($data['waiter_id']) && !empty($data['order_id'])) {
+            $order = Order::withoutGlobalScopes()->find($data['order_id']);
+            if ($order && $order->waiter_id) {
+                $data['waiter_id'] = $order->waiter_id;
+            }
+        }
+
+        $feedback = Feedback::withoutGlobalScopes()->create($data);
 
         return response()->json([
             'success' => true,

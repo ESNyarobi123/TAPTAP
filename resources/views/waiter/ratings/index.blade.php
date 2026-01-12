@@ -22,7 +22,7 @@
                 <div class="flex items-center justify-between pt-4 border-t border-white/5">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 glass rounded-xl flex items-center justify-center font-bold text-violet-400 text-sm">
-                            #{{ $feedback->order->table_number }}
+                            #{{ $feedback->order->table_number ?? 'N/A' }}
                         </div>
                         <p class="text-[11px] font-medium text-white/40 uppercase tracking-wider">Table Number</p>
                     </div>

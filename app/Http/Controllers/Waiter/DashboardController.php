@@ -44,8 +44,11 @@ class DashboardController extends Controller
         $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->get();
 
         // Recent Feedback
-        $recentFeedback = Feedback::whereHas('order', function($query) use ($waiter) {
-            $query->where('waiter_id', $waiter->id);
+        $recentFeedback = Feedback::where(function($query) use ($waiter) {
+            $query->where('waiter_id', $waiter->id)
+                  ->orWhereHas('order', function($q) use ($waiter) {
+                      $q->where('waiter_id', $waiter->id);
+                  });
         })->latest()->take(5)->get();
 
         // My Orders Today (History)
@@ -118,8 +121,11 @@ class DashboardController extends Controller
     public function ratings()
     {
         $waiter = Auth::user();
-        $feedbacks = Feedback::whereHas('order', function($query) use ($waiter) {
-            $query->where('waiter_id', $waiter->id);
+        $feedbacks = Feedback::where(function($query) use ($waiter) {
+            $query->where('waiter_id', $waiter->id)
+                  ->orWhereHas('order', function($q) use ($waiter) {
+                      $q->where('waiter_id', $waiter->id);
+                  });
         })->latest()->paginate(15);
         
         return view('waiter.ratings.index', compact('feedbacks'));

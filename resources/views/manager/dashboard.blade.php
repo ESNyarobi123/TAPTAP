@@ -284,11 +284,11 @@
                 @forelse($recentFeedback as $feedback)
                     <div class="flex gap-4 p-4 glass rounded-xl card-hover">
                         <div class="w-11 h-11 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center font-bold text-violet-400 border border-violet-500/20">
-                            {{ substr($feedback->order->customer_name ?? 'C', 0, 1) }}
+                            {{ substr($feedback->order->customer_name ?? $feedback->waiter->name ?? 'C', 0, 1) }}
                         </div>
                         <div class="flex-1">
                             <div class="flex justify-between mb-1">
-                                <h5 class="font-semibold text-white">{{ $feedback->order->customer_name ?? 'Customer' }}</h5>
+                                <h5 class="font-semibold text-white">{{ $feedback->order->customer_name ?? 'Feedback for ' . ($feedback->waiter->name ?? 'Service') }}</h5>
                                 <div class="flex text-amber-400">
                                     @for($i = 1; $i <= 5; $i++)
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="{{ $i <= $feedback->rating ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ $i <= $feedback->rating ? '' : 'text-white/20' }}">
