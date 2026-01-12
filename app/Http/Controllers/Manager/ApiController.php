@@ -15,17 +15,26 @@ class ApiController extends Controller
         return view('manager.api.index', compact('restaurant'));
     }
 
-    public function updateZenoPayKey(Request $request)
+    /**
+     * Update Selcom Payment Gateway Credentials
+     */
+    public function updateSelcomCredentials(Request $request)
     {
         $request->validate([
-            'zenopay_api_key' => 'required|string|max:255',
+            'selcom_vendor_id' => 'required|string|max:255',
+            'selcom_api_key' => 'required|string|max:255',
+            'selcom_api_secret' => 'required|string|max:255',
+            'selcom_is_live' => 'nullable|boolean',
         ]);
 
         $restaurant = Auth::user()->restaurant;
         $restaurant->update([
-            'zenopay_api_key' => $request->zenopay_api_key,
+            'selcom_vendor_id' => $request->selcom_vendor_id,
+            'selcom_api_key' => $request->selcom_api_key,
+            'selcom_api_secret' => $request->selcom_api_secret,
+            'selcom_is_live' => $request->has('selcom_is_live'),
         ]);
 
-        return back()->with('success', 'ZenoPay API Key updated successfully!');
+        return back()->with('success', 'Selcom credentials updated successfully!');
     }
 }

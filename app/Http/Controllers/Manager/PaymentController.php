@@ -8,16 +8,16 @@ use App\Models\Payment;
 use App\Models\Order;
 use Carbon\Carbon;
 
-use App\Services\ZenoPayService;
+use App\Services\SelcomService;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    protected $zenoPay;
+    protected $selcom;
 
-    public function __construct(ZenoPayService $zenoPay)
+    public function __construct(SelcomService $selcom)
     {
-        $this->zenoPay = $zenoPay;
+        $this->selcom = $selcom;
     }
 
     public function index()
@@ -32,7 +32,10 @@ class PaymentController extends Controller
         return view('manager.payments.index', compact('payments', 'cashRevenue', 'mobileRevenue', 'cardRevenue'));
     }
 
-    public function initiateZenoPay(Request $request)
+    /**
+     * Initiate Selcom USSD Push Payment
+     */
+    public function initiateSelcom(Request $request)
     {
         $request->validate([
             'order_id' => 'required|exists:orders,id',
@@ -44,42 +47,47 @@ class PaymentController extends Controller
         $order = Order::findOrFail($request->order_id);
         $restaurant = Auth::user()->restaurant;
 
-        if (!$restaurant->zenopay_api_key) {
-            return response()->json(['status' => 'error', 'message' => 'ZenoPay API Key not configured'], 400);
+        if (!$restaurant->hasSelcomConfigured()) {
+            return response()->json(['status' => 'error', 'message' => 'Selcom payment gateway not configured'], 400);
         }
 
-        $data = [
-            'order_id' => 'ORD-' . $order->id . '-' . time(),
-            'buyer_email' => $request->email,
-            'buyer_name' => $request->name,
-            'buyer_phone' => $request->phone,
-            'amount' => $order->total_amount,
-        ];
+        $transactionId = 'ORD-' . $order->id . '-' . time();
 
-        $result = $this->zenoPay->initiatePayment($restaurant->zenopay_api_key, $data);
+        $result = $this->selcom->initiatePayment($restaurant->getSelcomCredentials(), [
+            'order_id' => $transactionId,
+            'email' => $request->email,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'amount' => $order->total_amount,
+            'description' => 'Order #' . $order->id,
+        ]);
 
         if (isset($result['status']) && $result['status'] === 'success') {
             // Save the external order_id in the order
-            $order->update(['payment_reference' => $data['order_id']]);
+            $order->update(['payment_reference' => $transactionId]);
             return response()->json($result);
         }
 
         return response()->json($result, 400);
     }
 
-    public function checkZenoPayStatus($orderId)
+    /**
+     * Check Selcom Payment Status (Polling)
+     */
+    public function checkSelcomStatus($orderId)
     {
         $order = Order::findOrFail($orderId);
         $restaurant = Auth::user()->restaurant;
-        $externalId = $order->payment_reference; // Retrieve the external ID we saved
+        $externalId = $order->payment_reference;
 
         if (!$externalId) {
             return response()->json(['status' => 'error', 'message' => 'No active transaction found'], 400);
         }
 
-        $result = $this->zenoPay->checkStatus($restaurant->zenopay_api_key, $externalId);
+        $result = $this->selcom->checkOrderStatus($restaurant->getSelcomCredentials(), $externalId);
+        $paymentStatus = $this->selcom->parsePaymentStatus($result);
 
-        if (isset($result['result']) && $result['result'] === 'SUCCESS') {
+        if ($paymentStatus === 'paid') {
             // Payment successful, update order status
             $order->update(['status' => 'paid']);
             
@@ -92,8 +100,10 @@ class PaymentController extends Controller
             ]);
 
             return response()->json(['status' => 'paid', 'message' => 'Payment completed successfully!']);
+        } elseif ($paymentStatus === 'failed') {
+            return response()->json(['status' => 'failed', 'message' => 'Payment failed']);
         }
 
-        return response()->json($result);
+        return response()->json(['status' => 'pending', 'message' => 'Payment pending...']);
     }
 }

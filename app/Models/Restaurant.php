@@ -12,7 +12,43 @@ use App\Models\Tip;
 
 class Restaurant extends Model
 {
-    protected $fillable = ['name', 'location', 'phone', 'logo', 'menu_image', 'is_active', 'zenopay_api_key', 'kitchen_token', 'kitchen_token_generated_at'];
+    protected $fillable = [
+        'name', 
+        'location', 
+        'phone', 
+        'logo', 
+        'menu_image', 
+        'is_active', 
+        'selcom_vendor_id',
+        'selcom_api_key',
+        'selcom_api_secret',
+        'selcom_is_live',
+        'kitchen_token', 
+        'kitchen_token_generated_at'
+    ];
+
+    /**
+     * Get Selcom credentials array
+     */
+    public function getSelcomCredentials()
+    {
+        return [
+            'vendor_id' => $this->selcom_vendor_id,
+            'api_key' => $this->selcom_api_key,
+            'api_secret' => $this->selcom_api_secret,
+            'is_live' => $this->selcom_is_live,
+        ];
+    }
+
+    /**
+     * Check if Selcom is configured
+     */
+    public function hasSelcomConfigured()
+    {
+        return !empty($this->selcom_vendor_id) 
+            && !empty($this->selcom_api_key) 
+            && !empty($this->selcom_api_secret);
+    }
 
     public function users()
     {

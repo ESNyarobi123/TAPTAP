@@ -47,8 +47,14 @@ class RestaurantController extends Controller
             'name' => 'required|string|max:255',
             'location' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
-            'zenopay_api_key' => 'nullable|string',
+            'selcom_vendor_id' => 'nullable|string|max:255',
+            'selcom_api_key' => 'nullable|string|max:255',
+            'selcom_api_secret' => 'nullable|string|max:255',
+            'selcom_is_live' => 'nullable|boolean',
         ]);
+
+        // Handle checkbox (not sent when unchecked)
+        $validated['selcom_is_live'] = $request->has('selcom_is_live');
 
         $restaurant->update($validated);
 

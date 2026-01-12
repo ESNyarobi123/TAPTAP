@@ -42,7 +42,7 @@
             </div>
         </div>
 
-        <!-- ZenoPay Integration -->
+        <!-- Selcom Payment Integration -->
         <div class="glass-card p-8 rounded-2xl">
             <div class="flex items-center gap-4 mb-8">
                 <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-cyan-500/20">
@@ -50,19 +50,101 @@
                         <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-white tracking-tight">ZenoPay Mobile Money</h3>
+                <div>
+                    <h3 class="text-xl font-bold text-white tracking-tight">Selcom Mobile Money</h3>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-white/40">USSD Push Payment Gateway</p>
+                </div>
             </div>
 
-            <form action="{{ route('manager.api.zenopay.update') }}" method="POST" class="space-y-6">
+            @if(session('success'))
+            <div class="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                <div class="flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <p class="text-sm font-medium text-emerald-400">{{ session('success') }}</p>
+                </div>
+            </div>
+            @endif
+
+            <form action="{{ route('manager.api.selcom.update') }}" method="POST" class="space-y-5">
                 @csrf
+                
+                <!-- Vendor ID -->
                 <div>
-                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-3 block">ZenoPay API Key</label>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Vendor ID</label>
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <input type="text" name="selcom_vendor_id" value="{{ $restaurant->selcom_vendor_id }}" placeholder="e.g., TILL60917564" 
+                               class="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
+                    </div>
+                    @error('selcom_vendor_id') <p class="text-rose-400 text-[10px] font-medium mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- API Key -->
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">API Key</label>
                     <div class="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
                             <circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/>
                         </svg>
-                        <input type="password" name="zenopay_api_key" value="{{ $restaurant->zenopay_api_key }}" placeholder="Enter your ZenoPay API Key" 
-                               class="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
+                        <input type="password" name="selcom_api_key" value="{{ $restaurant->selcom_api_key }}" placeholder="Enter your Selcom API Key" 
+                               class="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
+                    </div>
+                    @error('selcom_api_key') <p class="text-rose-400 text-[10px] font-medium mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- API Secret -->
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">API Secret</label>
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <input type="password" name="selcom_api_secret" value="{{ $restaurant->selcom_api_secret }}" placeholder="Enter your Selcom API Secret" 
+                               class="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all">
+                    </div>
+                    @error('selcom_api_secret') <p class="text-rose-400 text-[10px] font-medium mt-1">{{ $message }}</p> @enderror
+                </div>
+
+                <!-- Live Mode Toggle -->
+                <div class="flex items-center justify-between p-4 glass rounded-xl">
+                    <div>
+                        <p class="text-sm font-semibold text-white">Live Mode</p>
+                        <p class="text-[10px] text-white/40">Enable live production payments (disable for testing)</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="selcom_is_live" value="1" {{ $restaurant->selcom_is_live ? 'checked' : '' }} class="sr-only peer">
+                        <div class="w-11 h-6 bg-white/10 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-cyan-500 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                </div>
+
+                <!-- Status Indicator -->
+                <div class="p-4 {{ $restaurant->hasSelcomConfigured() ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-amber-500/10 border-amber-500/20' }} rounded-xl border">
+                    <div class="flex items-center gap-3">
+                        @if($restaurant->hasSelcomConfigured())
+                        <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-emerald-400">Selcom Configured</p>
+                            <p class="text-[10px] text-white/40">{{ $restaurant->selcom_is_live ? 'LIVE MODE' : 'TEST MODE' }}</p>
+                        </div>
+                        @else
+                        <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-amber-400">Not Configured</p>
+                            <p class="text-[10px] text-white/40">Fill in all fields to enable payments</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -72,14 +154,14 @@
                             <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
                         </svg>
                         <div>
-                            <p class="text-sm font-semibold text-cyan-400 mb-1">How to get your API Key?</p>
-                            <p class="text-[11px] text-white/60 leading-relaxed">Log in to your ZenoPay dashboard, go to Settings > API Keys, and copy your production key here. This enables USSD push payments for your customers.</p>
+                            <p class="text-sm font-semibold text-cyan-400 mb-1">How to get Selcom credentials?</p>
+                            <p class="text-[11px] text-white/60 leading-relaxed">Log in to your Selcom Merchant Portal, go to Settings → API Integration. Copy your Vendor ID, API Key, and API Secret. Start with Test Mode, then switch to Live Mode when ready for production.</p>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
-                    Save ZenoPay Settings
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+                    Save Selcom Settings
                 </button>
             </form>
         </div>

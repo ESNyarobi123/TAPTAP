@@ -105,12 +105,12 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'store'])->name('waiters.store');
     Route::delete('/waiters/{waiter}', [\App\Http\Controllers\Manager\WaiterController::class, 'destroy'])->name('waiters.destroy');
     Route::get('/payments', [\App\Http\Controllers\Manager\PaymentController::class, 'index'])->name('payments.index');
-    Route::post('/payments/zenopay/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateZenoPay'])->name('payments.zenopay.initiate');
-    Route::get('/payments/zenopay/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkZenoPayStatus'])->name('payments.zenopay.status');
+    Route::post('/payments/selcom/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateSelcom'])->name('payments.selcom.initiate');
+    Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkSelcomStatus'])->name('payments.selcom.status');
     Route::get('/feedback', [\App\Http\Controllers\Manager\FeedbackController::class, 'index'])->name('feedback.index');
     Route::get('/tips', [\App\Http\Controllers\Manager\TipController::class, 'index'])->name('tips.index');
     Route::get('/api', [\App\Http\Controllers\Manager\ApiController::class, 'index'])->name('api.index');
-    Route::post('/api/zenopay', [\App\Http\Controllers\Manager\ApiController::class, 'updateZenoPayKey'])->name('api.zenopay.update');
+    Route::post('/api/selcom', [\App\Http\Controllers\Manager\ApiController::class, 'updateSelcomCredentials'])->name('api.selcom.update');
     
     // Menu Image Upload
     Route::get('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'index'])->name('menu-image.index');

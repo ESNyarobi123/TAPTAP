@@ -45,19 +45,28 @@
                 <div class="mt-6 p-6 bg-white/5 rounded-xl border border-white/10">
                     <div class="flex items-center justify-between mb-6">
                         <h4 class="text-sm font-black text-white uppercase tracking-widest">Payment API Configuration</h4>
-                        <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-[9px] font-black rounded-full uppercase tracking-widest border border-cyan-500/30">ZenoPay</span>
+                        <span class="px-3 py-1 {{ $restaurant->hasSelcomConfigured() ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border-amber-500/30' }} text-[9px] font-black rounded-full uppercase tracking-widest border">
+                            {{ $restaurant->hasSelcomConfigured() ? ($restaurant->selcom_is_live ? 'Selcom Live' : 'Selcom Test') : 'Not Configured' }}
+                        </span>
                     </div>
                     <div class="space-y-4">
                         <div>
+                            <p class="text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">Vendor ID</p>
+                            <code class="block bg-white/5 p-3 rounded-xl border border-white/10 text-xs font-mono text-white/60 truncate">
+                                {{ $restaurant->selcom_vendor_id ?? 'Not Configured' }}
+                            </code>
+                        </div>
+                        <div>
                             <p class="text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">API Key</p>
-                            <div class="flex items-center gap-3">
-                                <code class="flex-1 bg-white/5 p-3 rounded-xl border border-white/10 text-xs font-mono text-white/60 truncate">
-                                    {{ $restaurant->zenopay_api_key ?? 'Not Configured' }}
-                                </code>
-                                <button class="p-3 glass text-white/40 border border-white/10 rounded-xl hover:text-white hover:bg-white/10 transition-all">
-                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
+                            <code class="block bg-white/5 p-3 rounded-xl border border-white/10 text-xs font-mono text-white/60 truncate">
+                                {{ $restaurant->selcom_api_key ? '••••••••' . substr($restaurant->selcom_api_key, -4) : 'Not Configured' }}
+                            </code>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">API Secret</p>
+                            <code class="block bg-white/5 p-3 rounded-xl border border-white/10 text-xs font-mono text-white/60 truncate">
+                                {{ $restaurant->selcom_api_secret ? '••••••••' . substr($restaurant->selcom_api_secret, -4) : 'Not Configured' }}
+                            </code>
                         </div>
                     </div>
                 </div>

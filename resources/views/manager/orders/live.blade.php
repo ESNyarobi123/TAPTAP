@@ -364,7 +364,7 @@
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h3 class="text-xl font-bold text-white tracking-tight">Process Payment</h3>
-                        <p class="text-sm font-medium text-white/40">ZenoPay USSD Push</p>
+                        <p class="text-sm font-medium text-white/40">Selcom USSD Push</p>
                     </div>
                     <button onclick="closePaymentModal()" class="p-2 hover:bg-white/10 rounded-xl transition-all text-white/40 hover:text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -378,7 +378,7 @@
                     <span id="modalAmount" class="text-2xl font-bold text-white">Tsh 0</span>
                 </div>
 
-                <form id="zenoPayForm" class="space-y-4">
+                <form id="selcomPayForm" class="space-y-4">
                     <input type="hidden" id="modalOrderId">
                     <div>
                         <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Customer Phone (07XXXXXXXX)</label>
@@ -423,7 +423,7 @@
             document.getElementById('paymentModal').classList.add('hidden');
             document.getElementById('paymentModal').classList.remove('flex');
             if (pollingInterval) clearInterval(pollingInterval);
-            document.getElementById('zenoPayForm').classList.remove('hidden');
+            document.getElementById('selcomPayForm').classList.remove('hidden');
             document.getElementById('pollingStatus').classList.add('hidden');
         }
 
@@ -471,7 +471,7 @@
             input.value = val;
         }
 
-        document.getElementById('zenoPayForm').addEventListener('submit', async (e) => {
+        document.getElementById('selcomPayForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payButton = document.getElementById('payButton');
             const orderId = document.getElementById('modalOrderId').value;
@@ -482,7 +482,7 @@
             payButton.innerHTML = '<svg class="w-5 h-5 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Processing...';
 
             try {
-                const response = await fetch('{{ route("manager.payments.zenopay.initiate") }}', {
+                const response = await fetch('{{ route("manager.payments.selcom.initiate") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -499,7 +499,7 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    document.getElementById('zenoPayForm').classList.add('hidden');
+                    document.getElementById('selcomPayForm').classList.add('hidden');
                     document.getElementById('pollingStatus').classList.remove('hidden');
                     startPolling(orderId);
                 } else {
@@ -517,7 +517,7 @@
         function startPolling(orderId) {
             pollingInterval = setInterval(async () => {
                 try {
-                    const response = await fetch(`/manager/payments/zenopay/status/${orderId}`);
+                    const response = await fetch(`/manager/payments/selcom/status/${orderId}`);
                     const result = await response.json();
 
                     if (result.status === 'paid') {

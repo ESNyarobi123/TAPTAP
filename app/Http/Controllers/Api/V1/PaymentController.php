@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Order;
+use App\Services\SelcomService;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+    protected $selcom;
+
+    public function __construct(SelcomService $selcom)
+    {
+        $this->selcom = $selcom;
+    }
+
     public function ussdRequest(Request $request)
     {
         $validated = $request->validate([
@@ -16,26 +25,50 @@ class PaymentController extends Controller
             'phone_number' => 'required|string',
         ]);
 
-        $order = Order::find($validated['order_id']);
+        $order = Order::with('restaurant')->find($validated['order_id']);
+        $restaurant = $order->restaurant;
+
+        // Check if Selcom is configured
+        if (!$restaurant->hasSelcomConfigured()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payment gateway not configured for this restaurant'
+            ], 400);
+        }
         
-        // Simulate USSD request to gateway
         $transactionRef = 'TXN-' . strtoupper(uniqid());
         
-        $payment = Payment::create([
-            'order_id' => $order->id,
+        // Initiate Selcom payment
+        $result = $this->selcom->initiatePayment($restaurant->getSelcomCredentials(), [
+            'order_id' => $transactionRef,
+            'email' => 'customer@taptap.co.tz',
+            'name' => 'Customer',
+            'phone' => $validated['phone_number'],
             'amount' => $order->total_amount,
-            'method' => 'ussd',
-            'status' => 'pending',
-            'transaction_reference' => $transactionRef,
+            'description' => 'Order #' . $order->id,
         ]);
 
-        // In real app, call gateway API here
+        if (isset($result['status']) && $result['status'] === 'success') {
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'amount' => $order->total_amount,
+                'method' => 'ussd',
+                'status' => 'pending',
+                'transaction_reference' => $transactionRef,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'USSD push sent',
+                'transaction_reference' => $transactionRef,
+                'payment_id' => $payment->id
+            ]);
+        }
 
         return response()->json([
-            'message' => 'USSD push sent',
-            'transaction_reference' => $transactionRef,
-            'payment_id' => $payment->id
-        ]);
+            'success' => false,
+            'message' => $result['message'] ?? 'Failed to initiate payment'
+        ], 400);
     }
 
     public function cashPayment(Request $request)
@@ -65,19 +98,19 @@ class PaymentController extends Controller
         
         if ($payment && $payment->status === 'pending') {
             $restaurant = $order->restaurant;
-            $apiKey = $restaurant->zenopay_api_key;
 
-            if ($apiKey) {
-                $zenoPay = new \App\Services\ZenoPayService();
-                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+            if ($restaurant->hasSelcomConfigured()) {
+                $result = $this->selcom->checkOrderStatus(
+                    $restaurant->getSelcomCredentials(), 
+                    $payment->transaction_reference
+                );
+                $paymentStatus = $this->selcom->parsePaymentStatus($result);
 
-                if (isset($result['payment_status'])) {
-                    if ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS') {
-                        $payment->update(['status' => 'paid']);
-                        $order->update(['status' => 'paid']);
-                    } elseif ($result['payment_status'] === 'FAILED') {
-                        $payment->update(['status' => 'failed']);
-                    }
+                if ($paymentStatus === 'paid') {
+                    $payment->update(['status' => 'paid']);
+                    $order->update(['status' => 'paid']);
+                } elseif ($paymentStatus === 'failed') {
+                    $payment->update(['status' => 'failed']);
                 }
             }
         }
@@ -89,20 +122,28 @@ class PaymentController extends Controller
     }
 
     /**
-     * Handle ZenoPay Callback/Webhook
-     * This endpoint receives payment status updates from ZenoPay
+     * Handle Selcom Callback/Webhook
+     * This endpoint receives payment status updates from Selcom
      */
     public function callback(Request $request)
     {
         // Log incoming callback for debugging
-        \Illuminate\Support\Facades\Log::info('ZenoPay Callback Received', $request->all());
+        Log::info('Selcom Callback Received', $request->all());
 
         // Get the transaction reference from the callback
-        $orderId = $request->input('order_id'); // This is our transaction_reference
-        $status = $request->input('payment_status') ?? $request->input('status');
-        $resultCode = $request->input('result') ?? $request->input('result_code');
+        // Selcom uses various fields depending on the callback type
+        $orderId = $request->input('order_id') 
+            ?? $request->input('transid') 
+            ?? $request->input('reference');
+        
+        $status = $request->input('payment_status') 
+            ?? $request->input('result') 
+            ?? $request->input('status');
+        
+        $resultCode = $request->input('resultcode');
 
         if (!$orderId) {
+            Log::warning('Selcom Callback: Order ID missing', $request->all());
             return response()->json(['success' => false, 'message' => 'Order ID missing'], 400);
         }
 
@@ -110,17 +151,20 @@ class PaymentController extends Controller
         $payment = Payment::where('transaction_reference', $orderId)->first();
 
         if (!$payment) {
-            \Illuminate\Support\Facades\Log::warning('Payment not found for order_id: ' . $orderId);
+            Log::warning('Selcom Callback: Payment not found for order_id: ' . $orderId);
             return response()->json(['success' => false, 'message' => 'Payment not found'], 404);
         }
 
-        // Determine payment status
+        // Determine payment status based on Selcom response
         $isPaid = false;
         $isFailed = false;
 
-        if ($status === 'COMPLETED' || $status === 'SUCCESS' || $resultCode === 'SUCCESS') {
-            $isPaid = true;
-        } elseif ($status === 'FAILED' || $resultCode === 'FAILED') {
+        // Selcom uses resultcode '000' for success
+        if ($resultCode === '000') {
+            if (strtoupper($status) === 'COMPLETED' || strtoupper($status) === 'SUCCESS') {
+                $isPaid = true;
+            }
+        } elseif (strtoupper($status) === 'FAILED' || strtoupper($status) === 'CANCELLED') {
             $isFailed = true;
         }
 
@@ -133,10 +177,10 @@ class PaymentController extends Controller
                 $payment->order->update(['status' => 'paid']);
             }
 
-            \Illuminate\Support\Facades\Log::info('Payment marked as paid: ' . $payment->id);
+            Log::info('Selcom Callback: Payment marked as paid: ' . $payment->id);
         } elseif ($isFailed) {
             $payment->update(['status' => 'failed']);
-            \Illuminate\Support\Facades\Log::info('Payment marked as failed: ' . $payment->id);
+            Log::info('Selcom Callback: Payment marked as failed: ' . $payment->id);
         }
 
         return response()->json([

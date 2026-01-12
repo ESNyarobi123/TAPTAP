@@ -207,22 +207,19 @@ class WhatsAppBotController extends Controller
 
         $payment = $order->payments()->where('method', 'ussd')->latest()->first();
         
-        // Polling logic for ZenoPay
+        // Polling logic for Selcom
         if ($payment && $payment->status === 'pending') {
             $restaurant = $order->restaurant;
-            $apiKey = $restaurant->zenopay_api_key;
 
-            if ($apiKey) {
-                $zenoPay = new \App\Services\ZenoPayService();
-                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+            if ($restaurant->hasSelcomConfigured()) {
+                $selcom = new \App\Services\SelcomService();
+                $result = $selcom->checkOrderStatus($restaurant->getSelcomCredentials(), $payment->transaction_reference);
+                $paymentStatus = $selcom->parsePaymentStatus($result);
 
-                if (
-                    (isset($result['payment_status']) && ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS')) || 
-                    (isset($result['result']) && $result['result'] === 'SUCCESS')
-                ) {
+                if ($paymentStatus === 'paid') {
                     $payment->update(['status' => 'paid']);
                     $order->update(['status' => 'paid']);
-                } elseif (isset($result['payment_status']) && $result['payment_status'] === 'FAILED') {
+                } elseif ($paymentStatus === 'failed') {
                     $payment->update(['status' => 'failed']);
                 }
             }
@@ -318,34 +315,24 @@ class WhatsAppBotController extends Controller
         $order = Order::withoutGlobalScopes()->with('restaurant')->find($request->order_id);
         $restaurant = $order->restaurant;
 
-        if (!$restaurant || !$restaurant->zenopay_api_key) {
+        if (!$restaurant || !$restaurant->hasSelcomConfigured()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Restaurant payment gateway not configured'
             ], 400);
         }
 
-        // Prepare data for ZenoPay
+        // Prepare data for Selcom
         $transactionId = 'BOT-' . $order->id . '-' . time();
-        
-        // Map network names if necessary (e.g., tigopesa -> tigo)
-        $network = $request->network;
-        if ($network === 'tigopesa') {
-            $network = 'tigo';
-        } elseif ($network === 'mpesa') {
-            $network = 'voda';
-        } elseif ($network === 'halopesa') {
-            $network = 'halo';
-        }
 
-        $zenoPay = new \App\Services\ZenoPayService();
-        $result = $zenoPay->initiatePayment($restaurant->zenopay_api_key, [
+        $selcom = new \App\Services\SelcomService();
+        $result = $selcom->initiatePayment($restaurant->getSelcomCredentials(), [
             'order_id' => $transactionId,
-            'buyer_email' => $order->customer_phone . '@taptap.com', // Placeholder email
-            'buyer_name' => 'WhatsApp Customer',
-            'buyer_phone' => $request->phone_number,
+            'email' => $order->customer_phone . '@taptap.com',
+            'name' => 'WhatsApp Customer',
+            'phone' => $request->phone_number,
             'amount' => $request->amount,
-            'network' => $network
+            'description' => 'Order #' . $order->id
         ]);
 
         if (isset($result['status']) && $result['status'] === 'success') {
@@ -366,8 +353,8 @@ class WhatsAppBotController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => $result['message'] ?? 'Failed to initiate payment with ZenoPay',
-            'debug' => $result // Optional: remove in production
+            'message' => $result['message'] ?? 'Failed to initiate payment with Selcom',
+            'debug' => $result
         ], 400);
     }
 
@@ -387,34 +374,24 @@ class WhatsAppBotController extends Controller
 
         $restaurant = Restaurant::find($request->restaurant_id);
 
-        if (!$restaurant || !$restaurant->zenopay_api_key) {
+        if (!$restaurant || !$restaurant->hasSelcomConfigured()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Restaurant payment gateway not configured'
             ], 400);
         }
 
-        // Prepare data for ZenoPay
+        // Prepare data for Selcom
         $transactionId = 'QUICK-' . $restaurant->id . '-' . time();
-        
-        // Map network names if necessary (e.g., tigopesa -> tigo)
-        $network = $request->network;
-        if ($network === 'tigopesa') {
-            $network = 'tigo';
-        } elseif ($network === 'mpesa') {
-            $network = 'voda';
-        } elseif ($network === 'halopesa') {
-            $network = 'halo';
-        }
 
-        $zenoPay = new \App\Services\ZenoPayService();
-        $result = $zenoPay->initiatePayment($restaurant->zenopay_api_key, [
+        $selcom = new \App\Services\SelcomService();
+        $result = $selcom->initiatePayment($restaurant->getSelcomCredentials(), [
             'order_id' => $transactionId,
-            'buyer_email' => $request->phone_number . '@taptap.com', // Placeholder email
-            'buyer_name' => 'WhatsApp Customer',
-            'buyer_phone' => $request->phone_number,
+            'email' => $request->phone_number . '@taptap.com',
+            'name' => 'WhatsApp Customer',
+            'phone' => $request->phone_number,
             'amount' => $request->amount,
-            'network' => $network
+            'description' => $request->description
         ]);
 
         if (isset($result['status']) && $result['status'] === 'success') {
@@ -450,7 +427,7 @@ class WhatsAppBotController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => $result['message'] ?? 'Failed to initiate payment with ZenoPay',
+            'message' => $result['message'] ?? 'Failed to initiate payment with Selcom',
             'debug' => $result
         ], 400);
     }
@@ -471,21 +448,18 @@ class WhatsAppBotController extends Controller
             ], 404);
         }
 
-        // Polling logic for ZenoPay
+        // Polling logic for Selcom
         if ($payment->status === 'pending' && $payment->restaurant) {
             $restaurant = $payment->restaurant;
-            $apiKey = $restaurant->zenopay_api_key;
 
-            if ($apiKey) {
-                $zenoPay = new \App\Services\ZenoPayService();
-                $result = $zenoPay->checkStatus($apiKey, $payment->transaction_reference);
+            if ($restaurant->hasSelcomConfigured()) {
+                $selcom = new \App\Services\SelcomService();
+                $result = $selcom->checkOrderStatus($restaurant->getSelcomCredentials(), $payment->transaction_reference);
+                $paymentStatus = $selcom->parsePaymentStatus($result);
 
-                if (
-                    (isset($result['payment_status']) && ($result['payment_status'] === 'COMPLETED' || $result['payment_status'] === 'SUCCESS')) || 
-                    (isset($result['result']) && $result['result'] === 'SUCCESS')
-                ) {
+                if ($paymentStatus === 'paid') {
                     $payment->update(['status' => 'paid']);
-                } elseif (isset($result['payment_status']) && $result['payment_status'] === 'FAILED') {
+                } elseif ($paymentStatus === 'failed') {
                     $payment->update(['status' => 'failed']);
                 }
             }
