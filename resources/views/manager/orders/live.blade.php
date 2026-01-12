@@ -50,7 +50,7 @@
                         <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order') }}</span>
                                     <span class="text-white/40">Tsh {{ number_format($item->total) }}</span>
                                 </div>
                             @endforeach
@@ -112,7 +112,7 @@
                         <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order') }}</span>
                                     <span class="text-white/40">Tsh {{ number_format($item->total) }}</span>
                                 </div>
                             @endforeach
@@ -177,7 +177,7 @@
                         <div class="space-y-1.5 mb-4">
                             @foreach($order->items as $item)
                                 <div class="flex justify-between text-sm">
-                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                    <span class="font-semibold text-white">{{ $item->quantity }}x {{ $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order') }}</span>
                                 </div>
                             @endforeach
                         </div>

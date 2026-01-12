@@ -154,6 +154,7 @@ class WhatsAppBotController extends Controller
 
                     $orderItems[] = [
                         'menu_item_id' => $menuItem->id,
+                        'name' => $menuItem->name,
                         'quantity' => $itemData['quantity'],
                         'price' => $menuItem->price,
                         'total' => $subtotal,
@@ -585,7 +586,7 @@ class WhatsAppBotController extends Controller
                 'status' => $order->status,
                 'items' => $order->items->map(function($item) {
                     return [
-                        'name' => $item->menuItem->name,
+                        'name' => $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order'),
                         'quantity' => $item->quantity,
                         'price' => $item->price,
                         'subtotal' => $item->total
@@ -675,7 +676,7 @@ class WhatsAppBotController extends Controller
                     'menu_item_id' => $item->id,
                     'quantity' => $quantity,
                     'price' => $item->price,
-                    'name' => $item->name, // For response
+                    'name' => $item->name, // For response and DB
                     'subtotal' => $item->price * $quantity
                 ];
                 
@@ -687,14 +688,48 @@ class WhatsAppBotController extends Controller
             }
         }
 
+        // If no items matched, create a custom order with the raw text
         if (empty($matchedItems)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Sorry, we could not identify any menu items in your message. Please try using the exact names from the menu.'
-            ], 400);
+             try {
+                return DB::transaction(function () use ($request) {
+                    $order = Order::withoutGlobalScopes()->create([
+                        'restaurant_id' => $request->restaurant_id,
+                        'table_number' => $request->table_number,
+                        'customer_phone' => $request->customer_phone,
+                        'total_amount' => 0, // Unknown price
+                        'status' => 'pending',
+                        'notes' => 'Order from text: ' . $request->order_text
+                    ]);
+
+                    $order->items()->create([
+                        'menu_item_id' => null,
+                        'name' => $request->order_text,
+                        'quantity' => 1,
+                        'price' => 0,
+                        'total' => 0,
+                    ]);
+
+                    // Log Activity
+                    Activity::create([
+                        'description' => "New WhatsApp text order #{$order->id} from {$request->customer_phone}: \"{$request->order_text}\" (Unmatched)",
+                        'type' => 'order_created',
+                        'properties' => ['order_id' => $order->id, 'source' => 'whatsapp_text_unmatched']
+                    ]);
+
+                    return response()->json([
+                        'success' => true,
+                        'order_id' => $order->id,
+                        'total' => 0,
+                        'items' => [['name' => $request->order_text, 'quantity' => 1, 'price' => 0]],
+                        'message' => 'Order created successfully. Waiter will confirm the price.'
+                    ]);
+                });
+            } catch (\Exception $e) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            }
         }
 
-        // Create Order
+        // Create Order with matched items
         try {
             return DB::transaction(function () use ($request, $matchedItems, $totalAmount) {
                 $order = Order::withoutGlobalScopes()->create([
@@ -708,6 +743,7 @@ class WhatsAppBotController extends Controller
                 foreach ($matchedItems as $item) {
                     $order->items()->create([
                         'menu_item_id' => $item['menu_item_id'],
+                        'name' => $item['name'],
                         'quantity' => $item['quantity'],
                         'price' => $item['price'],
                         'total' => $item['subtotal'],

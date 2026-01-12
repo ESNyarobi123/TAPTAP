@@ -66,6 +66,7 @@ class LiveOrderController extends Controller
 
             $orderItems[] = [
                 'menu_item_id' => $menuItem->id,
+                'name' => $menuItem->name,
                 'quantity' => $itemData['quantity'],
                 'price' => $menuItem->price,
                 'total' => $subtotal,

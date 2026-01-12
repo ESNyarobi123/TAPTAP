@@ -64,7 +64,7 @@ class KitchenController extends Controller
                     'items' => $order->items->map(function ($item) {
                         return [
                             'id' => $item->id,
-                            'name' => $item->menuItem->name ?? 'Unknown Item',
+                            'name' => $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order'),
                             'quantity' => $item->quantity,
                             'notes' => $item->notes ?? '',
                             'status' => $item->status ?? 'pending'

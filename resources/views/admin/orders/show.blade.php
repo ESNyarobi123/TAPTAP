@@ -38,7 +38,7 @@
                                         {{ $item->quantity }}x
                                     </div>
                                     <div>
-                                        <p class="font-bold text-white">{{ $item->menuItem->name }}</p>
+                                        <p class="font-bold text-white">{{ $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order') }}</p>
                                         <p class="text-[10px] text-white/40 font-bold uppercase tracking-widest">Tsh {{ number_format($item->price, 0) }} per unit</p>
                                     </div>
                                 </div>

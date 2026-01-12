@@ -32,10 +32,10 @@
                                 <div class="flex -space-x-2">
                                     @foreach($order->items->take(4) as $item)
                                         <div class="w-10 h-10 rounded-lg border-2 border-surface-900 bg-white/5 flex items-center justify-center text-[10px] font-bold text-white/60 overflow-hidden">
-                                            @if($item->menuItem->image)
+                                            @if($item->menuItem && $item->menuItem->image)
                                                 <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
                                             @else
-                                                {{ substr($item->menuItem->name, 0, 1) }}
+                                                {{ substr($item->name ?? ($item->menuItem ? $item->menuItem->name : 'C'), 0, 1) }}
                                             @endif
                                         </div>
                                     @endforeach

@@ -185,7 +185,7 @@
                             <div class="space-y-2 mb-5">
                                 @foreach($order->items->take(2) as $item)
                                     <div class="flex justify-between text-xs">
-                                        <span class="text-white/60">{{ $item->quantity }}x {{ $item->menuItem->name }}</span>
+                                        <span class="text-white/60">{{ $item->quantity }}x {{ $item->name ?? ($item->menuItem ? $item->menuItem->name : 'Custom Order') }}</span>
                                     </div>
                                 @endforeach
                                 @if($order->items->count() > 2)
