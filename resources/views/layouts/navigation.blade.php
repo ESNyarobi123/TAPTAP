@@ -3,7 +3,9 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <span class="text-xl font-bold text-orange-red">TIPTAP</span>
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-red to-orange-500 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                        <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,10 +8,8 @@
         <div id="chat-container" class="flex flex-col min-h-[400px]">
             <!-- Chat Header -->
             <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+                <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30 overflow-hidden">
+                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h2 class="text-xl font-black text-white">TIPTAP Assistant</h2>

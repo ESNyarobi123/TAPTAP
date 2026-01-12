@@ -10,6 +10,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -167,8 +171,8 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:rotate-12 transition-transform duration-500">
-                        <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden group-hover:rotate-12 transition-transform duration-500">
+                        <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                     </div>
                     <span class="text-2xl font-display font-bold text-white tracking-tight">TIP<span class="text-primary">TAP</span></span>
                 </a>
@@ -206,7 +210,12 @@
     <!-- Mobile Menu -->
     <div class="fixed inset-0 z-[60] bg-[#030712] hidden flex-col p-8 lg:hidden" id="mobile-menu">
         <div class="flex justify-between items-center mb-12">
-            <span class="text-2xl font-display font-bold text-white">TIPTAP</span>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                </div>
+                <span class="text-2xl font-display font-bold text-white">TIPTAP</span>
+            </div>
             <button id="close-menu-btn" class="text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
         </div>
         <div class="flex flex-col gap-8 text-xl font-medium text-slate-300">
@@ -473,8 +482,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-2">
                     <a href="/" class="flex items-center gap-2 mb-6">
-                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                            <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center overflow-hidden">
+                            <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                         </div>
                         <span class="text-xl font-display font-bold text-white">TIPTAP</span>
                     </a>
