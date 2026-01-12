@@ -54,15 +54,243 @@ class WhatsAppBotController extends Controller
             return response()->json(['success' => false, 'message' => 'Restaurant not found or inactive'], 404);
         }
 
+        // Check if waiter_id or table_id is provided
+        $waiterId = $request->input('waiter_id');
+        $tableId = $request->input('table_id');
+        $waiter = null;
+        $table = null;
+
+        if ($waiterId) {
+            $waiter = User::where('id', $waiterId)
+                ->where('restaurant_id', $restaurant->id)
+                ->first();
+        }
+
+        if ($tableId) {
+            $table = Table::withoutGlobalScopes()
+                ->where('id', $tableId)
+                ->where('restaurant_id', $restaurant->id)
+                ->first();
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
                 'id' => $restaurant->id,
                 'name' => $restaurant->name,
                 'location' => $restaurant->location,
-                'table_number' => $request->input('table_number')
+                'table_number' => $table ? $table->name : $request->input('table_number'),
+                'table_id' => $table ? $table->id : null,
+                'table_tag' => $table ? $table->table_tag : null,
+                'waiter_id' => $waiter ? $waiter->id : null,
+                'waiter_name' => $waiter ? $waiter->name : null,
+                'waiter_code' => $waiter ? $waiter->waiter_code : null,
             ]
         ]);
+    }
+
+    /**
+     * Verify Service Tag (SMK-T01, SMK-W01, etc.)
+     * Supports both table tags and waiter codes
+     */
+    public function verifyTag(Request $request)
+    {
+        $request->validate([
+            'tag' => 'required|string|max:20',
+        ]);
+
+        $tag = strtoupper(trim($request->input('tag')));
+
+        // Determine if it's a table tag or waiter code
+        // Format: PREFIX-T## for tables, PREFIX-W## for waiters
+        if (preg_match('/^([A-Z0-9]+)-T(\d+)$/i', $tag, $matches)) {
+            // Table tag
+            $prefix = $matches[1];
+            
+            $table = Table::withoutGlobalScopes()
+                ->where('table_tag', $tag)
+                ->with('restaurant')
+                ->first();
+
+            if (!$table || !$table->restaurant || !$table->restaurant->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid table tag or restaurant inactive'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'type' => 'table',
+                'data' => [
+                    'restaurant_id' => $table->restaurant->id,
+                    'restaurant_name' => $table->restaurant->name,
+                    'restaurant_location' => $table->restaurant->location,
+                    'table_id' => $table->id,
+                    'table_name' => $table->name,
+                    'table_tag' => $table->table_tag,
+                    'waiter_id' => null,
+                    'waiter_name' => null,
+                ]
+            ]);
+
+        } elseif (preg_match('/^([A-Z0-9]+)-W(\d+)$/i', $tag, $matches)) {
+            // Waiter code
+            $prefix = $matches[1];
+            
+            $waiter = User::where('waiter_code', $tag)
+                ->with('restaurant')
+                ->first();
+
+            if (!$waiter || !$waiter->restaurant || !$waiter->restaurant->is_active) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid waiter code or restaurant inactive'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'type' => 'waiter',
+                'data' => [
+                    'restaurant_id' => $waiter->restaurant->id,
+                    'restaurant_name' => $waiter->restaurant->name,
+                    'restaurant_location' => $waiter->restaurant->location,
+                    'table_id' => null,
+                    'table_name' => null,
+                    'table_tag' => null,
+                    'waiter_id' => $waiter->id,
+                    'waiter_name' => $waiter->name,
+                    'waiter_code' => $waiter->waiter_code,
+                ]
+            ]);
+
+        } else {
+            // Try to find by prefix only (might be a restaurant tag)
+            $restaurant = Restaurant::where('tag_prefix', $tag)
+                ->where('is_active', true)
+                ->first();
+
+            if ($restaurant) {
+                return response()->json([
+                    'success' => true,
+                    'type' => 'restaurant',
+                    'data' => [
+                        'restaurant_id' => $restaurant->id,
+                        'restaurant_name' => $restaurant->name,
+                        'restaurant_location' => $restaurant->location,
+                    ]
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid tag format. Use PREFIX-T## for tables or PREFIX-W## for waiters.'
+            ], 400);
+        }
+    }
+
+    /**
+     * Parse QR code or tag input and return appropriate data
+     * Handles: START_2, START_2_T5, START_2_W3, SMK-T01, SMK-W01
+     */
+    public function parseEntry(Request $request)
+    {
+        $request->validate([
+            'input' => 'required|string|max:50',
+        ]);
+
+        $input = strtoupper(trim($request->input('input')));
+
+        // Pattern 1: START_{restaurant_id}
+        if (preg_match('/^START_(\d+)$/i', $input, $matches)) {
+            $restaurant = Restaurant::find($matches[1]);
+            if (!$restaurant || !$restaurant->is_active) {
+                return response()->json(['success' => false, 'message' => 'Restaurant not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'type' => 'restaurant',
+                'data' => [
+                    'restaurant_id' => $restaurant->id,
+                    'restaurant_name' => $restaurant->name,
+                ]
+            ]);
+        }
+
+        // Pattern 2: START_{restaurant_id}_T{table_id}
+        if (preg_match('/^START_(\d+)_T(\d+)$/i', $input, $matches)) {
+            $restaurant = Restaurant::find($matches[1]);
+            $table = Table::withoutGlobalScopes()->find($matches[2]);
+
+            if (!$restaurant || !$restaurant->is_active) {
+                return response()->json(['success' => false, 'message' => 'Restaurant not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'type' => 'table',
+                'data' => [
+                    'restaurant_id' => $restaurant->id,
+                    'restaurant_name' => $restaurant->name,
+                    'table_id' => $table ? $table->id : null,
+                    'table_name' => $table ? $table->name : null,
+                    'table_tag' => $table ? $table->table_tag : null,
+                ]
+            ]);
+        }
+
+        // Pattern 3: START_{restaurant_id}_W{waiter_id}
+        if (preg_match('/^START_(\d+)_W(\d+)$/i', $input, $matches)) {
+            $restaurant = Restaurant::find($matches[1]);
+            $waiter = User::find($matches[2]);
+
+            if (!$restaurant || !$restaurant->is_active) {
+                return response()->json(['success' => false, 'message' => 'Restaurant not found'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'type' => 'waiter',
+                'data' => [
+                    'restaurant_id' => $restaurant->id,
+                    'restaurant_name' => $restaurant->name,
+                    'waiter_id' => $waiter ? $waiter->id : null,
+                    'waiter_name' => $waiter ? $waiter->name : null,
+                    'waiter_code' => $waiter ? $waiter->waiter_code : null,
+                ]
+            ]);
+        }
+
+        // Pattern 4: Service tags (SMK-T01, SMK-W01)
+        if (preg_match('/^([A-Z0-9]+)-(T|W)(\d+)$/i', $input)) {
+            return $this->verifyTag(new Request(['tag' => $input]));
+        }
+
+        // Pattern 5: Old format START_{restaurant_id}_{table_number} (backward compatibility)
+        if (preg_match('/^START_(\d+)_(\d+)$/i', $input, $matches)) {
+            $restaurant = Restaurant::find($matches[1]);
+            if (!$restaurant || !$restaurant->is_active) {
+                return response()->json(['success' => false, 'message' => 'Restaurant not found'], 404);
+            }
+
+            // Treat second number as table_number (old format)
+            return response()->json([
+                'success' => true,
+                'type' => 'table',
+                'data' => [
+                    'restaurant_id' => $restaurant->id,
+                    'restaurant_name' => $restaurant->name,
+                    'table_number' => $matches[2],
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid input format'
+        ], 400);
     }
 
     /**

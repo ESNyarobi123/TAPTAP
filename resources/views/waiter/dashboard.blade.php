@@ -296,6 +296,40 @@
                 </div>
             </div>
 
+            <!-- My Service Tag & QR -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-cyan-900/50 to-violet-900/50 p-6 text-white shadow-xl border border-cyan-500/20">
+                <div class="mb-4 flex items-center justify-between">
+                    <h3 class="text-lg font-bold tracking-tight">My Service Tag</h3>
+                    <div class="rounded-lg bg-cyan-500/20 px-2 py-1 text-cyan-400 border border-cyan-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="bg-white p-2 rounded-xl shadow-lg shadow-black/20">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(Auth::user()->waiter_qr_url) }}" alt="My QR" class="w-20 h-20">
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Your Tag</p>
+                        <p class="text-2xl font-mono font-bold text-cyan-400 tracking-wider">{{ Auth::user()->waiter_code ?? 'N/A' }}</p>
+                        <p class="text-[10px] text-white/40 mt-1">Share this for direct orders</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data={{ urlencode(Auth::user()->waiter_qr_url) }}" download="my-qr-{{ Auth::user()->waiter_code }}.png" target="_blank" class="flex items-center justify-center gap-2 rounded-xl bg-white/10 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-white/20 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                        Save QR
+                    </a>
+                    <button onclick="copyToClipboard('{{ Auth::user()->waiter_qr_url }}', this)" class="flex items-center justify-center gap-2 rounded-xl bg-cyan-600 py-2.5 text-[11px] font-bold uppercase tracking-widest hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-600/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+
             <!-- Recent Ratings -->
             <div class="rounded-2xl glass-card p-6">
                 <div class="mb-5 flex items-center justify-between">
@@ -344,5 +378,28 @@
                 })
                 .catch(error => console.error('Error fetching stats:', error));
         }, 30000); // 30 seconds
+
+        async function copyToClipboard(text, button) {
+            try {
+                await navigator.clipboard.writeText(text);
+                
+                // Visual feedback
+                const originalContent = button.innerHTML;
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+                        <path d="M20 6 9 17l-5-5"/>
+                    </svg>
+                    Copied!
+                `;
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard');
+            }
+        }
     </script>
 </x-waiter-layout>

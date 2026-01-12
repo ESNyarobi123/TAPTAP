@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'restaurant_id',
+        'waiter_code',
     ];
 
     public function restaurant()
@@ -40,6 +41,29 @@ class User extends Authenticatable
     public function tips()
     {
         return $this->hasMany(Tip::class, 'waiter_id');
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class, 'waiter_id');
+    }
+
+    /**
+     * Get WhatsApp QR URL for this waiter
+     */
+    public function getWaiterQrUrlAttribute()
+    {
+        if (!$this->restaurant_id) {
+            return null;
+        }
+
+        $botNumber = \App\Models\Setting::get('whatsapp_bot_number', '255794321510');
+        $cleanNumber = preg_replace('/[^0-9]/', '', $botNumber);
+        
+        // Format: START_{restaurant_id}_W{waiter_id}
+        $message = "START_" . $this->restaurant_id . "_W" . $this->id;
+        
+        return "https://wa.me/" . $cleanNumber . "?text=" . urlencode($message);
     }
 
     /**

@@ -19,6 +19,7 @@ class Restaurant extends Model
         'logo', 
         'menu_image', 
         'is_active', 
+        'tag_prefix',
         'selcom_vendor_id',
         'selcom_api_key',
         'selcom_api_secret',
@@ -26,6 +27,99 @@ class Restaurant extends Model
         'kitchen_token', 
         'kitchen_token_generated_at'
     ];
+
+    /**
+     * Boot method - auto-generate tag_prefix on create
+     */
+    protected static function booted()
+    {
+        static::creating(function ($restaurant) {
+            if (empty($restaurant->tag_prefix)) {
+                $restaurant->tag_prefix = $restaurant->generateUniqueTagPrefix();
+            }
+        });
+    }
+
+    /**
+     * Generate unique tag prefix from restaurant name
+     */
+    public function generateUniqueTagPrefix()
+    {
+        // Take first 3 letters of restaurant name, uppercase
+        $name = preg_replace('/[^A-Za-z]/', '', $this->name);
+        $basePrefix = strtoupper(substr($name, 0, 3));
+        
+        // If less than 3 chars, pad with X
+        $basePrefix = str_pad($basePrefix, 3, 'X');
+        
+        // Check if exists, if so add number
+        $prefix = $basePrefix;
+        $counter = 1;
+        
+        while (Restaurant::where('tag_prefix', $prefix)->where('id', '!=', $this->id ?? 0)->exists()) {
+            $prefix = substr($basePrefix, 0, 2) . $counter;
+            $counter++;
+            if ($counter > 9) {
+                // If all single digits used, use random 3 chars
+                $prefix = $basePrefix . chr(rand(65, 90));
+            }
+        }
+        
+        return $prefix;
+    }
+
+    /**
+     * Get next available table tag number
+     */
+    public function getNextTableTagNumber()
+    {
+        $lastTable = Table::withoutGlobalScopes()
+            ->where('restaurant_id', $this->id)
+            ->whereNotNull('table_tag')
+            ->orderByRaw("CAST(SUBSTRING(table_tag, -2) AS UNSIGNED) DESC")
+            ->first();
+        
+        if ($lastTable && preg_match('/(\d+)$/', $lastTable->table_tag, $matches)) {
+            return (int) $matches[1] + 1;
+        }
+        
+        return 1;
+    }
+
+    /**
+     * Get next available waiter code number
+     */
+    public function getNextWaiterCodeNumber()
+    {
+        $lastWaiter = User::where('restaurant_id', $this->id)
+            ->whereNotNull('waiter_code')
+            ->orderByRaw("CAST(SUBSTRING(waiter_code, -2) AS UNSIGNED) DESC")
+            ->first();
+        
+        if ($lastWaiter && preg_match('/(\d+)$/', $lastWaiter->waiter_code, $matches)) {
+            return (int) $matches[1] + 1;
+        }
+        
+        return 1;
+    }
+
+    /**
+     * Generate table tag for this restaurant
+     */
+    public function generateTableTag($number = null)
+    {
+        $number = $number ?? $this->getNextTableTagNumber();
+        return $this->tag_prefix . '-T' . str_pad($number, 2, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Generate waiter code for this restaurant
+     */
+    public function generateWaiterCode($number = null)
+    {
+        $number = $number ?? $this->getNextWaiterCodeNumber();
+        return $this->tag_prefix . '-W' . str_pad($number, 2, '0', STR_PAD_LEFT);
+    }
 
     /**
      * Get Selcom credentials array
@@ -53,6 +147,16 @@ class Restaurant extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function waiters()
+    {
+        return $this->hasMany(User::class)->role('waiter');
+    }
+
+    public function tables()
+    {
+        return $this->hasMany(Table::class);
     }
 
     public function categories()

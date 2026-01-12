@@ -88,6 +88,19 @@
                 </div>
                 
                 <div class="bg-white/5 p-6 flex flex-col items-center gap-4 border-t border-white/5">
+                    <!-- Table Tag Badge -->
+                    @if($table->table_tag)
+                    <div class="w-full p-2 bg-white/5 rounded-lg border border-white/10 flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-white/40 uppercase tracking-wider">Tag</span>
+                        <div class="flex items-center gap-2">
+                            <code class="text-sm font-mono font-bold text-cyan-400">{{ $table->table_tag }}</code>
+                            <button onclick="copyLink('{{ $table->table_tag }}')" class="text-white/40 hover:text-white transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="bg-white p-2 rounded-xl">
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode($table->whatsapp_qr_url) }}" alt="QR Code" class="w-28 h-28">
                     </div>
@@ -98,7 +111,7 @@
                             </svg>
                             Download
                         </a>
-                        <button onclick="copyLink('{{ $table->whatsapp_qr_url }}')" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-cyan-600 transition-all flex items-center justify-center gap-2">
+                        <button onclick="copyLink('{{ $table->whatsapp_qr_url }}', this)" class="flex-1 glass py-2.5 rounded-xl font-semibold text-sm text-white/70 hover:text-white hover:bg-cyan-600 transition-all flex items-center justify-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                             </svg>
@@ -206,10 +219,33 @@
             document.getElementById('tableModal').classList.remove('flex');
         }
 
-        function copyLink(link) {
-            navigator.clipboard.writeText(link).then(() => {
-                alert('Link copied to clipboard!');
-            });
+        async function copyLink(link, button = null) {
+            try {
+                await navigator.clipboard.writeText(link);
+                
+                if (button) {
+                    // Visual feedback
+                    const originalContent = button.innerHTML;
+                    button.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                            <path d="M20 6 9 17l-5-5"/>
+                        </svg>
+                        Copied!
+                    `;
+                    button.classList.add('bg-emerald-500/20', 'border-emerald-500/30', 'text-emerald-400');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.classList.remove('bg-emerald-500/20', 'border-emerald-500/30', 'text-emerald-400');
+                    }, 2000);
+                } else {
+                    alert('Link copied to clipboard!');
+                }
+                
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard');
+            }
         }
     </script>
 </x-manager-layout>

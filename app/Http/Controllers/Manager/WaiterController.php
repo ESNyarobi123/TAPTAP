@@ -29,16 +29,25 @@ class WaiterController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        $restaurant = Auth::user()->restaurant;
+        
+        // Generate waiter code
+        $waiterCode = null;
+        if ($restaurant && $restaurant->tag_prefix) {
+            $waiterCode = $restaurant->generateWaiterCode();
+        }
+
         $waiter = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'restaurant_id' => Auth::user()->restaurant_id,
+            'waiter_code' => $waiterCode,
         ]);
 
         $waiter->assignRole('waiter');
 
-        return back()->with('success', 'Waiter added successfully!');
+        return back()->with('success', 'Waiter added successfully! Code: ' . ($waiterCode ?? 'N/A'));
     }
 
     public function destroy(User $waiter)
