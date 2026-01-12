@@ -119,11 +119,15 @@
                             </div>
                             <div class="flex -space-x-2 mb-3">
                                 @foreach($order->items->take(3) as $item)
-                                    <div class="w-7 h-7 rounded-full border-2 border-surface-900 bg-white/10 flex items-center justify-center text-[9px] font-bold text-white overflow-hidden" title="{{ $item->menuItem->name }}">
-                                        @if($item->menuItem->image)
-                                            <img src="{{ asset('storage/' . $item->menuItem->image) }}" class="w-full h-full object-cover">
+                                    @php
+                                        $itemName = $item->menuItem ? $item->menuItem->name : ($item->name ?? 'Item');
+                                        $itemImage = $item->menuItem ? $item->menuItem->image : null;
+                                    @endphp
+                                    <div class="w-7 h-7 rounded-full border-2 border-surface-900 bg-white/10 flex items-center justify-center text-[9px] font-bold text-white overflow-hidden" title="{{ $itemName }}">
+                                        @if($itemImage)
+                                            <img src="{{ asset('storage/' . $itemImage) }}" class="w-full h-full object-cover">
                                         @else
-                                            {{ substr($item->menuItem->name, 0, 1) }}
+                                            {{ substr($itemName, 0, 1) }}
                                         @endif
                                     </div>
                                 @endforeach
@@ -313,10 +317,10 @@
                     <div class="flex items-center justify-between p-4 glass rounded-xl card-hover">
                         <div class="flex items-center gap-4">
                             <div class="w-11 h-11 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center font-bold text-emerald-400 border border-emerald-500/20">
-                                {{ substr($tip->waiter->name, 0, 1) }}
+                                {{ substr($tip->waiter->name ?? 'W', 0, 1) }}
                             </div>
                             <div>
-                                <h5 class="font-semibold text-white">{{ $tip->waiter->name }}</h5>
+                                <h5 class="font-semibold text-white">{{ $tip->waiter->name ?? 'Unknown Waiter' }}</h5>
                                 <p class="text-[11px] text-white/40 font-medium uppercase tracking-wider">Active Waiter</p>
                             </div>
                         </div>
