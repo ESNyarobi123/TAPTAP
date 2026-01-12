@@ -249,47 +249,12 @@
             </div>
 
             <!-- Hero Visual -->
-            <div class="mt-24 relative max-w-5xl mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <div class="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-[2rem] blur opacity-30 animate-pulse"></div>
-                <div class="relative bg-[#0B0F1A] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden aspect-[16/9] group">
-                    <!-- Dashboard Mockup UI -->
-                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-50 group-hover:scale-105 transition-transform duration-1000"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-[#0B0F1A]/50 to-transparent"></div>
-                    
-                    <!-- Floating Cards -->
-                    <div class="absolute bottom-10 left-10 right-10 flex items-end justify-between">
-                        <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 w-64 animate-float">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                                    <i data-lucide="trending-up" class="w-5 h-5 text-green-500"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-slate-400 uppercase font-bold">Revenue Today</p>
-                                    <p class="text-xl font-bold text-white">TZS 850,000</p>
-                                </div>
-                            </div>
-                            <div class="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 w-[75%]"></div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 w-64 animate-float" style="animation-delay: 2s;">
-                            <div class="flex items-center gap-4 mb-4">
-                                <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                                    <i data-lucide="users" class="w-5 h-5 text-blue-500"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-slate-400 uppercase font-bold">Active Tables</p>
-                                    <p class="text-xl font-bold text-white">12 / 15</p>
-                                </div>
-                            </div>
-                            <div class="flex -space-x-2">
-                                <div class="w-8 h-8 rounded-full bg-slate-700 border-2 border-[#0B0F1A]"></div>
-                                <div class="w-8 h-8 rounded-full bg-slate-600 border-2 border-[#0B0F1A]"></div>
-                                <div class="w-8 h-8 rounded-full bg-slate-500 border-2 border-[#0B0F1A]"></div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="mt-16 relative max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                <div class="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-primary rounded-[2rem] blur opacity-20 animate-pulse"></div>
+                <div class="relative bg-[#0B0F1A] rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden aspect-video group">
+                    <!-- WhatsApp Chat Demo Image -->
+                    <img src="{{ asset('images/whatsapp_chat_demo.png') }}" alt="WhatsApp Chat Demo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A]/40 via-transparent to-transparent"></div>
                 </div>
             </div>
 
