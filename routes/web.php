@@ -1,13 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
-use App\Http\Controllers\Waiter\DashboardController as WaiterDashboard;
+use App\Http\Controllers\RestaurantRegistrationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\RestaurantRegistrationController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +13,7 @@ Route::get('/', function () {
 
 Route::get('/fix-storage', function () {
     \Illuminate\Support\Facades\Artisan::call('storage:link');
+
     return 'Storage link created!';
 });
 
@@ -34,6 +33,7 @@ Route::get('/dashboard', function () {
     } elseif ($user->hasRole('waiter')) {
         return redirect()->route('waiter.dashboard');
     }
+
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -50,35 +50,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [AdminDashboard::class, 'getStats'])->name('dashboard.stats');
-    
+
     // Restaurants
     Route::resource('restaurants', \App\Http\Controllers\Admin\RestaurantController::class);
     Route::post('restaurants/{restaurant}/toggle-status', [\App\Http\Controllers\Admin\RestaurantController::class, 'toggleStatus'])->name('restaurants.toggle-status');
-    
+
     // Users
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    
+
     // Orders
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
-    
+
     // Payments
     Route::get('payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
     Route::get('payments/{payment}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('payments.show');
-    
+
     // Withdrawals
     Route::get('withdrawals', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('withdrawals.index');
     Route::post('withdrawals/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('withdrawals.approve');
     Route::post('withdrawals/{withdrawal}/reject', [\App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('withdrawals.reject');
-    
+
     // Bots
     Route::get('bots', [\App\Http\Controllers\Admin\BotController::class, 'index'])->name('bots.index');
     Route::post('bots/update-endpoint', [\App\Http\Controllers\Admin\BotController::class, 'updateEndpoint'])->name('bots.update-endpoint');
     Route::post('bots/generate-token', [\App\Http\Controllers\Admin\BotController::class, 'generateToken'])->name('bots.generate-token');
-    
+
     // Notifications
     Route::get('notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/send', [\App\Http\Controllers\Admin\NotificationController::class, 'send'])->name('notifications.send');
-    
+
     // Settings
     Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('settings/update', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
@@ -96,7 +96,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::post('/menu', [\App\Http\Controllers\Manager\MenuController::class, 'store'])->name('menu.store');
     Route::put('/menu/{menuItem}', [\App\Http\Controllers\Manager\MenuController::class, 'update'])->name('menu.update');
     Route::delete('/menu/{menuItem}', [\App\Http\Controllers\Manager\MenuController::class, 'destroy'])->name('menu.destroy');
-    
+
     // Categories
     Route::post('/categories', [\App\Http\Controllers\Manager\CategoryController::class, 'store'])->name('categories.store');
     Route::put('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'update'])->name('categories.update');
@@ -111,12 +111,13 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/tips', [\App\Http\Controllers\Manager\TipController::class, 'index'])->name('tips.index');
     Route::get('/api', [\App\Http\Controllers\Manager\ApiController::class, 'index'])->name('api.index');
     Route::post('/api/selcom', [\App\Http\Controllers\Manager\ApiController::class, 'updateSelcomCredentials'])->name('api.selcom.update');
-    
+    Route::post('/api/selcom/test', [\App\Http\Controllers\Manager\ApiController::class, 'testSelcomConnection'])->name('api.selcom.test');
+
     // Menu Image Upload
     Route::get('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'index'])->name('menu-image.index');
     Route::post('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'store'])->name('menu-image.store');
     Route::delete('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'destroy'])->name('menu-image.destroy');
-    
+
     Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
 });
 
@@ -136,7 +137,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
 Route::prefix('kitchen')->name('kitchen.')->group(function () {
     // Public KDS display (accessed via secret token)
     Route::get('/display/{token}', [\App\Http\Controllers\KitchenController::class, 'display'])->name('display');
-    
+
     // API endpoints for real-time updates (no auth, uses token)
     Route::get('/api/{token}/orders', [\App\Http\Controllers\KitchenController::class, 'getOrders'])->name('api.orders');
     Route::post('/api/{token}/order/status', [\App\Http\Controllers\KitchenController::class, 'updateStatus'])->name('api.order.status');

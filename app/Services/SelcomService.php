@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 class SelcomService
 {
     protected $liveBaseUrl = 'https://apigw.selcommobile.com/v1';
+
     protected $sandboxBaseUrl = 'https://apigwtest.selcommobile.com/v1';
 
     /**
@@ -24,13 +25,13 @@ class SelcomService
     protected function generateHeaders($apiKey, $apiSecret)
     {
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
-        $signedFields = "timestamp";
+        $signedFields = 'timestamp';
         $digest = base64_encode(hash('sha256', $timestamp, true));
         $signature = base64_encode(hash_hmac('sha256', "timestamp=$timestamp", $apiSecret, true));
 
         return [
             'Content-Type' => 'application/json',
-            'Authorization' => 'SELCOM ' . base64_encode($apiKey),
+            'Authorization' => 'SELCOM '.base64_encode($apiKey),
             'Digest-Method' => 'HS256',
             'Digest' => $digest,
             'Timestamp' => $timestamp,
@@ -51,7 +52,7 @@ class SelcomService
             // Format phone number (remove + and ensure starts with 255)
             $phone = preg_replace('/[^0-9]/', '', $data['phone']);
             if (substr($phone, 0, 1) === '0') {
-                $phone = '255' . substr($phone, 1);
+                $phone = '255'.substr($phone, 1);
             }
 
             $payload = [
@@ -68,12 +69,12 @@ class SelcomService
             ];
 
             Log::info('Selcom Payment Request', [
-                'url' => $baseUrl . '/checkout/create-order-minimal',
-                'payload' => $payload
+                'url' => $baseUrl.'/checkout/create-order-minimal',
+                'payload' => $payload,
             ]);
 
             $response = Http::withHeaders($headers)
-                ->post($baseUrl . '/checkout/create-order-minimal', $payload);
+                ->post($baseUrl.'/checkout/create-order-minimal', $payload);
 
             $result = $response->json();
 
@@ -90,24 +91,25 @@ class SelcomService
                     'status' => 'success',
                     'order_id' => $data['order_id'],
                     'transid' => $result['data'][0]['transid'] ?? null,
-                    'message' => 'USSD Push sent to ' . $phone,
-                    'ussd_result' => $ussdResult
+                    'message' => 'USSD Push sent to '.$phone,
+                    'ussd_result' => $ussdResult,
                 ];
             }
 
             return [
                 'status' => 'error',
                 'message' => $result['message'] ?? 'Failed to create order',
-                'raw' => $result
+                'raw' => $result,
             ];
 
         } catch (\Exception $e) {
-            Log::error('Selcom Payment Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
+            Log::error('Selcom Payment Error: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return [
                 'status' => 'error',
-                'message' => 'Connection failed: ' . $e->getMessage()
+                'message' => 'Connection failed: '.$e->getMessage(),
             ];
         }
     }
@@ -124,7 +126,7 @@ class SelcomService
             // Format phone number
             $phone = preg_replace('/[^0-9]/', '', $data['phone']);
             if (substr($phone, 0, 1) === '0') {
-                $phone = '255' . substr($phone, 1);
+                $phone = '255'.substr($phone, 1);
             }
 
             $payload = [
@@ -133,7 +135,7 @@ class SelcomService
             ];
 
             $response = Http::withHeaders($headers)
-                ->post($baseUrl . '/checkout/wallet-payment', $payload);
+                ->post($baseUrl.'/checkout/wallet-payment', $payload);
 
             $result = $response->json();
 
@@ -142,10 +144,11 @@ class SelcomService
             return $result;
 
         } catch (\Exception $e) {
-            Log::error('Selcom USSD Push Error: ' . $e->getMessage());
+            Log::error('Selcom USSD Push Error: '.$e->getMessage());
+
             return [
                 'status' => 'error',
-                'message' => 'USSD Push failed: ' . $e->getMessage()
+                'message' => 'USSD Push failed: '.$e->getMessage(),
             ];
         }
     }
@@ -160,24 +163,25 @@ class SelcomService
             $headers = $this->generateHeaders($credentials['api_key'], $credentials['api_secret']);
 
             $response = Http::withHeaders($headers)
-                ->get($baseUrl . '/checkout/order-status', [
-                    'order_id' => $orderId
+                ->get($baseUrl.'/checkout/order-status', [
+                    'order_id' => $orderId,
                 ]);
 
             $result = $response->json();
 
             Log::info('Selcom Order Status Response', [
                 'order_id' => $orderId,
-                'response' => $result
+                'response' => $result,
             ]);
 
             return $result;
 
         } catch (\Exception $e) {
-            Log::error('Selcom Status Check Error: ' . $e->getMessage());
+            Log::error('Selcom Status Check Error: '.$e->getMessage());
+
             return [
                 'status' => 'error',
-                'message' => 'Status check failed: ' . $e->getMessage()
+                'message' => 'Status check failed: '.$e->getMessage(),
             ];
         }
     }
@@ -187,13 +191,13 @@ class SelcomService
      */
     public function parsePaymentStatus($response)
     {
-        if (!isset($response['resultcode'])) {
+        if (! isset($response['resultcode'])) {
             return 'pending';
         }
 
         if ($response['resultcode'] === '000' && isset($response['data'][0]['payment_status'])) {
             $status = strtoupper($response['data'][0]['payment_status']);
-            
+
             if ($status === 'COMPLETED' || $status === 'SUCCESS') {
                 return 'paid';
             } elseif ($status === 'FAILED' || $status === 'CANCELLED') {
@@ -209,8 +213,8 @@ class SelcomService
      */
     public function validateCredentials($credentials)
     {
-        return !empty($credentials['vendor_id']) 
-            && !empty($credentials['api_key']) 
-            && !empty($credentials['api_secret']);
+        return ! empty($credentials['vendor_id'])
+            && ! empty($credentials['api_key'])
+            && ! empty($credentials['api_secret']);
     }
 }

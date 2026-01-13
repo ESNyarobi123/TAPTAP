@@ -160,9 +160,22 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
-                    Save Selcom Settings
-                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
+                        Save Selcom Settings
+                    </button>
+                    
+                    @if($restaurant->hasSelcomConfigured())
+                    <button type="button" id="test-btn" onclick="testSelcomConnection()" class="w-full glass border border-cyan-500/30 text-cyan-400 py-3.5 rounded-xl font-semibold hover:bg-cyan-500/10 transition-all flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Test Connection
+                    </button>
+                    @endif
+                </div>
+                
+                <div id="test-result" class="hidden"></div>
             </form>
         </div>
     </div>
@@ -356,6 +369,42 @@
             input.select();
             navigator.clipboard.writeText(input.value);
             alert('Kitchen Display URL copied to clipboard!');
+        }
+
+        function testSelcomConnection() {
+            const btn = document.getElementById('test-btn');
+            const resultDiv = document.getElementById('test-result');
+            
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Testing...';
+            
+            fetch('{{ route("manager.api.selcom.test") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultDiv.classList.remove('hidden');
+                if (data.success) {
+                    resultDiv.className = 'mt-4 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl';
+                    resultDiv.innerHTML = '<div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span class="text-sm font-medium text-emerald-400">' + data.message + '</span></div>';
+                } else {
+                    resultDiv.className = 'mt-4 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl';
+                    resultDiv.innerHTML = '<div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-rose-400"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg><span class="text-sm font-medium text-rose-400">' + data.message + '</span></div>';
+                }
+            })
+            .catch(error => {
+                resultDiv.classList.remove('hidden');
+                resultDiv.className = 'mt-4 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl';
+                resultDiv.innerHTML = '<div class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-rose-400"><circle cx="12" cy="12" r="10"/><line x1="15" x2="9" y1="9" y2="15"/><line x1="9" x2="15" y1="9" y2="15"/></svg><span class="text-sm font-medium text-rose-400">Connection error. Please try again.</span></div>';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Test Connection';
+            });
         }
     </script>
 </x-manager-layout>

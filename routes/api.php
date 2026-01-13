@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\RestaurantController;
+use App\Http\Controllers\Api\V1\FeedbackController;
 use App\Http\Controllers\Api\V1\MenuController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\PaymentController;
-use App\Http\Controllers\Api\V1\FeedbackController;
+use App\Http\Controllers\Api\V1\RestaurantController;
 use App\Http\Controllers\Api\V1\TipController;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -33,7 +32,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/payments/ussd-request', [PaymentController::class, 'ussdRequest']);
     Route::post('/payments/cash', [PaymentController::class, 'cashPayment']);
     Route::get('/payments/{order}/status', [PaymentController::class, 'status']);
-    
+
     // Feedback & Tips
     Route::post('/feedback', [FeedbackController::class, 'store']);
     Route::post('/tips', [TipController::class, 'store']);
@@ -43,10 +42,10 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1/manager')->middleware(['auth:sanctum', 'role:manager'])->group(function () {
     // Categories
     Route::apiResource('categories', \App\Http\Controllers\Api\Manager\CategoryController::class);
-    
+
     // Menu
     Route::apiResource('menu', \App\Http\Controllers\Api\Manager\MenuController::class);
-    
+
     // Tables
     Route::apiResource('tables', \App\Http\Controllers\Api\Manager\TableController::class);
 });
@@ -72,7 +71,7 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     Route::get('/restaurant/{restaurantId}/waiters', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getWaiters']);
     Route::get('/active-order', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getActiveOrder']);
     Route::get('/restaurant/{restaurantId}/menu-image', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getMenuImage']);
-    
+
     // Quick Payment Routes (payment without order)
     Route::post('/payment/quick', [App\Http\Controllers\Api\WhatsAppBotController::class, 'initiateQuickPayment']);
     Route::get('/payment/quick/{paymentId}/status', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getQuickPaymentStatus']);
@@ -81,6 +80,3 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
 // WhatsApp Webhook (Meta/WhatsApp Cloud API)
 Route::get('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'verify']);
 Route::post('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'handle']);
-
-// Public callback for payments (no auth required usually, or verify signature)
-Route::post('/v1/payments/callback', [PaymentController::class, 'callback']);

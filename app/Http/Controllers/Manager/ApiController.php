@@ -3,15 +3,23 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Services\SelcomService;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
 
 class ApiController extends Controller
 {
+    protected SelcomService $selcom;
+
+    public function __construct(SelcomService $selcom)
+    {
+        $this->selcom = $selcom;
+    }
+
     public function index()
     {
         $restaurant = Auth::user()->restaurant;
+
         return view('manager.api.index', compact('restaurant'));
     }
 
@@ -36,5 +44,70 @@ class ApiController extends Controller
         ]);
 
         return back()->with('success', 'Selcom credentials updated successfully!');
+    }
+
+    /**
+     * Test Selcom Connection
+     */
+    public function testSelcomConnection()
+    {
+        $restaurant = Auth::user()->restaurant;
+
+        if (! $restaurant->hasSelcomConfigured()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please save your Selcom credentials first',
+            ]);
+        }
+
+        $credentials = $restaurant->getSelcomCredentials();
+
+        // Try to validate credentials by making a test call
+        // We'll create a minimal order to test the connection
+        $testOrderId = 'TEST-'.time();
+
+        try {
+            $result = $this->selcom->checkOrderStatus($credentials, $testOrderId);
+
+            // A 404 "not found" is actually good - it means credentials are valid
+            // but the order doesn't exist (which is expected for a test order)
+            if (isset($result['resultcode'])) {
+                if ($result['resultcode'] === '404' || $result['resultcode'] === '000') {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Connection successful! Selcom credentials are valid. Mode: '.
+                            ($credentials['is_live'] ? 'LIVE' : 'TEST'),
+                    ]);
+                }
+
+                // Authentication errors
+                if ($result['resultcode'] === '401' || $result['resultcode'] === '403') {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Invalid credentials. Please check your API Key and Secret.',
+                    ]);
+                }
+            }
+
+            // Check for error messages in the response
+            if (isset($result['message']) && str_contains(strtolower($result['message']), 'unauthorized')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid credentials. Please check your API Key and Secret.',
+                ]);
+            }
+
+            // If we got a response, credentials are likely valid
+            return response()->json([
+                'success' => true,
+                'message' => 'Connection successful! Mode: '.($credentials['is_live'] ? 'LIVE' : 'TEST'),
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Connection failed: '.$e->getMessage(),
+            ]);
+        }
     }
 }
