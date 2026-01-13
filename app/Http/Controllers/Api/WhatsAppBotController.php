@@ -369,15 +369,25 @@ class WhatsAppBotController extends Controller
     {
         $request->validate([
             'restaurant_id' => 'required|exists:restaurants,id',
-            'table_number' => 'required',
+            'table_id' => 'nullable|exists:tables,id',
+            'table_number' => 'nullable|string',
+            'waiter_id' => 'nullable|exists:users,id',
             'customer_phone' => 'required',
+            'customer_name' => 'nullable|string',
             'items' => 'required|array',
             'items.*.menu_item_id' => 'required|exists:menu_items,id',
             'items.*.quantity' => 'required|integer|min:1',
         ]);
 
+        // Get table number from table_id if provided
+        $tableNumber = $request->table_number;
+        if (! $tableNumber && $request->table_id) {
+            $table = Table::withoutGlobalScopes()->find($request->table_id);
+            $tableNumber = $table ? $table->name : null;
+        }
+
         try {
-            return DB::transaction(function () use ($request) {
+            return DB::transaction(function () use ($request, $tableNumber) {
                 $totalAmount = 0;
                 $orderItems = [];
 
@@ -397,8 +407,10 @@ class WhatsAppBotController extends Controller
 
                 $order = Order::withoutGlobalScopes()->create([
                     'restaurant_id' => $request->restaurant_id,
-                    'table_number' => $request->table_number,
+                    'waiter_id' => $request->waiter_id,
+                    'table_number' => $tableNumber,
                     'customer_phone' => $request->customer_phone,
+                    'customer_name' => $request->customer_name,
                     'total_amount' => $totalAmount,
                     'status' => 'pending',
                 ]);
@@ -411,13 +423,19 @@ class WhatsAppBotController extends Controller
                 Activity::create([
                     'description' => "New WhatsApp order #{$order->id} from {$request->customer_phone}",
                     'type' => 'order_created',
-                    'properties' => ['order_id' => $order->id, 'source' => 'whatsapp'],
+                    'properties' => [
+                        'order_id' => $order->id,
+                        'source' => 'whatsapp',
+                        'waiter_id' => $request->waiter_id,
+                    ],
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'order_id' => $order->id,
                     'total' => $totalAmount,
+                    'waiter_id' => $request->waiter_id,
+                    'table_number' => $tableNumber,
                     'message' => 'Order created successfully',
                 ]);
             });
@@ -981,18 +999,29 @@ class WhatsAppBotController extends Controller
 
     /**
      * Create Order from Text (Natural Language)
+     * table_id/table_number is optional - order can be created via waiter QR scan
      */
     public function createOrderByText(Request $request)
     {
         $request->validate([
             'restaurant_id' => 'required|exists:restaurants,id',
-            'table_number' => 'required',
+            'table_id' => 'nullable|exists:tables,id',
+            'table_number' => 'nullable|string',
+            'waiter_id' => 'nullable|exists:users,id',
             'customer_phone' => 'required',
+            'customer_name' => 'nullable|string',
             'order_text' => 'required|string',
         ]);
 
         $text = $request->order_text;
         $restaurantId = $request->restaurant_id;
+
+        // Get table number from table_id if provided
+        $tableNumber = $request->table_number;
+        if (! $tableNumber && $request->table_id) {
+            $table = Table::withoutGlobalScopes()->find($request->table_id);
+            $tableNumber = $table ? $table->name : null;
+        }
 
         // Fetch all available items for this restaurant
         $menuItems = MenuItem::withoutGlobalScopes()
@@ -1040,11 +1069,13 @@ class WhatsAppBotController extends Controller
         // If no items matched, create a custom order with the raw text
         if (empty($matchedItems)) {
             try {
-                return DB::transaction(function () use ($request) {
+                return DB::transaction(function () use ($request, $tableNumber) {
                     $order = Order::withoutGlobalScopes()->create([
                         'restaurant_id' => $request->restaurant_id,
-                        'table_number' => $request->table_number,
+                        'waiter_id' => $request->waiter_id,
+                        'table_number' => $tableNumber,
                         'customer_phone' => $request->customer_phone,
+                        'customer_name' => $request->customer_name,
                         'total_amount' => 0, // Unknown price
                         'status' => 'pending',
                         'notes' => 'Order from text: '.$request->order_text,
@@ -1062,7 +1093,11 @@ class WhatsAppBotController extends Controller
                     Activity::create([
                         'description' => "New WhatsApp text order #{$order->id} from {$request->customer_phone}: \"{$request->order_text}\" (Unmatched)",
                         'type' => 'order_created',
-                        'properties' => ['order_id' => $order->id, 'source' => 'whatsapp_text_unmatched'],
+                        'properties' => [
+                            'order_id' => $order->id,
+                            'source' => 'whatsapp_text_unmatched',
+                            'waiter_id' => $request->waiter_id,
+                        ],
                     ]);
 
                     return response()->json([
@@ -1080,11 +1115,13 @@ class WhatsAppBotController extends Controller
 
         // Create Order with matched items
         try {
-            return DB::transaction(function () use ($request, $matchedItems, $totalAmount) {
+            return DB::transaction(function () use ($request, $matchedItems, $totalAmount, $tableNumber) {
                 $order = Order::withoutGlobalScopes()->create([
                     'restaurant_id' => $request->restaurant_id,
-                    'table_number' => $request->table_number,
+                    'waiter_id' => $request->waiter_id,
+                    'table_number' => $tableNumber,
                     'customer_phone' => $request->customer_phone,
+                    'customer_name' => $request->customer_name,
                     'total_amount' => $totalAmount,
                     'status' => 'pending',
                 ]);
@@ -1103,7 +1140,11 @@ class WhatsAppBotController extends Controller
                 Activity::create([
                     'description' => "New WhatsApp text order #{$order->id} from {$request->customer_phone}: \"{$request->order_text}\"",
                     'type' => 'order_created',
-                    'properties' => ['order_id' => $order->id, 'source' => 'whatsapp_text'],
+                    'properties' => [
+                        'order_id' => $order->id,
+                        'source' => 'whatsapp_text',
+                        'waiter_id' => $request->waiter_id,
+                    ],
                 ]);
 
                 return response()->json([
@@ -1111,6 +1152,8 @@ class WhatsAppBotController extends Controller
                     'order_id' => $order->id,
                     'total' => $totalAmount,
                     'items' => $matchedItems,
+                    'waiter_id' => $request->waiter_id,
+                    'table_number' => $tableNumber,
                     'message' => 'Order created successfully',
                 ]);
             });
