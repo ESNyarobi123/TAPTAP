@@ -168,6 +168,7 @@ class SelcomService
 
     /**
      * Initiate USSD Push for existing order
+     * Selcom wallet-payment requires: transid (order_id), msisdn
      */
     public function initiateUssdPush(array $credentials, array $data): array
     {
@@ -175,7 +176,9 @@ class SelcomService
             $baseUrl = $this->getBaseUrl($credentials['is_live'] ?? false);
             $phone = $this->formatPhone($data['phone']);
 
+            // Selcom expects 'transid' not 'order_id' for wallet-payment
             $payload = [
+                'transid' => $data['order_id'],
                 'order_id' => $data['order_id'],
                 'msisdn' => $phone,
             ];
@@ -185,6 +188,11 @@ class SelcomService
                 $credentials['api_secret'],
                 $payload
             );
+
+            Log::info('Selcom USSD Push Request', [
+                'url' => $baseUrl.'/checkout/wallet-payment',
+                'payload' => $payload,
+            ]);
 
             $response = Http::withHeaders($headers)
                 ->post($baseUrl.'/checkout/wallet-payment', $payload);
