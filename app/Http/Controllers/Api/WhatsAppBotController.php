@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -428,6 +428,7 @@ class WhatsAppBotController extends Controller
 
     /**
      * Check Order & Payment Status (Polling)
+     * Bot calls this repeatedly to check if payment is complete
      */
     public function getOrderStatus($orderId)
     {
@@ -441,30 +442,74 @@ class WhatsAppBotController extends Controller
 
         $payment = $order->payments()->where('method', 'ussd')->latest()->first();
 
-        // Polling logic for Selcom
+        // If already completed or failed, return immediately
+        if ($payment && in_array($payment->status, ['paid', 'failed', 'cancelled'])) {
+            return response()->json([
+                'success' => true,
+                'order_id' => $order->id,
+                'order_status' => $order->status,
+                'payment_status' => $payment->status,
+                'is_paid' => $payment->status === 'paid',
+                'is_failed' => in_array($payment->status, ['failed', 'cancelled']),
+                'total' => $order->total_amount,
+                'items' => $order->items,
+            ]);
+        }
+
+        // Polling logic for Selcom - check with Selcom API
         if ($payment && $payment->status === 'pending') {
             $restaurant = $order->restaurant;
 
-            if ($restaurant->hasSelcomConfigured()) {
+            if ($restaurant && $restaurant->hasSelcomConfigured()) {
                 $selcom = new \App\Services\SelcomService;
-                $result = $selcom->checkOrderStatus($restaurant->getSelcomCredentials(), $payment->transaction_reference);
+                $result = $selcom->checkOrderStatus(
+                    $restaurant->getSelcomCredentials(),
+                    $payment->transaction_reference
+                );
                 $paymentStatus = $selcom->parsePaymentStatus($result);
 
                 if ($paymentStatus === 'paid') {
                     $payment->update(['status' => 'paid']);
                     $order->update(['status' => 'paid']);
+
+                    // Log successful payment
+                    Activity::create([
+                        'description' => 'Order #'.$order->id.' payment completed: Tsh '.number_format($order->total_amount),
+                        'type' => 'order_payment_success',
+                        'properties' => [
+                            'order_id' => $order->id,
+                            'payment_id' => $payment->id,
+                            'amount' => $order->total_amount,
+                        ],
+                    ]);
+
+                    // Refresh to get updated status
+                    $payment->refresh();
+                    $order->refresh();
                 } elseif ($paymentStatus === 'failed') {
                     $payment->update(['status' => 'failed']);
+                    $payment->refresh();
                 }
             }
         }
 
+        // Check if payment has expired (older than 10 minutes)
+        if ($payment && $payment->status === 'pending' && $payment->created_at->diffInMinutes(now()) > 10) {
+            $payment->update(['status' => 'failed']);
+            $payment->refresh();
+        }
+
         return response()->json([
             'success' => true,
-            'status' => $order->status,
+            'order_id' => $order->id,
+            'order_status' => $order->status,
             'payment_status' => $payment ? $payment->status : 'unpaid',
+            'is_paid' => $payment && $payment->status === 'paid',
+            'is_failed' => $payment && in_array($payment->status, ['failed', 'cancelled']),
+            'is_pending' => $payment && $payment->status === 'pending',
             'total' => $order->total_amount,
             'items' => $order->items,
+            'transaction_reference' => $payment?->transaction_reference,
         ]);
     }
 
@@ -668,11 +713,13 @@ class WhatsAppBotController extends Controller
 
     /**
      * Check Quick Payment Status (Polling)
+     * Bot calls this repeatedly to check if payment is complete
      */
     public function getQuickPaymentStatus($paymentId)
     {
         $payment = Payment::where('id', $paymentId)
             ->where('payment_type', 'quick')
+            ->with('restaurant')
             ->first();
 
         if (! $payment) {
@@ -682,29 +729,76 @@ class WhatsAppBotController extends Controller
             ], 404);
         }
 
-        // Polling logic for Selcom
+        // If already completed or failed, return immediately
+        if (in_array($payment->status, ['paid', 'failed', 'cancelled'])) {
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'status' => $payment->status,
+                'is_complete' => $payment->status === 'paid',
+                'is_failed' => in_array($payment->status, ['failed', 'cancelled']),
+                'amount' => $payment->amount,
+                'description' => $payment->description,
+                'customer_phone' => $payment->customer_phone,
+                'created_at' => $payment->created_at->format('Y-m-d H:i:s'),
+            ]);
+        }
+
+        // Polling logic for Selcom - check with Selcom API
         if ($payment->status === 'pending' && $payment->restaurant) {
             $restaurant = $payment->restaurant;
 
             if ($restaurant->hasSelcomConfigured()) {
                 $selcom = new \App\Services\SelcomService;
-                $result = $selcom->checkOrderStatus($restaurant->getSelcomCredentials(), $payment->transaction_reference);
+                $result = $selcom->checkOrderStatus(
+                    $restaurant->getSelcomCredentials(),
+                    $payment->transaction_reference
+                );
                 $paymentStatus = $selcom->parsePaymentStatus($result);
 
+                // Update payment status based on Selcom response
                 if ($paymentStatus === 'paid') {
                     $payment->update(['status' => 'paid']);
+
+                    // Log successful payment
+                    Activity::create([
+                        'description' => 'Quick payment completed: Tsh '.number_format($payment->amount),
+                        'type' => 'payment_success',
+                        'properties' => [
+                            'payment_id' => $payment->id,
+                            'amount' => $payment->amount,
+                            'phone' => $payment->customer_phone,
+                        ],
+                    ]);
                 } elseif ($paymentStatus === 'failed') {
                     $payment->update(['status' => 'failed']);
                 }
+
+                // Refresh payment to get updated status
+                $payment->refresh();
             }
+        }
+
+        // Check if payment has expired (older than 10 minutes)
+        $isExpired = $payment->status === 'pending'
+            && $payment->created_at->diffInMinutes(now()) > 10;
+
+        if ($isExpired) {
+            $payment->update(['status' => 'failed']);
+            $payment->refresh();
         }
 
         return response()->json([
             'success' => true,
             'payment_id' => $payment->id,
             'status' => $payment->status,
+            'is_complete' => $payment->status === 'paid',
+            'is_failed' => in_array($payment->status, ['failed', 'cancelled']),
+            'is_pending' => $payment->status === 'pending',
             'amount' => $payment->amount,
             'description' => $payment->description,
+            'customer_phone' => $payment->customer_phone,
+            'transaction_reference' => $payment->transaction_reference,
             'created_at' => $payment->created_at->format('Y-m-d H:i:s'),
         ]);
     }
