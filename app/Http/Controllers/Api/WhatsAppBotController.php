@@ -196,11 +196,18 @@ class WhatsAppBotController extends Controller
      */
     public function parseEntry(Request $request)
     {
-        $request->validate([
-            'input' => 'required|string|max:50',
-        ]);
+        // Support both POST body and query parameter for flexibility
+        $inputValue = $request->input('input') ?? $request->query('input') ?? $request->query('text');
+        
+        if (empty($inputValue)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'The input field is required.',
+                'hint' => 'Send input as POST body: {"input": "START_2_W12"} or as query: ?input=START_2_W12'
+            ], 422);
+        }
 
-        $input = strtoupper(trim($request->input('input')));
+        $input = strtoupper(trim($inputValue));
 
         // Pattern 1: START_{restaurant_id}
         if (preg_match('/^START_(\d+)$/i', $input, $matches)) {
