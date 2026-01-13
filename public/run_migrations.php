@@ -51,6 +51,33 @@ use Illuminate\Database\Schema\Blueprint;
             echo '<a href="?action=migrate" class="btn">Run All Migrations</a>';
             echo '<a href="?action=fix_customer_requests" class="btn btn-success">Fix customer_requests Table (Add table_id, waiter_id)</a>';
             echo '<a href="?action=status" class="btn">Check Migration Status</a>';
+            echo '<a href="?action=show_columns" class="btn">Show customer_requests Columns</a>';
+        }
+        
+        elseif ($action === 'show_columns') {
+            try {
+                echo "<h3>Columns in customer_requests table:</h3>";
+                $columns = Schema::getColumnListing('customer_requests');
+                echo "<pre>";
+                foreach ($columns as $column) {
+                    $type = DB::selectOne("SHOW COLUMNS FROM customer_requests WHERE Field = ?", [$column]);
+                    echo "• {$column} ({$type->Type})" . ($type->Null === 'YES' ? ' [nullable]' : ' [required]') . "\n";
+                }
+                echo "</pre>";
+                
+                // Check specific columns
+                $hasTableId = in_array('table_id', $columns);
+                $hasWaiterId = in_array('waiter_id', $columns);
+                
+                echo "<h4>Status:</h4>";
+                echo $hasTableId ? "<p class='success'>✓ table_id column EXISTS</p>" : "<p class='error'>✗ table_id column MISSING</p>";
+                echo $hasWaiterId ? "<p class='success'>✓ waiter_id column EXISTS</p>" : "<p class='error'>✗ waiter_id column MISSING</p>";
+                
+            } catch (\Exception $e) {
+                echo "<h3 class='error'>Error:</h3>";
+                echo "<pre>" . htmlspecialchars($e->getMessage()) . "</pre>";
+            }
+            echo '<br><a href="?" class="btn">← Back</a>';
         }
         
         elseif ($action === 'status') {
