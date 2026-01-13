@@ -20,34 +20,56 @@ class SelcomService
     }
 
     /**
+     * Compute Selcom authentication signature
+     * Based on Selcom API docs:
+     * - Signed-Fields: comma-separated list of all payload keys
+     * - Digest: Base64(HMAC-SHA256("timestamp=xxx&key1=val1&key2=val2...", api_secret))
+     */
+    protected function computeSignature(string $apiSecret, string $timestamp, array $payload): array
+    {
+        // Get all field names as signed fields
+        $signedFieldsList = array_keys($payload);
+        $signedFields = implode(',', $signedFieldsList);
+
+        // Build the string to sign: timestamp=xxx&field1=value1&field2=value2...
+        $stringToSign = 'timestamp='.$timestamp;
+        foreach ($signedFieldsList as $field) {
+            $value = $payload[$field];
+            // Convert to string
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            } elseif (is_array($value)) {
+                $value = json_encode($value);
+            }
+            $stringToSign .= '&'.$field.'='.$value;
+        }
+
+        // Compute HMAC-SHA256 digest
+        $digest = base64_encode(hash_hmac('sha256', $stringToSign, $apiSecret, true));
+
+        return [
+            'signed_fields' => $signedFields,
+            'digest' => $digest,
+        ];
+    }
+
+    /**
      * Generate authorization headers for Selcom API
-     * Selcom requires: Digest = Base64(SHA256(JSON_body))
-     * Signature = Base64(HMAC-SHA256(signed_fields_values, api_secret))
      */
     protected function generateHeaders(string $apiKey, string $apiSecret, array $payload = []): array
     {
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
 
-        // For POST requests, digest is SHA256 of the JSON body
-        // For GET requests with no body, use empty string
-        $jsonBody = ! empty($payload) ? json_encode($payload) : '';
-        $digest = base64_encode(hash('sha256', $jsonBody, true));
-
-        // Signed fields - include timestamp
-        $signedFields = 'timestamp';
-        $signedData = 'timestamp='.$timestamp;
-
-        // Signature = HMAC-SHA256 of signed fields values
-        $signature = base64_encode(hash_hmac('sha256', $signedData, $apiSecret, true));
+        // Compute signature based on payload
+        $signatureData = $this->computeSignature($apiSecret, $timestamp, $payload);
 
         return [
             'Content-Type' => 'application/json',
             'Authorization' => 'SELCOM '.base64_encode($apiKey),
             'Digest-Method' => 'HS256',
-            'Digest' => $digest,
+            'Digest' => $signatureData['digest'],
             'Timestamp' => $timestamp,
-            'Signed-Fields' => $signedFields,
-            'Signature' => $signature,
+            'Signed-Fields' => $signatureData['signed_fields'],
         ];
     }
 
@@ -91,7 +113,6 @@ class SelcomService
                 'no_of_items' => 1,
             ];
 
-            // Generate headers with payload for correct digest
             $headers = $this->generateHeaders(
                 $credentials['api_key'],
                 $credentials['api_secret'],
@@ -101,6 +122,7 @@ class SelcomService
             Log::info('Selcom Payment Request', [
                 'url' => $baseUrl.'/checkout/create-order-minimal',
                 'payload' => $payload,
+                'headers' => array_diff_key($headers, ['Authorization' => '']),
             ]);
 
             $response = Http::withHeaders($headers)
@@ -158,7 +180,6 @@ class SelcomService
                 'msisdn' => $phone,
             ];
 
-            // Generate headers with payload for correct digest
             $headers = $this->generateHeaders(
                 $credentials['api_key'],
                 $credentials['api_secret'],
@@ -192,17 +213,17 @@ class SelcomService
         try {
             $baseUrl = $this->getBaseUrl($credentials['is_live'] ?? false);
 
-            // For GET requests, generate headers without payload (empty body)
+            // For GET requests, include query params in signature
+            $queryParams = ['order_id' => $orderId];
+
             $headers = $this->generateHeaders(
                 $credentials['api_key'],
                 $credentials['api_secret'],
-                [] // Empty for GET request
+                $queryParams
             );
 
             $response = Http::withHeaders($headers)
-                ->get($baseUrl.'/checkout/order-status', [
-                    'order_id' => $orderId,
-                ]);
+                ->get($baseUrl.'/checkout/order-status', $queryParams);
 
             $result = $response->json();
 
