@@ -172,7 +172,11 @@
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group">
                     <div class="w-10 h-10 flex items-center justify-center overflow-hidden group-hover:rotate-12 transition-transform duration-500">
-                        <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
+                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                            <path d="M7 2v20"></path>
+                            <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                        </svg>
                     </div>
                     <span class="text-2xl font-display font-bold text-white tracking-tight">TIP<span class="text-primary">TAP</span></span>
                 </a>
@@ -212,7 +216,11 @@
         <div class="flex justify-between items-center mb-12">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 flex items-center justify-center overflow-hidden">
-                    <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
+                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                        <path d="M7 2v20"></path>
+                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                    </svg>
                 </div>
                 <span class="text-2xl font-display font-bold text-white">TIPTAP</span>
             </div>
@@ -483,7 +491,11 @@
                 <div class="col-span-2">
                     <a href="/" class="flex items-center gap-2 mb-6">
                         <div class="w-8 h-8 flex items-center justify-center overflow-hidden">
-                            <img src="{{ asset('logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
+                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
+                                <path d="M7 2v20"></path>
+                                <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+                            </svg>
                         </div>
                         <span class="text-xl font-display font-bold text-white">TIPTAP</span>
                     </a>
