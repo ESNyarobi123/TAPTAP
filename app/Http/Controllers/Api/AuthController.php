@@ -26,7 +26,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+        $user = Auth::user()->load('restaurant');
 
         $user->tokens()->delete();
 
@@ -42,7 +42,10 @@ class AuthController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'restaurant_id' => $user->restaurant_id,
+                'restaurant_name' => $user->restaurant?->name,
+                'restaurant_location' => $user->restaurant?->location,
                 'waiter_code' => $user->waiter_code,
+                'waiter_qr_url' => $user->waiter_qr_url,
                 'roles' => $user->getRoleNames()->toArray(),
             ],
         ]);
