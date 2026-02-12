@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+// Waiter API (auth:sanctum + role:waiter)
+Route::prefix('waiter')->middleware(['auth:sanctum', 'role:waiter'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'index']);
+    Route::get('/dashboard/stats', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'stats']);
+    Route::get('/orders', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'orders']);
+    Route::get('/tips', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'tips']);
+    Route::get('/ratings', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'ratings']);
+    Route::get('/menu', [\App\Http\Controllers\Api\Waiter\MenuController::class, 'index']);
+    Route::get('/requests', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'pendingRequests']);
+    Route::post('/orders/{order}/claim', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'claimOrder']);
+    Route::post('/requests/{customerRequest}/complete', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'completeRequest']);
+});
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
