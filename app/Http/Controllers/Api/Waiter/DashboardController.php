@@ -45,12 +45,14 @@ class DashboardController extends Controller
                 ]),
             ]);
 
-        $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->get()->map(fn ($req) => [
-            'id' => $req->id,
-            'type' => $req->type,
-            'table_number' => $req->table_number,
-            'created_at' => $req->created_at->toIso8601String(),
-        ]);
+        $pendingRequests = CustomerRequest::where('status', 'pending')
+            ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+            ->latest()->get()->map(fn ($req) => [
+                'id' => $req->id,
+                'type' => $req->type,
+                'table_number' => $req->table_number,
+                'created_at' => $req->created_at->toIso8601String(),
+            ]);
 
         $recentFeedback = Feedback::where(function ($query) use ($waiter) {
             $query->where('waiter_id', $waiter->id)
@@ -116,7 +118,9 @@ class DashboardController extends Controller
                 'total_tips_received' => Tip::where('waiter_id', $waiter->id)->sum('amount'),
                 'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
                 'ready_to_serve' => Order::where('status', 'ready')->count(),
-                'pending_requests' => CustomerRequest::where('status', 'pending')->count(),
+                'pending_requests' => CustomerRequest::where('status', 'pending')
+                    ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+                    ->count(),
             ],
         ]);
     }
@@ -151,10 +155,19 @@ class DashboardController extends Controller
     }
 
     /**
-     * Mark customer request (call waiter / request bill) as completed
+     * Mark customer request (call waiter / request bill) as completed.
+     * Waiter can only complete requests assigned to them or unassigned (waiter_id null).
      */
     public function completeRequest(CustomerRequest $customerRequest): JsonResponse
     {
+        $waiter = Auth::user();
+        if ($customerRequest->waiter_id !== null && (int) $customerRequest->waiter_id !== (int) $waiter->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This request is assigned to another waiter.',
+            ], 403);
+        }
+
         $customerRequest->update(['status' => 'completed']);
 
         return response()->json([
@@ -260,13 +273,23 @@ class DashboardController extends Controller
      */
     public function pendingRequests(): JsonResponse
     {
-        $requests = CustomerRequest::where('status', 'pending')->latest()->get()->map(fn ($req) => [
-            'id' => $req->id,
-            'type' => $req->type,
-            'table_number' => $req->table_number,
-            'waiter_id' => $req->waiter_id,
-            'created_at' => $req->created_at->toIso8601String(),
-        ]);
+        $waiter = Auth::user();
+        $requests = CustomerRequest::with('waiter')
+            ->where('status', 'pending')
+            ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+            ->latest()->get()->map(function ($req) {
+            $typeLabel = $req->type === 'request_bill' ? 'Request Bill' : 'Call Waiter';
+
+            return [
+                'id' => $req->id,
+                'type' => $req->type,
+                'type_label' => $typeLabel,
+                'table_number' => $req->table_number ?? '-',
+                'waiter_id' => $req->waiter_id,
+                'waiter_name' => $req->waiter?->name,
+                'created_at' => $req->created_at->toIso8601String(),
+            ];
+        });
 
         return response()->json([
             'success' => true,
