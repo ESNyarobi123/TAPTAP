@@ -667,6 +667,7 @@ class WhatsAppBotController extends Controller
             'amount' => 'required|numeric|min:100',
             'description' => 'required|string|max:500',
             'network' => 'nullable|string',
+            'waiter_id' => 'nullable|exists:users,id',
         ]);
 
         $restaurant = Restaurant::find($request->restaurant_id);
@@ -694,6 +695,7 @@ class WhatsAppBotController extends Controller
         if (isset($result['status']) && $result['status'] === 'success') {
             $payment = Payment::create([
                 'restaurant_id' => $restaurant->id,
+                'waiter_id' => $request->waiter_id,
                 'customer_phone' => $request->phone_number,
                 'amount' => $request->amount,
                 'method' => 'ussd',
@@ -777,6 +779,16 @@ class WhatsAppBotController extends Controller
                 // Update payment status based on Selcom response
                 if ($paymentStatus === 'paid') {
                     $payment->update(['status' => 'paid']);
+
+                    // If this quick payment was a tip (waiter_id set), create Tip so waiter sees it in API
+                    if ($payment->waiter_id) {
+                        Tip::withoutGlobalScopes()->create([
+                            'restaurant_id' => $payment->restaurant_id,
+                            'waiter_id' => $payment->waiter_id,
+                            'order_id' => null,
+                            'amount' => $payment->amount,
+                        ]);
+                    }
 
                     // Log successful payment
                     Activity::create([

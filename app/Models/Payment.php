@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
-        'order_id', 
+        'order_id',
         'restaurant_id',
+        'waiter_id',
         'customer_phone',
-        'amount', 
-        'method', 
+        'amount',
+        'method',
         'payment_type',
-        'status', 
+        'status',
         'transaction_reference',
-        'description'
+        'description',
     ];
 
     public function order()
@@ -26,5 +27,10 @@ class Payment extends Model
     public function restaurant()
     {
         return $this->belongsTo(Restaurant::class);
+    }
+
+    public function waiter()
+    {
+        return $this->belongsTo(User::class, 'waiter_id');
     }
 }
