@@ -786,12 +786,21 @@ class WhatsAppBotController extends Controller
 
                     // If this quick payment was a tip (waiter_id set), create Tip so waiter sees it in API
                     if ($payment->waiter_id) {
-                        Tip::withoutGlobalScopes()->create([
+                        $tipData = [
                             'restaurant_id' => $payment->restaurant_id,
                             'waiter_id' => $payment->waiter_id,
                             'order_id' => null,
                             'amount' => $payment->amount,
-                        ]);
+                        ];
+                        if (Schema::hasColumn('tips', 'payment_id')) {
+                            $tipData['payment_id'] = $payment->id;
+                            Tip::withoutGlobalScopes()->firstOrCreate(
+                                ['payment_id' => $payment->id],
+                                $tipData
+                            );
+                        } else {
+                            Tip::withoutGlobalScopes()->create($tipData);
+                        }
                     }
 
                     // Log successful payment

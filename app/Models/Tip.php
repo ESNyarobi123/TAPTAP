@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Restaurant; // Added for restaurant relationship
 use App\Models\User;       // Added for waiter relationship (assuming User model for waiters)
 use App\Models\Order;      // Added for order relationship
+use App\Models\Payment;
 
 class Tip extends Model
 {
-    protected $fillable = ['restaurant_id', 'waiter_id', 'order_id', 'amount'];
+    protected $fillable = ['restaurant_id', 'waiter_id', 'order_id', 'payment_id', 'amount'];
 
     protected static function booted()
     {
@@ -29,5 +30,10 @@ class Tip extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
     }
 }

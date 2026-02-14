@@ -81,7 +81,10 @@ class DashboardController extends Controller
             'data' => [
                 'stats' => [
                     'tips_today' => $tipsToday,
+                    'tips_today_amount' => $tipsToday,
                     'tips_this_week' => $tipsThisWeek,
+                    'tips_this_week_amount' => $tipsThisWeek,
+                    'total_tips_received' => Tip::where('waiter_id', $waiter->id)->sum('amount'),
                     'my_active_orders' => $myActiveOrders,
                     'restaurant_active_orders' => $restaurantActiveOrders,
                     'ready_to_serve' => $readyToServeOrders,
@@ -103,10 +106,14 @@ class DashboardController extends Controller
         $waiter = Auth::user();
         $today = Carbon::today();
 
+        $tipsTodayAmount = Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount');
+
         return response()->json([
             'success' => true,
             'data' => [
-                'tips_today' => Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount'),
+                'tips_today' => $tipsTodayAmount,
+                'tips_today_amount' => $tipsTodayAmount,
+                'total_tips_received' => Tip::where('waiter_id', $waiter->id)->sum('amount'),
                 'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
                 'ready_to_serve' => Order::where('status', 'ready')->count(),
                 'pending_requests' => CustomerRequest::where('status', 'pending')->count(),
@@ -201,7 +208,8 @@ class DashboardController extends Controller
         $tips->getCollection()->transform(fn ($t) => [
             'id' => $t->id,
             'order_id' => $t->order_id,
-            'amount' => $t->amount,
+            'amount' => (float) $t->amount,
+            'amount_received' => (float) $t->amount,
             'created_at' => $t->created_at->toIso8601String(),
         ]);
 
@@ -209,6 +217,12 @@ class DashboardController extends Controller
             'success' => true,
             'data' => [
                 'total_tips' => $totalTips,
+                'total_amount_received' => $totalTips,
+                'summary' => [
+                    'total_tips' => $totalTips,
+                    'today' => Tip::where('waiter_id', $waiter->id)->whereDate('created_at', Carbon::today())->sum('amount'),
+                    'this_week' => Tip::where('waiter_id', $waiter->id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount'),
+                ],
                 'tips' => $tips,
             ],
         ]);
