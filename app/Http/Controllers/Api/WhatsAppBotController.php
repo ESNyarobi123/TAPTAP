@@ -11,6 +11,7 @@ use App\Models\MenuItem;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Restaurant;
+use App\Models\Setting;
 use App\Models\Table;
 use App\Models\Tip;
 use App\Models\User;
@@ -613,15 +614,31 @@ class WhatsAppBotController extends Controller
         $order = Order::withoutGlobalScopes()->with('restaurant')->find($request->order_id);
         $restaurant = $order->restaurant;
 
+        $transactionId = 'BOT-'.$order->id.'-'.time();
+
+        if (Setting::get('demo_push', '0') === '1') {
+            $payment = Payment::create([
+                'order_id' => $order->id,
+                'amount' => $request->amount,
+                'method' => 'ussd',
+                'status' => 'paid',
+                'transaction_reference' => $transactionId,
+            ]);
+            $order->update(['status' => 'paid']);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'message' => 'Demo: Payment marked successful (no push sent)',
+            ]);
+        }
+
         if (! $restaurant || ! $restaurant->hasSelcomConfigured()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Restaurant payment gateway not configured',
             ], 400);
         }
-
-        // Prepare data for Selcom
-        $transactionId = 'BOT-'.$order->id.'-'.time();
 
         $selcom = new \App\Services\SelcomService;
         $result = $selcom->initiatePayment($restaurant->getSelcomCredentials(), [
@@ -673,15 +690,73 @@ class WhatsAppBotController extends Controller
 
         $restaurant = Restaurant::find($request->restaurant_id);
 
-        if (! $restaurant || ! $restaurant->hasSelcomConfigured()) {
+        if (! $restaurant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Restaurant not found',
+            ], 404);
+        }
+
+        $transactionId = 'QUICK-'.$restaurant->id.'-'.time();
+
+        if (Setting::get('demo_push', '0') === '1') {
+            $paymentData = [
+                'restaurant_id' => $restaurant->id,
+                'customer_phone' => $request->phone_number,
+                'amount' => $request->amount,
+                'method' => 'ussd',
+                'payment_type' => 'quick',
+                'status' => 'paid',
+                'transaction_reference' => $transactionId,
+                'description' => $request->description,
+            ];
+            if (Schema::hasColumn('payments', 'waiter_id') && $request->waiter_id) {
+                $paymentData['waiter_id'] = $request->waiter_id;
+            }
+            $payment = Payment::create($paymentData);
+
+            if ($payment->waiter_id) {
+                $tipData = [
+                    'restaurant_id' => $payment->restaurant_id,
+                    'waiter_id' => $payment->waiter_id,
+                    'order_id' => null,
+                    'amount' => $payment->amount,
+                ];
+                if (Schema::hasColumn('tips', 'payment_id')) {
+                    $tipData['payment_id'] = $payment->id;
+                    Tip::withoutGlobalScopes()->firstOrCreate(
+                        ['payment_id' => $payment->id],
+                        $tipData
+                    );
+                } else {
+                    Tip::withoutGlobalScopes()->create($tipData);
+                }
+            }
+
+            Activity::create([
+                'description' => 'Demo: Quick payment completed: Tsh '.number_format($request->amount),
+                'type' => 'payment_success',
+                'properties' => [
+                    'payment_id' => $payment->id,
+                    'amount' => $payment->amount,
+                    'phone' => $request->phone_number,
+                ],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'payment_id' => $payment->id,
+                'message' => 'Demo: Payment marked successful (no push sent)',
+                'description' => $request->description,
+            ]);
+        }
+
+        if (! $restaurant->hasSelcomConfigured()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Restaurant payment gateway not configured',
             ], 400);
         }
-
-        // Prepare data for Selcom
-        $transactionId = 'QUICK-'.$restaurant->id.'-'.time();
 
         $selcom = new \App\Services\SelcomService;
         $result = $selcom->initiatePayment($restaurant->getSelcomCredentials(), [
@@ -709,7 +784,6 @@ class WhatsAppBotController extends Controller
             }
             $payment = Payment::create($paymentData);
 
-            // Log Activity
             Activity::create([
                 'description' => 'Quick payment initiated: Tsh '.number_format($request->amount)." from {$request->phone_number}",
                 'type' => 'quick_payment',

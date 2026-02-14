@@ -16,11 +16,19 @@ class SettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->except('_token');
-        
+
+        if (! $request->has('demo_push')) {
+            $data['demo_push'] = '0';
+        }
+
         foreach ($data as $key => $value) {
+            $payload = ['value' => $value];
+            if ($key === 'demo_push') {
+                $payload['group'] = 'payments';
+            }
             \App\Models\Setting::updateOrCreate(
                 ['key' => $key],
-                ['value' => $value]
+                $payload
             );
         }
 

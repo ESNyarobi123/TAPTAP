@@ -47,6 +47,23 @@
                 </div>
             </div>
 
+            <!-- Demo / Testing (Payments) -->
+            <div class="glass-card rounded-2xl p-8">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black text-white tracking-tight">Demo / Testing</h3>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Simulate successful payments without real money (push not sent, payment marked paid)</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <input type="hidden" name="demo_push" value="0">
+                    <input type="checkbox" name="demo_push" value="1" id="demo_push"
+                        {{ \App\Models\Setting::get('demo_push', '0') === '1' ? 'checked' : '' }}
+                        class="w-5 h-5 rounded border-white/20 bg-white/5 text-violet-500 focus:ring-violet-500">
+                    <label for="demo_push" class="text-sm font-bold text-white">Demo push ON – payments auto-success (no real push)</label>
+                </div>
+                <p class="text-[10px] text-amber-400/80 mt-2">When ON: USSD push is not sent; payment is marked successful. When OFF: normal Selcom flow.</p>
+            </div>
+
             <!-- Bot & API Settings -->
             <div class="glass-card rounded-2xl p-8">
                 <div class="mb-8">
