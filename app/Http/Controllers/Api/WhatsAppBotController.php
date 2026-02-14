@@ -16,6 +16,7 @@ use App\Models\Tip;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class WhatsAppBotController extends Controller
 {
@@ -693,9 +694,8 @@ class WhatsAppBotController extends Controller
         ]);
 
         if (isset($result['status']) && $result['status'] === 'success') {
-            $payment = Payment::create([
+            $paymentData = [
                 'restaurant_id' => $restaurant->id,
-                'waiter_id' => $request->waiter_id,
                 'customer_phone' => $request->phone_number,
                 'amount' => $request->amount,
                 'method' => 'ussd',
@@ -703,7 +703,11 @@ class WhatsAppBotController extends Controller
                 'status' => 'pending',
                 'transaction_reference' => $transactionId,
                 'description' => $request->description,
-            ]);
+            ];
+            if (Schema::hasColumn('payments', 'waiter_id') && $request->waiter_id) {
+                $paymentData['waiter_id'] = $request->waiter_id;
+            }
+            $payment = Payment::create($paymentData);
 
             // Log Activity
             Activity::create([
