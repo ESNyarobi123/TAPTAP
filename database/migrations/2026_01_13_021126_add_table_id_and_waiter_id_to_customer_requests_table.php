@@ -13,11 +13,19 @@ return new class extends Migration
     {
         Schema::table('customer_requests', function (Blueprint $table) {
             // Make table_number nullable (for waiter-based requests)
-            $table->string('table_number')->nullable()->change();
+            if (Schema::hasColumn('customer_requests', 'table_number')) {
+                $table->string('table_number')->nullable()->change();
+            }
 
-            // Add table_id and waiter_id
-            $table->foreignId('table_id')->nullable()->after('table_number')->constrained()->nullOnDelete();
-            $table->foreignId('waiter_id')->nullable()->after('table_id')->constrained('users')->nullOnDelete();
+            // Add table_id (only if not exists - handles partial migration/duplicate runs)
+            if (! Schema::hasColumn('customer_requests', 'table_id')) {
+                $table->foreignId('table_id')->nullable()->after('table_number')->constrained()->nullOnDelete();
+            }
+
+            // Add waiter_id (only if not exists)
+            if (! Schema::hasColumn('customer_requests', 'waiter_id')) {
+                $table->foreignId('waiter_id')->nullable()->after('table_id')->constrained('users')->nullOnDelete();
+            }
         });
     }
 
@@ -27,10 +35,17 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('customer_requests', function (Blueprint $table) {
-            $table->dropForeign(['table_id']);
-            $table->dropForeign(['waiter_id']);
-            $table->dropColumn(['table_id', 'waiter_id']);
-            $table->string('table_number')->nullable(false)->change();
+            if (Schema::hasColumn('customer_requests', 'table_id')) {
+                $table->dropForeign(['table_id']);
+                $table->dropColumn('table_id');
+            }
+            if (Schema::hasColumn('customer_requests', 'waiter_id')) {
+                $table->dropForeign(['waiter_id']);
+                $table->dropColumn('waiter_id');
+            }
+            if (Schema::hasColumn('customer_requests', 'table_number')) {
+                $table->string('table_number')->nullable(false)->change();
+            }
         });
     }
 };

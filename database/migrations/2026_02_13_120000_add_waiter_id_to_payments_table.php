@@ -13,7 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->foreignId('waiter_id')->nullable()->after('restaurant_id')->constrained('users')->onDelete('set null');
+            if (! Schema::hasColumn('payments', 'waiter_id')) {
+                $table->foreignId('waiter_id')->nullable()->after('restaurant_id')->constrained('users')->onDelete('set null');
+            }
         });
     }
 
@@ -23,7 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->dropForeign(['waiter_id']);
+            if (Schema::hasColumn('payments', 'waiter_id')) {
+                $table->dropForeign(['waiter_id']);
+                $table->dropColumn('waiter_id');
+            }
         });
     }
 };
