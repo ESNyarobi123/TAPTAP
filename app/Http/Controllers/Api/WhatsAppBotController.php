@@ -82,6 +82,7 @@ class WhatsAppBotController extends Controller
 
         return response()->json([
             'success' => true,
+            'skip_standalone_welcome' => true,
             'data' => [
                 'id' => $restaurant->id,
                 'name' => $restaurant->name,
@@ -130,6 +131,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'table',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $table->restaurant->id,
                     'restaurant_name' => $table->restaurant->name,
@@ -161,6 +163,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'waiter',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $waiter->restaurant->id,
                     'restaurant_name' => $waiter->restaurant->name,
@@ -185,6 +188,7 @@ class WhatsAppBotController extends Controller
                 return response()->json([
                     'success' => true,
                     'type' => 'restaurant',
+                    'skip_standalone_welcome' => true,
                     'data' => [
                         'restaurant_id' => $restaurant->id,
                         'restaurant_name' => $restaurant->name,
@@ -230,6 +234,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'restaurant',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
@@ -250,6 +255,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'table',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
@@ -273,6 +279,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'waiter',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
@@ -300,6 +307,7 @@ class WhatsAppBotController extends Controller
             return response()->json([
                 'success' => true,
                 'type' => 'table',
+                'skip_standalone_welcome' => true,
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
