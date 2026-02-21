@@ -58,8 +58,15 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-16 text-center">
-                                <p class="text-sm text-white/40 font-medium">No orders found</p>
+                            <td colspan="4" class="p-0">
+                                <div class="p-6">
+                                    <x-empty-state
+                                        title="No orders yet"
+                                        description="Your service history will appear here once you have orders."
+                                        :action-url="route('waiter.dashboard')"
+                                        action-label="Go to Dashboard"
+                                    />
+                                </div>
                             </td>
                         </tr>
                     @endforelse

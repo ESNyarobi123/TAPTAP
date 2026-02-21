@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use App\Models\Order;
 use App\Models\Feedback;
-use App\Models\Tip;
+use App\Models\Order;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,13 +31,8 @@ class DashboardController extends Controller
         // Feedback
         $recentFeedback = Feedback::with('order')->latest()->take(5)->get();
 
-        // Tips
-        $waiterTips = Tip::with('waiter')
-            ->whereDate('created_at', $today)
-            ->selectRaw('waiter_id, SUM(amount) as total_amount')
-            ->groupBy('waiter_id')
-            ->orderByDesc('total_amount')
-            ->get();
+        // Tips: not shown to manager (policy: don't show tips to manager)
+        $waiterTips = collect();
 
         return view('manager.dashboard', compact(
             'totalOrdersToday',
@@ -55,6 +47,7 @@ class DashboardController extends Controller
             'waiterTips'
         ));
     }
+
     public function getStats()
     {
         $restaurantId = Auth::user()->restaurant_id;

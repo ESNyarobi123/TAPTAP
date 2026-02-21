@@ -47,6 +47,23 @@ class ApiController extends Controller
     }
 
     /**
+     * Update Customer Support Phone (shown on WhatsApp bot)
+     */
+    public function updateSupportPhone(Request $request)
+    {
+        $request->validate([
+            'support_phone' => 'nullable|string|max:20',
+        ]);
+
+        $restaurant = Auth::user()->restaurant;
+        $restaurant->update([
+            'support_phone' => $request->input('support_phone') ?: null,
+        ]);
+
+        return back()->with('success', 'Customer support number updated. It will appear on the WhatsApp menu when set.');
+    }
+
+    /**
      * Test Selcom Connection
      */
     public function testSelcomConnection()

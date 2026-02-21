@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="TIPTAP | Login">
     <div class="relative">
         <div class="text-center mb-8">
             <h2 class="text-3xl font-black text-white tracking-tight">Karibu Tena!</h2>

@@ -1,0 +1,305 @@
+TAPTAP – Log ya Updates za Routes / APIs
+==========================================
+Kila mabadiliko ya routes au APIs inaandikwa hapa, na docx (TAPTAP_Feature_Updates_Request.docx) inasasishwa pia.
+
+-------------------------------------------
+2026-02-21 | Waiter API: Completed payments + Payment waiter_id/restaurant_id
+-------------------------------------------
+
+1. ROUTES (api.php)
+   - ADDED: GET api/waiter/payments
+   - Controller: App\Http\Controllers\Api\Waiter\DashboardController@payments
+   - Middleware: auth:sanctum, role:waiter
+   - Kazi: Waiter kupata list ya malipo yaliyokamilika (status=paid) kutoka meza alizohudumia, na table_number na message "Payment successful – from Table X".
+
+2. CONTROLLERS
+   - Api\Waiter\DashboardController: ADDED method payments(). Inarudisha Payment::where('status','paid')->(waiter_id = current user OR order.waiter_id = current user), with order for table_number. Response: id, order_id, amount, method, status, table_number, message, created_at.
+   - Api\WhatsAppBotController::initiatePayment: Payment::create sasa ina restaurant_id na waiter_id kutoka $order (demo na USSD).
+   - Api\V1\PaymentController::ussdRequest: Payment::create sasa ina waiter_id kutoka $order.
+   - Api\V1\PaymentController::cashPayment: Payment::create sasa ina waiter_id kutoka $order.
+
+3. MODELS
+   - Hakuna mabadiliko (Payment tayari ina fillable: order_id, restaurant_id, waiter_id, ...).
+
+-------------------------------------------
+2026-02-21 | Link table and waiter (ease calling) – Web + WhatsApp
+-------------------------------------------
+
+1. DATABASE
+   - ADDED migration: add_waiter_id_to_tables_table. Column tables.waiter_id (nullable, FK users).
+
+2. MODELS
+   - Table: fillable + waiter_id; relationship waiter() -> User.
+
+3. WEB (Manager)
+   - Manager\TableController::index: with('waiter'), pass $waiters (role waiter, same restaurant).
+   - Manager\TableController::update: accept waiter_id; update table.waiter_id.
+   - View manager/tables/index: dropdown "Assigned Waiter" in edit modal; show waiter name on card.
+
+4. BACKEND API (call-waiter)
+   - WhatsAppBotController::callWaiter: when table_id present, load table; if table.waiter_id set, use as request waiter_id (link table → waiter). CustomerRequest inawekwa na waiter_id from table when not sent by bot.
+
+5. WHATSAPP BOT (tiptopbot)
+   - api.js callWaiter: payload ina table_id when data.table_id present.
+   - handler.js: initiateCallWaiter ina table_id from session in payload.
+   - HOME → Call waiter: when session has no table_number/table_id, state CALL_WAITER_ASK_TABLE; show "Upo meza namba ngapi?" and list from getRestaurantTables; validate reply (number or table_X), set session.table_number + table_id, then call initiateCallWaiter.
+   - New: showCallWaiterAskTable(), handleCallWaiterAskTableState().
+
+6. ROUTES
+   - Hakuna route mpya (call-waiter tayari ipo; Manager tables CRUD tayari ipo).
+
+-------------------------------------------
+2026-02-21 | WhatsApp: 0 = main menu, menu = menu image only, specific commands
+-------------------------------------------
+
+1. GLOBAL COMMAND
+   - Typing "0" from any state sets session.state = 'HOME' and shows main menu (showHomeScreen). Handled before state machine.
+
+2. MENU = MENU IMAGE ONLY
+   - From HOME, "View Our Menu" / "menu" → showMenuImage only (no list menu). Return after showMenuImage so user does not fall through.
+   - When getMenuImage fails: no longer show showMenuSelection (menu_image vs menu_list); show "Menu image not available" and go to HOME.
+   - After menu image: caption includes "Type your order (e.g. Chips 2, Soda 1) or type 0 to go back." Button: "🏠 Home (0)".
+   - In MENU_IMAGE_ORDER state: accept "0" or "home" to go back to main menu. On order failure: only "Home (0)" button (no "Use List Menu").
+
+3. SPECIFIC COMMANDS (menu screen)
+   - 0 = back to main menu (global + in MENU_IMAGE_ORDER).
+   - Home button label: "🏠 Home (0)" so users know the shortcut.
+
+4. HOME SCREEN
+   - Welcome text: "Type 0 anytime to go back here." so users know the command.
+
+5. BOT FILE
+   - handler.js: global "0" block, showMenuImage flow, showMenuImage fallback to HOME, handleMenuImageOrderState "0"/home, button labels, home hint.
+
+-------------------------------------------
+2026-02-21 | WhatsApp Pay Bill: prompt "Enter phone number to be billed"
+-------------------------------------------
+
+1. WHATSAPP BOT (tiptopbot)
+   - Pay Bill flow: when asking for phone number, message = "Enter phone number to be billed" (Bill Payment only; tip flow keeps "Enter phone number to tip...").
+   - showQuickPaymentPhone: when quick_payment_desc === 'Bill Payment' → "📱 Enter phone number to be billed".
+   - handlePaymentSummaryState (pay_mobile): "📱 Enter phone number to be billed".
+   - handleProviderSelectState (provider_): "📱 Enter phone number to be billed".
+
+-------------------------------------------
+2026-02-21 | WhatsApp Rate/Tip waiter: comment prompt "Enter comment or type END to finish"
+-------------------------------------------
+
+1. WHATSAPP BOT (tiptopbot)
+   - After rating waiter/restaurant (FEEDBACK_COMMENT): prompt = "Enter comment or type END to finish".
+   - handleFeedbackCommentState: "END" or "skip" = finish with no comment; otherwise text is saved as comment.
+
+-------------------------------------------
+2026-02-21 | Waiter API: anonymous comments; visible after configured time
+-------------------------------------------
+
+1. CONFIG
+   - config/services.php: 'feedback' => ['visible_after_minutes' => env('FEEDBACK_VISIBLE_AFTER_MINUTES', 60)].
+   - .env.example: FEEDBACK_VISIBLE_AFTER_MINUTES=60.
+
+2. WAITER API (GET /api/waiter/dashboard, GET /api/waiter/ratings)
+   - Comments are anonymous: no customer phone, no table_number, no user identity in response.
+   - DashboardController::index (recent_feedback): only feedback where created_at <= now - visible_after_minutes; response: id, rating, comment, created_at (no table/customer).
+   - DashboardController::ratings(): same delay filter; response: id, rating, comment, created_at (table_number removed so comments are anonymous).
+   - Comments appear on waiter platform after the configured time (e.g. 60 minutes).
+
+-------------------------------------------
+2026-02-21 | Add customer support number (WhatsApp + Manager)
+-------------------------------------------
+
+1. DATABASE
+   - Migration: add support_phone (nullable string) to restaurants table.
+
+2. MODELS
+   - Restaurant: fillable + support_phone; getCustomerSupportPhone() returns support_phone ?? phone.
+
+3. BOT API (WhatsAppBotController)
+   - All responses that return restaurant info now include support_phone (from getCustomerSupportPhone()): verifyRestaurant, verifyTag (table + waiter + restaurant by prefix), parseEntry (all patterns), searchRestaurant (each item in data).
+
+4. WHATSAPP BOT (tiptopbot handler.js)
+   - Session: store support_phone when setting restaurant (handleEntry waiter/table, search selection, verifyRestaurant).
+   - HOME menu: add row "📞 Customer Support" (id: customer_support) when session.support_phone is set.
+   - handleHomeState: customer_support / "support" → send "Customer Support – Call or WhatsApp: [number]" + Back button; type 0 to go back.
+
+5. MANAGER (Web)
+   - Route: POST manager/api/support-phone → ApiController@updateSupportPhone (name: manager.api.support-phone.update).
+   - Manager API page (QR & Mobile API): new card "Customer Support Number" with input support_phone and Save; description says it appears on WhatsApp under "Customer Support". Leave empty to hide or use main restaurant phone.
+
+-------------------------------------------
+2026-02-21 | WhatsApp: Change language (Swahili / English) as main menu item
+-------------------------------------------
+
+1. LANGUAGES
+   - English (en) and Kiswahili (sw). User can switch from main menu.
+
+2. BOT (tiptopbot)
+   - New file src/lang.js: L = { en: {...}, sw: {...} }, T(session, key) returns string for session.lang. All menu labels, prompts, and main messages have en/sw keys.
+   - Session: session.lang = 'en' by default; session.support_phone in createNewSession.
+   - Main menu: new item "🌐 Change language" (id: change_language), description "Swahili / English". Placed before Exit.
+   - Flow: User picks "Change language" → state LANGUAGE_SELECT → buttons "English" / "Kiswahili" → pick lang_en/lang_sw → set session.lang, show "Language set to ...", show home. All subsequent messages use T(session, key).
+   - Translated: HOME (welcome, choose, type 0, all row titles/descriptions), menu image (downloading, here is menu, type order, home btn, not available), pay bill (enter phone billed/tip/pay, amount, invalid, sending, request sent, confirm, back to menu), customer support (title, call, type 0, back to menu), feedback (comment prompt, thanks), entry (verifying, invalid qr, error try again), table (enter table, valid table), order received (order id, items found, total, waiter confirm, pay now, track status, home), default (not_understood). handleHomeState: change_language or "language"/"lugha" → showLanguageSelect; exit → T(session, 'goodbye').
+
+3. STATE
+   - LANGUAGE_SELECT: handleLanguageSelectState; lang_en → lang 'en', lang_sw → lang 'sw', then showHomeScreen.
+
+-------------------------------------------
+2026-02-21 | WhatsApp menu screen: 0 = back + specific commands for menu items
+-------------------------------------------
+
+1. MENU IMAGE SCREEN (showMenuImage)
+   - Caption now shows explicit *Commands:* block:
+     • 0 = Back to main menu (en) / 0 = Rudi kwenye menu kuu (sw)
+     • Order = Type item name and quantity (e.g. Chips 2, Soda 1) (en) / Agizo = Andika jina la kitu na idadi (sw)
+   - 0 is already handled globally (any state) and in handleMenuImageOrderState; button "Home (0)" kept.
+   - lang.js: menu_commands, menu_cmd_zero, menu_cmd_order (en + sw).
+
+-------------------------------------------
+2026-02-21 | Hand over of tables before departure (Waiter)
+-------------------------------------------
+
+1. API (Waiter)
+   - GET /api/waiter/my-tables: list tables where waiter_id = current user (id, name, table_tag).
+   - GET /api/waiter/colleagues: list other waiters in same restaurant (id, name) for hand-over target.
+   - POST /api/waiter/handover-tables: body table_ids (array), hand_over_to_waiter_id (nullable). Tables must be assigned to current waiter; target must be colleague or null. Updates tables.waiter_id.
+
+2. WEB (Waiter portal)
+   - GET /waiter/handover (name: waiter.handover): page "Hand Over Tables" – lists my tables (checkboxes), dropdown "Hand over to" (Unassigned + colleagues), submit.
+   - POST /waiter/handover (name: waiter.handover.submit): validate table_ids, hand_over_to_waiter_id; update tables; redirect back with success/error.
+   - Sidebar: new link "Hand Over Tables" (teal/cyan icon).
+
+3. CONTROLLERS
+   - Api\Waiter\DashboardController: myTables(), colleagues(), handoverTables(Request).
+   - Waiter\DashboardController: handover(), handoverSubmit(Request).
+
+4. VIEW
+   - resources/views/waiter/handover.blade.php: form with table checkboxes and colleague select.
+
+-------------------------------------------
+2026-02-21 | Change notification before payment (cash)
+-------------------------------------------
+
+1. API (v1 – auth:sanctum)
+   - POST /api/v1/payments/cash/change-notification: body order_id, amount_received (required). Returns order_total, amount_received, change_to_give, message. No payment created. Use before confirming cash payment to show "Change to give: X Tsh".
+   - POST /api/v1/payments/cash: body order_id, amount_received (optional). When amount_received present, response includes change_to_give, order_total, amount_received, message. Payment created and order marked paid.
+
+2. CONTROLLER
+   - Api\V1\PaymentController::cashChangeNotification(Request): validate order_id, amount_received; compute change_to_give = max(0, amount_received - order.total_amount); return JSON.
+   - Api\V1\PaymentController::cashPayment(Request): optional amount_received; when provided add change_to_give (and related) to response.
+
+3. ROUTES
+   - payments/cash/change-notification defined before payments/cash so route order is correct.
+
+4. DOCS
+   - WAITER_API.md: section "Cash payment & change notification" with request/response examples.
+
+-------------------------------------------
+2026-02-21 | WhatsApp: Change Bot to TipTap (branding)
+-------------------------------------------
+
+1. USER-FACING TEXT (WhatsApp)
+   - All "Bot" → "TipTap": payment confirmation message ("TipTap will confirm automatically..."), thanks message ("Thanks for using TipTap! Welcome again!"), welcome ("Welcome to TipTap!").
+   - lang.js: bot_confirm_auto (en + sw) now says "TipTap"; thanks_using_tiptap added (en + sw).
+   - handler.js: USSD payment message uses T(session, 'bot_confirm_auto'); thanks after tip uses T(session, 'thanks_using_tiptap').
+
+2. CONSOLE / LOGS (tiptopbot)
+   - index.js: banner "TipTap WhatsApp", "TipTap is now ONLINE", "Shutting down TipTap".
+   - api.js: "TipTap tables API failed" (was "Bot tables API failed").
+
+-------------------------------------------
+2026-02-21 | Don't show tips to manager (backend / web)
+-------------------------------------------
+
+1. MANAGER DASHBOARD
+   - Removed "Waiter Tips Today" block and link to tips. DashboardController no longer loads Tip data; passes empty collection for waiterTips.
+
+2. MANAGER SIDEBAR
+   - Removed "Tips Management" link from manager layout (tips not shown to manager).
+
+3. MANAGER TIPS ROUTE
+   - GET /manager/tips: TipController::index now redirects to manager.dashboard with flash message "Tips are not visible to managers." No tip data returned.
+
+4. MANAGER WAITERS PAGE
+   - Removed "Tips" box from each waiter card. Removed "Total Tips" from View Profile modal. openViewWaiterModal(waiter) no longer takes totalTips; tips are not displayed.
+
+5. FILES
+   - Manager\DashboardController: removed Tip use and waiterTips query; pass empty collect().
+   - Manager\TipController: index() redirects to dashboard with info message.
+   - manager/dashboard.blade.php: removed waiter tips section; added session('info') flash.
+   - layouts/manager.blade.php: removed Tips Management sidebar link.
+   - manager/waiters/index.blade.php: removed tips from cards and modal.
+
+-------------------------------------------
+2026-02-21 | API routes: verify all in api.php + doc (Controller @ method)
+-------------------------------------------
+
+1. ROUTES
+   - All APIs we added/updated are in routes/api.php with correct Controller@method.
+   - Waiter: dashboard, stats, orders, tips, ratings, menu, requests, payments, my-tables, colleagues, handover-tables, claimOrder, completeRequest.
+   - V1: restaurants, menu, orders, payments (ussd-request, cash/change-notification, cash, status), feedback, tips.
+   - V1/manager: apiResource categories, menu, tables.
+   - Bot: verifyRestaurant, verifyTag, parseEntry, searchRestaurant, getFullMenu, getCategories, getCategoryItems, getItemDetails, createOrder, createOrderByText, getOrderStatus, initiatePayment, submitFeedback, submitTip, getTables, callWaiter, getWaiters, getActiveOrder, getMenuImage, initiateQuickPayment, getQuickPaymentStatus.
+
+2. DOCS
+   - routes/api.php: added PHPDoc block at top listing every route and Controller@method.
+   - docs/API_ROUTES.md: full reference table (Waiter, V1, V1/manager, Bot) with endpoint and method.
+
+-------------------------------------------
+2026-02-21 | Docs: Table 1 (original features) + Table 2 (implementation status)
+-------------------------------------------
+
+1. TAPTAP_Feature_Updates_Request.md / .html
+   - Table 1 – Original Features (Requested Scope): zile features zilizokuwa zimeombwa mwanzoni; column "Platform (requested)" (Web + WhatsApp / WhatsApp only / Web only).
+   - Table 2 – Implementation Status: zipi zimetekelezwa; columns Web, WhatsApp, Notes (Done / Pending). Features 1–12 Done; Feature 13 (Tip the chef) Pending.
+   - Executive summary short; section numbers 4–9 (Per-Feature, Priority, Dependencies, Notes, Document Control, Implementation log).
+   - Document version 1.5.
+
+2. API_ROUTES.md
+   - Short note at top: for feature scope and implementation status see TAPTAP_Feature_Updates_Request.md (Table 1, Table 2).
+
+3. .docx
+   - Open TAPTAP_Feature_Updates_Request.html in Word → Save As .docx to get same tables and structure.
+
+-------------------------------------------
+2026-02-21 | UI/UX: Manager hamburger fix + UI_UX_IMPROVEMENTS.md
+-------------------------------------------
+
+1. BUG FIX
+   - layouts/manager.blade.php: mobile hamburger button had closing </svg> without opening <svg>; opening tag added so icon displays.
+
+2. DOCS
+   - docs/UI_UX_IMPROVEMENTS.md: new document for web + mobile UI/UX, all dashboards (Waiter, Manager, Admin). Includes: current state, clashes (Manager SVG fixed; Admin CDN vs Vite; breakpoints), list of implementations for smooth/amazing experience (responsive, touch, loading/empty/error states, consistency, a11y), prioritized list, and key files.
+
+-------------------------------------------
+2026-02-21 | UI/UX: Implement items from UI_UX_IMPROVEMENTS.md
+-------------------------------------------
+
+1. ADMIN LAYOUT (Vite + md + persistent sidebar + toasts + a11y)
+   - Removed Tailwind CDN and tailwind.config; added @vite(['resources/css/app.css', 'resources/js/app.js']). Kept Lucide unpkg.
+   - Breakpoint: lg → md (mobile header, desktop bar, content padding). Overlay: md:hidden.
+   - Sidebar: -translate-x-full md:translate-x-0 (persistent on desktop). Main: id="main-content", md:ml-72. Close button: md:hidden.
+   - Toasts: success, error, info (same pattern as Waiter/Manager); removed inline success/error blocks.
+   - Skip link, safe area body padding, .sidebar-link min-height 44px + focus ring, .bg-surface-900, hamburger min-h-[44px] and focus/aria-label.
+
+2. WAITER LAYOUT
+   - Sidebar: -translate-x-full md:translate-x-0, .sidebar-open for mobile open. JS: openSidebar/closeSidebar use classList add/remove('sidebar-open') instead of style.transform.
+   - Overlay md:hidden. Main id="main-content", md:ml-72. Desktop menu button removed (sidebar persistent on md).
+   - Skip link, safe area body padding, .sidebar-link min-h 44px + focus, close/hamburger buttons min-h-[44px] and focus/aria-label.
+   - Info toast block added (session('info')).
+
+3. MANAGER LAYOUT
+   - Same as Waiter: persistent sidebar md:, sidebar-open, overlay md:hidden, main id + md:ml-72, desktop menu button removed, skip link, safe area, sidebar-link and button touch/focus, info toast.
+   - Content padding: lg:p-8 → md:p-8.
+
+4. EMPTY STATE + PAGES
+   - components/empty-state.blade.php: title, description, optional icon, actionUrl, actionLabel; glass-card, min-h-[44px] on action button, focus ring.
+   - waiter/orders/index.blade.php: @empty block uses <x-empty-state> (title, description, action Dashboard).
+
+5. MANAGER TABLES
+   - Add New Table button: type="button", min-h-[44px], focus:ring-2 focus:ring-violet-500 focus:ring-offset-2.
+
+6. DOCS
+   - UI_UX_IMPROVEMENTS.md: Clashes 2 and 3 marked Fixed. Prioritized list updated (items 2–8 done).
+
+-------------------------------------------
+(Updates zijazo zitaongezwa hapa chini.)
+-------------------------------------------

@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Table;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TableController extends Controller
 {
     public function index()
     {
-        $tables = Table::latest()->get();
-        return view('manager.tables.index', compact('tables'));
+        $tables = Table::with('waiter')->latest()->get();
+        $waiters = User::role('waiter')->where('restaurant_id', Auth::user()->restaurant_id)->orderBy('name')->get(['id', 'name']);
+
+        return view('manager.tables.index', compact('tables', 'waiters'));
     }
 
     public function store(Request $request)
@@ -43,10 +46,11 @@ class TableController extends Controller
             'name' => 'required|string|max:255',
             'capacity' => 'nullable|integer|min:1',
             'is_active' => 'boolean',
+            'waiter_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->all();
-        $data['is_active'] = $request->has('is_active');
+        $data = $request->only(['name', 'capacity', 'waiter_id']);
+        $data['is_active'] = $request->boolean('is_active');
 
         $table->update($data);
 
@@ -56,6 +60,7 @@ class TableController extends Controller
     public function destroy(Table $table)
     {
         $table->delete();
+
         return back()->with('success', 'Table deleted successfully!');
     }
 }

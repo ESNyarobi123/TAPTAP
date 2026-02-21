@@ -52,6 +52,7 @@ class PaymentController extends Controller
             $payment = Payment::create([
                 'order_id' => $order->id,
                 'restaurant_id' => $restaurant->id,
+                'waiter_id' => $order->waiter_id,
                 'customer_phone' => $validated['phone_number'],
                 'amount' => $order->total_amount,
                 'method' => 'ussd',
@@ -74,19 +75,53 @@ class PaymentController extends Controller
     }
 
     /**
-     * Record Cash Payment for an Order
+     * Change notification before payment: get change to give when customer pays cash.
+     * Call this before confirming cash payment so the app can show "Change to give: X Tsh".
+     */
+    public function cashChangeNotification(Request $request)
+    {
+        $validated = $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'amount_received' => 'required|numeric|min:0',
+        ]);
+
+        $order = Order::find($validated['order_id']);
+        $orderTotal = (float) $order->total_amount;
+        $amountReceived = (float) $validated['amount_received'];
+        $changeToGive = max(0, $amountReceived - $orderTotal);
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $order->id,
+            'order_total' => $orderTotal,
+            'amount_received' => $amountReceived,
+            'change_to_give' => $changeToGive,
+            'message' => $changeToGive > 0
+                ? 'Change to give to customer: '.number_format($changeToGive).' Tsh'
+                : ($amountReceived >= $orderTotal ? 'Exact amount or no change needed.' : 'Amount received is less than order total.'),
+        ]);
+    }
+
+    /**
+     * Record Cash Payment for an Order.
+     * Optional amount_received: when provided, response includes change_to_give for notification/receipt.
      */
     public function cashPayment(Request $request)
     {
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
+            'amount_received' => 'nullable|numeric|min:0',
         ]);
 
         $order = Order::with('restaurant')->find($validated['order_id']);
+        $orderTotal = (float) $order->total_amount;
+        $amountReceived = isset($validated['amount_received']) ? (float) $validated['amount_received'] : null;
+        $changeToGive = $amountReceived !== null ? max(0, $amountReceived - $orderTotal) : null;
 
         $payment = Payment::create([
             'order_id' => $order->id,
             'restaurant_id' => $order->restaurant_id,
+            'waiter_id' => $order->waiter_id,
             'amount' => $order->total_amount,
             'method' => 'cash',
             'status' => 'paid',
@@ -95,10 +130,20 @@ class PaymentController extends Controller
 
         $order->update(['status' => 'paid']);
 
-        return response()->json([
+        $response = [
             'success' => true,
             'payment' => $payment,
-        ]);
+        ];
+        if ($changeToGive !== null) {
+            $response['change_to_give'] = $changeToGive;
+            $response['order_total'] = $orderTotal;
+            $response['amount_received'] = $amountReceived;
+            $response['message'] = $changeToGive > 0
+                ? 'Change to give to customer: '.number_format($changeToGive).' Tsh'
+                : 'Payment recorded. No change needed.';
+        }
+
+        return response()->json($response);
     }
 
     /**

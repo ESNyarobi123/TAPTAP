@@ -111,3 +111,64 @@ Role: All endpoints require `waiter` role.
 // Response 200
 { "success": true, "message": "Request marked as attended!", "data": { "request_id": 1 } }
 ```
+
+---
+
+## Cash payment & change notification (v1 API)
+
+Use these with the same `Authorization: Bearer {token}` (waiter or manager). Base path: `/api/v1`.
+
+### POST /payments/cash/change-notification (before payment)
+
+Get the change to give to the customer **before** confirming cash payment. Show this in the app so the waiter knows how much to give back.
+
+**Request**
+```json
+{ "order_id": 45, "amount_received": 10000 }
+```
+
+**Response 200**
+```json
+{
+  "success": true,
+  "order_id": 45,
+  "order_total": 9500,
+  "amount_received": 10000,
+  "change_to_give": 500,
+  "message": "Change to give to customer: 500 Tsh"
+}
+```
+
+Then call `POST /payments/cash` to record the payment.
+
+### POST /payments/cash
+
+Record a cash payment. Optionally send `amount_received`; response will include `change_to_give` for receipt/notification.
+
+**Request**
+```json
+{ "order_id": 45 }
+```
+or
+```json
+{ "order_id": 45, "amount_received": 10000 }
+```
+
+**Response 200**
+```json
+{
+  "success": true,
+  "payment": { "id": 1, "order_id": 45, "amount": 9500, "method": "cash", "status": "paid", ... }
+}
+```
+When `amount_received` was sent:
+```json
+{
+  "success": true,
+  "payment": { ... },
+  "change_to_give": 500,
+  "order_total": 9500,
+  "amount_received": 10000,
+  "message": "Change to give to customer: 500 Tsh"
+}
+```

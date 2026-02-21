@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Table extends Model
 {
-    protected $fillable = ['restaurant_id', 'name', 'qr_code', 'capacity', 'is_active', 'table_tag'];
+    protected $fillable = ['restaurant_id', 'waiter_id', 'name', 'qr_code', 'capacity', 'is_active', 'table_tag'];
 
     protected static function booted()
     {
@@ -27,7 +27,12 @@ class Table extends Model
     {
         return $this->belongsTo(Restaurant::class);
     }
-    
+
+    public function waiter()
+    {
+        return $this->belongsTo(User::class, 'waiter_id');
+    }
+
     /**
      * Get WhatsApp QR URL for this table
      */
@@ -36,11 +41,11 @@ class Table extends Model
         $botNumber = \App\Models\Setting::get('whatsapp_bot_number', '255794321510');
         // Strip non-numeric characters
         $cleanNumber = preg_replace('/[^0-9]/', '', $botNumber);
-        
+
         // Format: START_{restaurant_id}_T{table_id}
-        $message = "START_" . $this->restaurant_id . "_T" . $this->id;
-        
-        return "https://wa.me/" . $cleanNumber . "?text=" . urlencode($message);
+        $message = 'START_'.$this->restaurant_id.'_T'.$this->id;
+
+        return 'https://wa.me/'.$cleanNumber.'?text='.urlencode($message);
     }
 
     /**
@@ -48,13 +53,13 @@ class Table extends Model
      */
     public function getTagEntryUrlAttribute()
     {
-        if (!$this->table_tag) {
+        if (! $this->table_tag) {
             return null;
         }
 
         $botNumber = \App\Models\Setting::get('whatsapp_bot_number', '255794321510');
         $cleanNumber = preg_replace('/[^0-9]/', '', $botNumber);
-        
-        return "https://wa.me/" . $cleanNumber . "?text=" . urlencode($this->table_tag);
+
+        return 'https://wa.me/'.$cleanNumber.'?text='.urlencode($this->table_tag);
     }
 }

@@ -71,14 +71,11 @@
                         <p class="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1">Orders</p>
                         <p class="text-xl font-bold text-white">{{ $waiter->orders_count }}</p>
                     </div>
-                    <div class="glass p-4 rounded-xl">
-                        <p class="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1">Tips</p>
-                        <p class="text-xl font-bold text-white">Tsh {{ number_format($waiter->tips()->sum('amount')) }}</p>
-                    </div>
+                    {{-- Tips are not shown to manager --}}
                 </div>
 
                 <div class="flex gap-2">
-                    <button onclick="openViewWaiterModal({{ json_encode($waiter) }}, '{{ number_format($waiter->tips()->sum('amount')) }}')" class="flex-1 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
+                    <button onclick="openViewWaiterModal({{ json_encode($waiter) }})" class="flex-1 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
                     <form action="{{ route('manager.waiters.destroy', $waiter->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this waiter?')">
                         @csrf
                         @method('DELETE')
@@ -149,10 +146,7 @@
                         <p class="text-[10px] font-bold text-violet-300 uppercase tracking-wider mb-1">Total Orders</p>
                         <p class="text-2xl font-bold text-white" id="viewWaiterOrders">0</p>
                     </div>
-                    <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
-                        <p class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider mb-1">Total Tips</p>
-                        <p class="text-2xl font-bold text-white" id="viewWaiterTips">Tsh 0</p>
-                    </div>
+                    {{-- Tips are not shown to manager --}}
                 </div>
 
                 <button onclick="closeViewWaiterModal()" class="w-full bg-white/10 text-white py-3.5 rounded-xl font-semibold hover:bg-white/20 transition-all">
@@ -220,13 +214,12 @@
             document.getElementById('addWaiterModal').classList.remove('flex');
         }
 
-        function openViewWaiterModal(waiter, totalTips) {
+        function openViewWaiterModal(waiter) {
             document.getElementById('viewWaiterName').textContent = waiter.name;
             document.getElementById('viewWaiterEmail').textContent = waiter.email;
             document.getElementById('viewWaiterCode').textContent = waiter.waiter_code || 'N/A';
             document.getElementById('viewWaiterInitial').textContent = waiter.name.charAt(0);
             document.getElementById('viewWaiterOrders').textContent = waiter.orders_count;
-            document.getElementById('viewWaiterTips').textContent = 'Tsh ' + totalTips;
             
             // Format Date
             const date = new Date(waiter.created_at);

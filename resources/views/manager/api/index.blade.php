@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            @if(session('success'))
+            @if(session('success') && str_contains(session('success'), 'Selcom'))
             <div class="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
                 <div class="flex items-center gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
@@ -176,6 +176,39 @@
                 </div>
                 
                 <div id="test-result" class="hidden"></div>
+            </form>
+        </div>
+
+        <!-- Customer Support Number (WhatsApp) -->
+        <div class="glass-card p-8 rounded-2xl">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center border border-emerald-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white tracking-tight">Customer Support Number</h3>
+                    <p class="text-[10px] font-bold uppercase tracking-wider text-white/40">Shown on WhatsApp bot menu</p>
+                </div>
+            </div>
+            @if(session('success') && str_contains(session('success'), 'support'))
+            <div class="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                <p class="text-sm font-medium text-emerald-400">{{ session('success') }}</p>
+            </div>
+            @endif
+            <form action="{{ route('manager.api.support-phone.update') }}" method="POST" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Phone number (e.g. 0712345678)</label>
+                    <input type="text" name="support_phone" value="{{ old('support_phone', $restaurant->support_phone) }}" placeholder="0712345678 or 255712345678"
+                           class="w-full px-4 py-3.5 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all">
+                    <p class="text-white/40 text-xs mt-1">Customers will see this under "📞 Customer Support" on WhatsApp. Leave empty to hide the option or use the main restaurant phone.</p>
+                    @error('support_phone') <p class="text-rose-400 text-[10px] font-medium mt-1">{{ $message }}</p> @enderror
+                </div>
+                <button type="submit" class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3.5 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all">
+                    Save Support Number
+                </button>
             </form>
         </div>
     </div>

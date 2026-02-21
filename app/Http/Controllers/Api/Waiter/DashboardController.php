@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomerRequest;
 use App\Models\Feedback;
 use App\Models\Order;
+use App\Models\Payment;
+use App\Models\Table;
 use App\Models\Tip;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -54,10 +58,11 @@ class DashboardController extends Controller
                 'created_at' => $req->created_at->toIso8601String(),
             ]);
 
+        $feedbackVisibleAt = Carbon::now()->subMinutes(config('services.feedback.visible_after_minutes', 60));
         $recentFeedback = Feedback::where(function ($query) use ($waiter) {
             $query->where('waiter_id', $waiter->id)
                 ->orWhereHas('order', fn ($q) => $q->where('waiter_id', $waiter->id));
-        })->latest()->take(5)->get()->map(fn ($f) => [
+        })->where('created_at', '<=', $feedbackVisibleAt)->latest()->take(5)->get()->map(fn ($f) => [
             'id' => $f->id,
             'rating' => $f->rating,
             'comment' => $f->comment,
@@ -242,22 +247,24 @@ class DashboardController extends Controller
     }
 
     /**
-     * List waiter's ratings/feedback (paginated)
+     * List waiter's ratings/feedback (paginated).
+     * Anonymous: no customer/table identity. Comments appear after configured delay.
      */
     public function ratings(): JsonResponse
     {
         $waiter = Auth::user();
+        $feedbackVisibleAt = Carbon::now()->subMinutes(config('services.feedback.visible_after_minutes', 60));
+
         $feedbacks = Feedback::where(function ($query) use ($waiter) {
             $query->where('waiter_id', $waiter->id)
                 ->orWhereHas('order', fn ($q) => $q->where('waiter_id', $waiter->id));
-        })->with('order')->latest()->paginate(15);
+        })->where('created_at', '<=', $feedbackVisibleAt)->latest()->paginate(15);
 
         $feedbacks->getCollection()->transform(function ($f) {
             return [
                 'id' => $f->id,
                 'rating' => $f->rating,
                 'comment' => $f->comment,
-                'table_number' => $f->order?->table_number,
                 'created_at' => $f->created_at->toIso8601String(),
             ];
         });
@@ -278,22 +285,147 @@ class DashboardController extends Controller
             ->where('status', 'pending')
             ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
             ->latest()->get()->map(function ($req) {
-            $typeLabel = $req->type === 'request_bill' ? 'Request Bill' : 'Call Waiter';
+                $typeLabel = $req->type === 'request_bill' ? 'Request Bill' : 'Call Waiter';
+
+                return [
+                    'id' => $req->id,
+                    'type' => $req->type,
+                    'type_label' => $typeLabel,
+                    'table_number' => $req->table_number ?? '-',
+                    'waiter_id' => $req->waiter_id,
+                    'waiter_name' => $req->waiter?->name,
+                    'created_at' => $req->created_at->toIso8601String(),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $requests->values(),
+        ]);
+    }
+
+    /**
+     * List completed (successful) payments for tables this waiter served.
+     * Used for "Payment confirmation → waiter": waiter sees "Payment successful – from Table X".
+     */
+    public function payments(): JsonResponse
+    {
+        $waiter = Auth::user();
+
+        $payments = Payment::query()
+            ->where('status', 'paid')
+            ->where(function ($query) use ($waiter) {
+                $query->where('waiter_id', $waiter->id)
+                    ->orWhereHas('order', fn ($q) => $q->where('waiter_id', $waiter->id));
+            })
+            ->with('order:id,table_number,waiter_id,restaurant_id')
+            ->latest()
+            ->paginate(15);
+
+        $payments->getCollection()->transform(function (Payment $payment) {
+            $tableNumber = $payment->order?->table_number ?? null;
 
             return [
-                'id' => $req->id,
-                'type' => $req->type,
-                'type_label' => $typeLabel,
-                'table_number' => $req->table_number ?? '-',
-                'waiter_id' => $req->waiter_id,
-                'waiter_name' => $req->waiter?->name,
-                'created_at' => $req->created_at->toIso8601String(),
+                'id' => $payment->id,
+                'order_id' => $payment->order_id,
+                'amount' => (float) $payment->amount,
+                'method' => $payment->method,
+                'status' => $payment->status,
+                'table_number' => $tableNumber,
+                'message' => $tableNumber
+                ? "Payment successful – from Table {$tableNumber}"
+                : 'Payment successful',
+                'created_at' => $payment->created_at->toIso8601String(),
             ];
         });
 
         return response()->json([
             'success' => true,
-            'data' => $requests->values(),
+            'data' => $payments,
+        ]);
+    }
+
+    /**
+     * List tables assigned to the current waiter (for hand over before departure).
+     */
+    public function myTables(): JsonResponse
+    {
+        $waiter = Auth::user();
+        $tables = Table::where('waiter_id', $waiter->id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'table_tag', 'waiter_id']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $tables->map(fn ($t) => [
+                'id' => $t->id,
+                'name' => $t->name,
+                'table_tag' => $t->table_tag,
+            ]),
+        ]);
+    }
+
+    /**
+     * List other waiters in the same restaurant (for hand over target).
+     */
+    public function colleagues(): JsonResponse
+    {
+        $waiter = Auth::user();
+        $colleagues = User::where('restaurant_id', $waiter->restaurant_id)
+            ->where('id', '!=', $waiter->id)
+            ->whereHas('roles', fn ($q) => $q->where('name', 'waiter'))
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $colleagues->map(fn ($u) => ['id' => $u->id, 'name' => $u->name]),
+        ]);
+    }
+
+    /**
+     * Hand over selected tables to another waiter or unassign (before departure).
+     */
+    public function handoverTables(Request $request): JsonResponse
+    {
+        $waiter = Auth::user();
+        $request->validate([
+            'table_ids' => 'required|array',
+            'table_ids.*' => 'integer|exists:tables,id',
+            'hand_over_to_waiter_id' => 'nullable|integer|exists:users,id',
+        ]);
+
+        $tableIds = $request->input('table_ids');
+        $targetWaiterId = $request->input('hand_over_to_waiter_id');
+
+        $tables = Table::whereIn('id', $tableIds)->where('waiter_id', $waiter->id)->get();
+        if ($tables->count() !== count($tableIds)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Some tables are not assigned to you.',
+            ], 403);
+        }
+
+        if ($targetWaiterId !== null) {
+            $target = User::where('id', $targetWaiterId)
+                ->where('restaurant_id', $waiter->restaurant_id)
+                ->whereHas('roles', fn ($q) => $q->where('name', 'waiter'))
+                ->first();
+            if (! $target) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid hand over target.',
+                ], 422);
+            }
+        }
+
+        Table::whereIn('id', $tableIds)->update(['waiter_id' => $targetWaiterId]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $targetWaiterId
+                ? 'Tables handed over successfully.'
+                : 'Tables unassigned successfully.',
         ]);
     }
 }

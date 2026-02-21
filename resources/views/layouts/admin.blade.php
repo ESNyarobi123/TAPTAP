@@ -15,57 +15,8 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        // Unified Premium Dark Theme Colors
-                        'brand': {
-                            50: '#fdf4ff',
-                            100: '#fae8ff',
-                            200: '#f5d0fe',
-                            300: '#f0abfc',
-                            400: '#e879f9',
-                            500: '#d946ef',
-                            600: '#c026d3',
-                            700: '#a21caf',
-                            800: '#86198f',
-                            900: '#701a75',
-                        },
-                        'surface': {
-                            50: '#fafafa',
-                            100: '#f4f4f5',
-                            200: '#e4e4e7',
-                            300: '#d4d4d8',
-                            400: '#a1a1aa',
-                            500: '#71717a',
-                            600: '#52525b',
-                            700: '#3f3f46',
-                            800: '#27272a',
-                            900: '#18181b',
-                            950: '#09090b',
-                        },
-                        'accent': {
-                            primary: '#8b5cf6',    // Purple
-                            secondary: '#06b6d4',  // Cyan  
-                            success: '#10b981',    // Emerald
-                            warning: '#f59e0b',    // Amber
-                            danger: '#ef4444',     // Red
-                            info: '#3b82f6',       // Blue
-                        }
-                    },
-                }
-            }
-        }
-    </script>
 
     <style>
         * {
@@ -118,8 +69,12 @@
         .sidebar-link {
             position: relative;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 44px;
         }
-        
+        .sidebar-link:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6);
+        }
         .sidebar-link:hover {
             background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
             color: #fff;
@@ -184,16 +139,19 @@
         /* Hide scrollbar utility */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .bg-surface-900 { background: #0f0a1e; }
     </style>
 </head>
-<body class="font-sans antialiased text-white">
+<body class="font-sans antialiased text-white min-h-screen pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#0f0a1e] focus:outline-none">Skip to main content</a>
     
-    <!-- Overlay -->
-    <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+    <!-- Overlay (mobile only) -->
+    <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden md:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
 
     <div class="flex min-h-screen">
-        <!-- Premium Dark Sidebar -->
-        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 transform -translate-x-full transition-transform duration-300 ease-out border-r border-white/5">
+        <!-- Premium Dark Sidebar: drawer on mobile, persistent on md+ -->
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out border-r border-white/5">
             <!-- Logo Area -->
             <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5">
                 <div class="flex items-center gap-3">
@@ -209,7 +167,7 @@
                         <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Super Admin</span>
                     </div>
                 </div>
-                <button onclick="closeSidebar()" class="p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all">
+                <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                     </svg>
@@ -222,7 +180,7 @@
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Main Command</p>
                 </div>
                 
-                <a href="{{ route('admin.dashboard') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('admin.dashboard') ? 'sidebar-link-active' : 'text-white/60' }}">
+                <a href="{{ route('admin.dashboard') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl min-h-[44px] {{ request()->routeIs('admin.dashboard') ? 'sidebar-link-active' : 'text-white/60' }} focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.dashboard') ? 'text-violet-400' : 'text-white/60' }}">
                             <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
@@ -327,11 +285,11 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-all duration-300">
+        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-all duration-300 md:ml-72" tabindex="-1">
             <!-- Mobile Header -->
-            <div class="lg:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
+            <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <button onclick="openSidebar()" class="flex items-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95">
+                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Open menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
@@ -348,16 +306,10 @@
             </div>
 
             <!-- Desktop Header & Content -->
-            <div class="p-4 lg:p-8 flex-1">
-                <!-- Desktop Top Bar -->
-                <div class="hidden lg:flex justify-between items-center mb-8">
+            <div class="p-4 md:p-8 flex-1">
+                <!-- Desktop Top Bar (sidebar persistent on md+, no menu button) -->
+                <div class="hidden md:flex justify-between items-center mb-8">
                     <div class="flex items-center gap-5">
-                        <button onclick="openSidebar()" class="flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-white/10 transition-all active:scale-95 group">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60 group-hover:text-violet-400 transition-colors">
-                                <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
-                            </svg>
-                            <span class="font-semibold text-sm text-white/80">Menu</span>
-                        </button>
                         <div>
                             <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">System Overview</p>
                             <h1 class="text-3xl font-bold text-white tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
@@ -382,26 +334,55 @@
                     </div>
                 </div>
 
-                @if(session('success'))
-                    <div class="mb-6 p-4 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-xl font-medium text-sm flex items-center gap-3 backdrop-blur-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                        </svg>
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if(session('error'))
-                    <div class="mb-6 p-4 bg-red-500/20 border border-red-500/30 text-red-300 rounded-xl font-medium text-sm flex items-center gap-3 backdrop-blur-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>
-                        </svg>
-                        {{ session('error') }}
-                    </div>
-                @endif
-
                 {{ $slot }}
             </div>
+
+            <!-- Toast Notifications (same pattern as Waiter/Manager) -->
+            @if(session('success'))
+                <div id="toast-success" class="fixed bottom-8 right-8 z-[200] animate-float">
+                    <div class="glass-card px-6 py-4 rounded-2xl border-emerald-500/20 flex items-center gap-4 shadow-2xl shadow-emerald-500/10">
+                        <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white uppercase tracking-wider">Success</p>
+                            <p class="text-sm text-white/60">{{ session('success') }}</p>
+                        </div>
+                        <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded" aria-label="Dismiss">×</button>
+                    </div>
+                </div>
+                <script>setTimeout(() => document.getElementById('toast-success')?.remove(), 5000);</script>
+            @endif
+            @if(session('error'))
+                <div id="toast-error" class="fixed bottom-8 right-8 z-[200] animate-float">
+                    <div class="glass-card px-6 py-4 rounded-2xl border-rose-500/20 flex items-center gap-4 shadow-2xl shadow-rose-500/10">
+                        <div class="w-10 h-10 bg-rose-500/20 rounded-xl flex items-center justify-center text-rose-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white uppercase tracking-wider">Error</p>
+                            <p class="text-sm text-white/60">{{ session('error') }}</p>
+                        </div>
+                        <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded" aria-label="Dismiss">×</button>
+                    </div>
+                </div>
+                <script>setTimeout(() => document.getElementById('toast-error')?.remove(), 5000);</script>
+            @endif
+            @if(session('info'))
+                <div id="toast-info" class="fixed bottom-8 right-8 z-[200] animate-float">
+                    <div class="glass-card px-6 py-4 rounded-2xl border-cyan-500/20 flex items-center gap-4 shadow-2xl shadow-cyan-500/10">
+                        <div class="w-10 h-10 bg-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white uppercase tracking-wider">Info</p>
+                            <p class="text-sm text-white/60">{{ session('info') }}</p>
+                        </div>
+                        <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded" aria-label="Dismiss">×</button>
+                    </div>
+                </div>
+                <script>setTimeout(() => document.getElementById('toast-info')?.remove(), 5000);</script>
+            @endif
         </main>
     </div>
 

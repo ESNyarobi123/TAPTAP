@@ -31,12 +31,18 @@ class WhatsAppBotController extends Controller
         $restaurants = Restaurant::where('name', 'like', "%{$query}%")
             ->where('is_active', true)
             ->limit(3)
-            ->get(['id', 'name', 'location']);
+            ->get()
+            ->map(fn ($r) => [
+                'id' => $r->id,
+                'name' => $r->name,
+                'location' => $r->location,
+                'support_phone' => $r->getCustomerSupportPhone(),
+            ]);
 
         return response()->json([
             'success' => true,
             'count' => $restaurants->count(),
-            'data' => $restaurants,
+            'data' => $restaurants->values(),
         ]);
     }
 
@@ -80,6 +86,7 @@ class WhatsAppBotController extends Controller
                 'id' => $restaurant->id,
                 'name' => $restaurant->name,
                 'location' => $restaurant->location,
+                'support_phone' => $restaurant->getCustomerSupportPhone(),
                 'table_number' => $table ? $table->name : $request->input('table_number'),
                 'table_id' => $table ? $table->id : null,
                 'table_tag' => $table ? $table->table_tag : null,
@@ -127,6 +134,7 @@ class WhatsAppBotController extends Controller
                     'restaurant_id' => $table->restaurant->id,
                     'restaurant_name' => $table->restaurant->name,
                     'restaurant_location' => $table->restaurant->location,
+                    'support_phone' => $table->restaurant->getCustomerSupportPhone(),
                     'table_id' => $table->id,
                     'table_name' => $table->name,
                     'table_tag' => $table->table_tag,
@@ -157,6 +165,7 @@ class WhatsAppBotController extends Controller
                     'restaurant_id' => $waiter->restaurant->id,
                     'restaurant_name' => $waiter->restaurant->name,
                     'restaurant_location' => $waiter->restaurant->location,
+                    'support_phone' => $waiter->restaurant->getCustomerSupportPhone(),
                     'table_id' => null,
                     'table_name' => null,
                     'table_tag' => null,
@@ -180,6 +189,7 @@ class WhatsAppBotController extends Controller
                         'restaurant_id' => $restaurant->id,
                         'restaurant_name' => $restaurant->name,
                         'restaurant_location' => $restaurant->location,
+                        'support_phone' => $restaurant->getCustomerSupportPhone(),
                     ],
                 ]);
             }
@@ -223,6 +233,7 @@ class WhatsAppBotController extends Controller
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
+                    'support_phone' => $restaurant->getCustomerSupportPhone(),
                 ],
             ]);
         }
@@ -242,6 +253,7 @@ class WhatsAppBotController extends Controller
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
+                    'support_phone' => $restaurant->getCustomerSupportPhone(),
                     'table_id' => $table ? $table->id : null,
                     'table_name' => $table ? $table->name : null,
                     'table_tag' => $table ? $table->table_tag : null,
@@ -264,6 +276,7 @@ class WhatsAppBotController extends Controller
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
+                    'support_phone' => $restaurant->getCustomerSupportPhone(),
                     'waiter_id' => $waiter ? $waiter->id : null,
                     'waiter_name' => $waiter ? $waiter->name : null,
                     'waiter_code' => $waiter ? $waiter->waiter_code : null,
@@ -290,6 +303,7 @@ class WhatsAppBotController extends Controller
                 'data' => [
                     'restaurant_id' => $restaurant->id,
                     'restaurant_name' => $restaurant->name,
+                    'support_phone' => $restaurant->getCustomerSupportPhone(),
                     'table_number' => $matches[2],
                 ],
             ]);
@@ -619,6 +633,8 @@ class WhatsAppBotController extends Controller
         if (Setting::get('demo_push', '0') === '1') {
             $payment = Payment::create([
                 'order_id' => $order->id,
+                'restaurant_id' => $order->restaurant_id,
+                'waiter_id' => $order->waiter_id,
                 'amount' => $request->amount,
                 'method' => 'ussd',
                 'status' => 'paid',
@@ -653,6 +669,8 @@ class WhatsAppBotController extends Controller
         if (isset($result['status']) && $result['status'] === 'success') {
             $payment = Payment::create([
                 'order_id' => $order->id,
+                'restaurant_id' => $order->restaurant_id,
+                'waiter_id' => $order->waiter_id,
                 'amount' => $request->amount,
                 'method' => 'ussd',
                 'status' => 'pending',
@@ -963,15 +981,21 @@ class WhatsAppBotController extends Controller
 
         // Get table info if table_id is provided but table_number is not
         $tableNumber = $request->table_number;
-        if (empty($tableNumber) && $request->table_id) {
-            $table = Table::withoutGlobalScopes()->find($request->table_id);
-            $tableNumber = $table ? $table->name : null;
+        $table = $request->table_id ? Table::withoutGlobalScopes()->find($request->table_id) : null;
+        if (empty($tableNumber) && $table) {
+            $tableNumber = $table->name;
         }
 
-        // Get waiter info if waiter_id is provided
+        // Waiter: from request or from table's linked waiter (link table and waiter)
+        $waiterId = $request->waiter_id;
+        if (! $waiterId && $table && $table->waiter_id) {
+            $waiterId = $table->waiter_id;
+        }
+
+        // Get waiter info if waiter_id is set
         $waiterName = null;
-        if ($request->waiter_id) {
-            $waiter = User::find($request->waiter_id);
+        if ($waiterId) {
+            $waiter = User::find($waiterId);
             $waiterName = $waiter ? $waiter->name : null;
         }
 
@@ -979,7 +1003,7 @@ class WhatsAppBotController extends Controller
             'restaurant_id' => $request->restaurant_id,
             'table_number' => $tableNumber,
             'table_id' => $request->table_id,
-            'waiter_id' => $request->waiter_id,
+            'waiter_id' => $waiterId,
             'type' => $request->type,
             'status' => 'pending',
         ]);

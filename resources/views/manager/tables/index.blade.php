@@ -8,7 +8,7 @@
             <h2 class="text-3xl font-bold text-white tracking-tight">Table Management</h2>
             <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Manage your tables and QR codes</p>
         </div>
-        <button onclick="openAddTableModal()" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+        <button type="button" onclick="openAddTableModal()" class="min-h-[44px] inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 12h14"/><path d="M12 5v14"/>
             </svg>
@@ -85,6 +85,9 @@
                     </div>
                     <h4 class="text-lg font-bold text-white mb-1">{{ $table->name }}</h4>
                     <p class="text-sm font-medium text-white/40">{{ $table->capacity }} Seats</p>
+                    @if($table->waiter)
+                    <p class="text-xs font-medium text-violet-400/80">Waiter: {{ $table->waiter->name }}</p>
+                    @endif
                 </div>
                 
                 <div class="bg-white/5 p-6 flex flex-col items-center gap-4 border-t border-white/5">
@@ -172,6 +175,16 @@
                                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
 
+                    <div id="waiterSelectWrap" class="hidden">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Assigned Waiter (Link table → waiter)</label>
+                        <select name="waiter_id" id="tableWaiterId" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
+                            <option value="">— None —</option>
+                            @foreach($waiters as $w)
+                                <option value="{{ $w->id }}">{{ $w->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div id="statusToggle" class="hidden flex items-center gap-3 p-3 bg-white/5 rounded-xl">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="is_active" id="tableActive" class="sr-only peer" checked>
@@ -195,7 +208,9 @@
             document.getElementById('formMethod').value = 'POST';
             document.getElementById('tableName').value = '';
             document.getElementById('tableCapacity').value = '';
+            document.getElementById('tableWaiterId').value = '';
             document.getElementById('statusToggle').classList.add('hidden');
+            document.getElementById('waiterSelectWrap').classList.add('hidden');
             
             document.getElementById('tableModal').classList.remove('hidden');
             document.getElementById('tableModal').classList.add('flex');
@@ -207,8 +222,10 @@
             document.getElementById('formMethod').value = 'PUT';
             document.getElementById('tableName').value = table.name;
             document.getElementById('tableCapacity').value = table.capacity;
+            document.getElementById('tableWaiterId').value = table.waiter_id || '';
             document.getElementById('tableActive').checked = table.is_active;
             document.getElementById('statusToggle').classList.remove('hidden');
+            document.getElementById('waiterSelectWrap').classList.remove('hidden');
             
             document.getElementById('tableModal').classList.remove('hidden');
             document.getElementById('tableModal').classList.add('flex');

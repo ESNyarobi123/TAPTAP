@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="TIPTAP | Register Restaurant">
     <div class="max-w-2xl mx-auto">
         <!-- Progress Bar -->
         <div class="mb-8 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">

@@ -181,6 +181,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/api', [\App\Http\Controllers\Manager\ApiController::class, 'index'])->name('api.index');
     Route::post('/api/selcom', [\App\Http\Controllers\Manager\ApiController::class, 'updateSelcomCredentials'])->name('api.selcom.update');
     Route::post('/api/selcom/test', [\App\Http\Controllers\Manager\ApiController::class, 'testSelcomConnection'])->name('api.selcom.test');
+    Route::post('/api/support-phone', [\App\Http\Controllers\Manager\ApiController::class, 'updateSupportPhone'])->name('api.support-phone.update');
 
     // Menu Image Upload
     Route::get('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'index'])->name('menu-image.index');
@@ -200,6 +201,8 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/ratings', [\App\Http\Controllers\Waiter\DashboardController::class, 'ratings'])->name('ratings');
     Route::post('/requests/{request}/complete', [\App\Http\Controllers\Waiter\DashboardController::class, 'completeRequest'])->name('requests.complete');
     Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
+    Route::get('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handover'])->name('handover');
+    Route::post('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handoverSubmit'])->name('handover.submit');
 });
 
 // Kitchen Display System (KDS) - Secret URL Access

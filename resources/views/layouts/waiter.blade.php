@@ -133,16 +133,20 @@
         /* Hide scrollbar utility */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .sidebar-link { min-height: 44px; }
+        .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6); }
+        .sidebar-open { transform: translateX(0) !important; }
     </style>
 </head>
-<body class="font-sans antialiased text-white">
+<body class="font-sans antialiased text-white min-h-screen pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#0f0a1e] focus:outline-none">Skip to main content</a>
     
-    <!-- Overlay -->
-    <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+    <!-- Overlay (mobile only) -->
+    <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden md:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
 
     <div class="flex min-h-screen">
-        <!-- Premium Waiter Sidebar -->
-        <aside id="mobile-sidebar" style="transform: translateX(-100%);" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 transition-transform duration-300 ease-out border-r border-white/5">
+        <!-- Premium Waiter Sidebar: drawer on mobile, persistent on md+ -->
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out border-r border-white/5">
             <!-- Logo Area -->
             <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5">
                 <div class="flex items-center gap-3">
@@ -158,7 +162,7 @@
                         <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Waiter Portal</span>
                     </div>
                 </div>
-                <button onclick="closeSidebar()" class="p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all">
+                <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                     </svg>
@@ -216,6 +220,18 @@
                     <span class="font-semibold text-sm">Customer Calls</span>
                     @if($pendingCount > 0)
                         <span class="ml-auto bg-rose-500/20 text-rose-400 text-[10px] font-bold px-2.5 py-1 rounded-full">{{ $pendingCount }} New</span>
+                    @endif
+                </a>
+
+                <a href="{{ route('waiter.handover') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.handover') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.handover') ? 'text-teal-400' : 'text-white/60' }}">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Hand Over Tables</span>
+                    @if(request()->routeIs('waiter.handover'))
+                        <div class="absolute right-3 w-1.5 h-8 bg-gradient-to-b from-teal-500 to-cyan-500 rounded-full"></div>
                     @endif
                 </a>
 
@@ -277,11 +293,11 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-all duration-300">
+        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-all duration-300 md:ml-72" tabindex="-1">
             <!-- Mobile Header -->
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <button onclick="openSidebar()" class="flex items-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95">
+                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Open menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
@@ -299,15 +315,9 @@
 
             <!-- Desktop Header & Content -->
             <div class="p-4 lg:p-8 flex-1">
-                <!-- Desktop Top Bar -->
+                <!-- Desktop Top Bar (sidebar persistent on md+, no menu button) -->
                 <div class="hidden md:flex justify-between items-center mb-8">
                     <div class="flex items-center gap-5">
-                        <button onclick="openSidebar()" class="flex items-center gap-3 px-4 py-3 glass rounded-xl hover:bg-white/10 transition-all active:scale-95 group">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60 group-hover:text-violet-400 transition-colors">
-                                <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
-                            </svg>
-                            <span class="font-semibold text-sm text-white/80">Menu</span>
-                        </button>
                         <div>
                             <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">Waiter Portal</p>
                             <h1 class="text-3xl font-bold text-white tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
@@ -354,12 +364,25 @@
                             <p class="text-xs font-bold text-white uppercase tracking-wider">Error</p>
                             <p class="text-sm text-white/60">{{ session('error') }}</p>
                         </div>
-                        <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        </button>
+                        <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded" aria-label="Dismiss">×</button>
                     </div>
                 </div>
                 <script>setTimeout(() => document.getElementById('toast-error')?.remove(), 5000);</script>
+            @endif
+            @if(session('info'))
+                <div id="toast-info" class="fixed bottom-8 right-8 z-[200] animate-float">
+                    <div class="glass-card px-6 py-4 rounded-2xl border-cyan-500/20 flex items-center gap-4 shadow-2xl shadow-cyan-500/10">
+                        <div class="w-10 h-10 bg-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-white uppercase tracking-wider">Info</p>
+                            <p class="text-sm text-white/60">{{ session('info') }}</p>
+                        </div>
+                        <button type="button" onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/20 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 rounded" aria-label="Dismiss">×</button>
+                    </div>
+                </div>
+                <script>setTimeout(() => document.getElementById('toast-info')?.remove(), 5000);</script>
             @endif
         </main>
     </div>
@@ -368,44 +391,22 @@
         function openSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.style.transform = 'translateX(0)';
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.add('translate-x-0');
-            
+            sidebar.classList.add('sidebar-open');
             overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.remove('opacity-0');
-                overlay.classList.add('opacity-100');
-            }, 10);
-            
+            setTimeout(() => { overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100'); }, 10);
             document.body.style.overflow = 'hidden';
         }
-
         function closeSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.style.transform = 'translateX(-100%)';
-            sidebar.classList.remove('translate-x-0');
-            sidebar.classList.add('-translate-x-full');
-            
-            overlay.classList.remove('opacity-100');
-            overlay.classList.add('opacity-0');
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 300);
-            
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
+            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
             document.body.style.overflow = '';
         }
-
         function toggleSidebar() {
-            const sidebar = document.getElementById('mobile-sidebar');
-            if (sidebar.style.transform === 'translateX(-100%)' || sidebar.classList.contains('-translate-x-full')) {
-                openSidebar();
-            } else {
-                closeSidebar();
-            }
+            if (document.getElementById('mobile-sidebar').classList.contains('sidebar-open')) closeSidebar();
+            else openSidebar();
         }
 
         document.addEventListener('keydown', function(e) {

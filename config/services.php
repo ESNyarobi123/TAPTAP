@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    /*
+    | Waiter feedback (ratings/comments) on waiter platform: anonymous and visible after delay.
+    */
+    'feedback' => [
+        'visible_after_minutes' => (int) env('FEEDBACK_VISIBLE_AFTER_MINUTES', 60),
+    ],
+
 ];

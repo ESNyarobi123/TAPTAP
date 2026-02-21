@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAPTAP Feature Updates - Client Request</title>
+<style>
+body { font-family: Calibri, 'Segoe UI', sans-serif; margin: 1in; line-height: 1.4; }
+h1 { font-size: 18pt; border-bottom: 2px solid #333; padding-bottom: 4px; }
+h2 { font-size: 14pt; margin-top: 18pt; }
+h3 { font-size: 12pt; margin-top: 12pt; }
+p { margin: 6pt 0; }
+table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+th, td { border: 1px solid #333; padding: 6pt 8pt; text-align: left; }
+th { background: #f0f0f0; font-weight: bold; }
+ul { margin: 6pt 0; padding-left: 20pt; }
+.note { background: #fff3cd; padding: 8pt; margin: 12pt 0; font-size: 10pt; }
+</style>
+</head>
+<body>
+
+<p class="note"><strong>To save as .docx:</strong> Open this file in Microsoft Word, then File → Save As → Word Document (.docx).</p>
+
+<h1>TAPTAP System – Feature Updates Document (Client Request)</h1>
+
+<p><strong>Document version:</strong> 1.5<br>
+<strong>Date:</strong> February 2026<br>
+<strong>Prepared for:</strong> Client (mtenegnezeee)<br>
+<strong>Systems:</strong> TAPTAP Laravel Backend + Web Portals | TipTap WhatsApp Bot (tiptopbot)</p>
+
+<h2>1. Executive Summary</h2>
+<p>This document lists the <strong>client-requested features</strong>, shows <strong>which were originally in scope</strong> (Table 1), <strong>which have been implemented</strong> (Table 2), and gives per-feature requirements and recommendations. The WhatsApp bot <strong>uses the same Laravel backend as the web</strong> (Web = Manager/Waiter/Admin; WhatsApp = TipTap bot calling /api/bot/*).</p>
+
+<h2>2. Table 1 – Original Features (Requested Scope)</h2>
+<p><em>Zile features zilizokuwa zimeombwa mwanzoni – platform (Web / WhatsApp) zilizotajwa.</em></p>
+<table>
+<thead>
+<tr><th>#</th><th>Feature</th><th>Platform (requested)</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Payment confirmation from waiters tab → go to waiter</td><td>Web + WhatsApp</td></tr>
+<tr><td>2</td><td>Link table and waiter (ease calling)</td><td>Web (link + UI) + WhatsApp (ask table, validate, show &quot;Table X&quot; to waiter)</td></tr>
+<tr><td>3</td><td>Add 0 to go back to main menu + specific commands for menu items</td><td>WhatsApp only</td></tr>
+<tr><td>4</td><td>Enter phone number to be billed</td><td>Web + WhatsApp</td></tr>
+<tr><td>5</td><td>Enter comment or type END to finish</td><td>WhatsApp only</td></tr>
+<tr><td>6</td><td>Anonymous comments; appear on waiter platform after configured time</td><td>Web + WhatsApp</td></tr>
+<tr><td>7</td><td>Add customer support number</td><td>Web + WhatsApp</td></tr>
+<tr><td>8</td><td>Change language as main menu item</td><td>WhatsApp only</td></tr>
+<tr><td>9</td><td>Hand over of tables before departure</td><td>Web (Waiter/Manager)</td></tr>
+<tr><td>10</td><td>Change notification before payment</td><td>Web + WhatsApp</td></tr>
+<tr><td>11</td><td>Change BoT to TipTap (branding)</td><td>Web + WhatsApp</td></tr>
+<tr><td>12</td><td>Don't show tips to manager</td><td>Web only</td></tr>
+<tr><td>13</td><td>Tip the chef</td><td>Web + WhatsApp</td></tr>
+</tbody>
+</table>
+
+<h2>3. Table 2 – Implementation Status</h2>
+<p><em>Hii table inaonyesha zipi zimetekelezwa (Done) na zipi bado (Pending).</em></p>
+<table>
+<thead>
+<tr><th>#</th><th>Feature</th><th>Web</th><th>WhatsApp</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Payment confirmation → waiter</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>GET /api/waiter/payments; &quot;Payment successful – from Table X&quot;; waiter tab Payments</td></tr>
+<tr><td>2</td><td>Link table and waiter</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>tables.waiter_id; Manager assign waiter; bot asks &quot;Upo meza namba ngapi?&quot;, validates; waiter sees &quot;at Table X&quot;</td></tr>
+<tr><td>3</td><td>0 = main menu + menu commands</td><td>—</td><td><strong>Done</strong></td><td>Global &quot;0&quot; → HOME; menu image + caption with commands (0 = back, Order = type item + qty)</td></tr>
+<tr><td>4</td><td>Enter phone number to be billed</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>All pay-bill flows: &quot;Enter phone number to be billed&quot;</td></tr>
+<tr><td>5</td><td>Comment or type END to finish</td><td>—</td><td><strong>Done</strong></td><td>Feedback: &quot;Enter comment or type END to finish&quot;; END/skip = no comment</td></tr>
+<tr><td>6</td><td>Anonymous comments; visible after delay</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>No customer/table in waiter view; FEEDBACK_VISIBLE_AFTER_MINUTES; waiter sees after delay</td></tr>
+<tr><td>7</td><td>Customer support number</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>restaurants.support_phone; Manager QR &amp; Mobile API page; bot HOME &quot;Customer Support&quot;</td></tr>
+<tr><td>8</td><td>Change language (main menu)</td><td>—</td><td><strong>Done</strong></td><td>Swahili/English; main menu &quot;Change language&quot;; session.lang, lang.js</td></tr>
+<tr><td>9</td><td>Hand over tables before departure</td><td><strong>Done</strong></td><td>—</td><td>GET my-tables, colleagues; POST handover-tables; /waiter/handover page</td></tr>
+<tr><td>10</td><td>Change notification before payment</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>POST cash/change-notification (change_to_give); cash payment with amount_received</td></tr>
+<tr><td>11</td><td>BoT → TipTap (branding)</td><td><strong>Done</strong></td><td><strong>Done</strong></td><td>User-facing &quot;TipTap&quot;; console &quot;TipTap WhatsApp&quot;</td></tr>
+<tr><td>12</td><td>Don't show tips to manager</td><td><strong>Done</strong></td><td>—</td><td>No tips on manager dashboard/sidebar/waiters; /manager/tips redirects with message</td></tr>
+<tr><td>13</td><td>Tip the chef</td><td><strong>Pending</strong></td><td><strong>Pending</strong></td><td>Not yet implemented (chef role / chef_id + bot flow + chef view)</td></tr>
+</tbody>
+</table>
+
+
+</body>
+</html>

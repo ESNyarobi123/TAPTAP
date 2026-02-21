@@ -1,5 +1,55 @@
 <?php
 
+/**
+ * TAPTAP API Routes
+ *
+ * All API routes with their controller and method:
+ *
+ * AUTH (public)
+ *   POST /auth/login                    -> AuthController@login
+ *   POST /auth/logout                    -> AuthController@logout (auth:sanctum)
+ *
+ * WAITER (prefix: /waiter, auth:sanctum + role:waiter)
+ *   GET  /dashboard                     -> Api\Waiter\DashboardController@index
+ *   GET  /dashboard/stats               -> Api\Waiter\DashboardController@stats
+ *   GET  /orders                        -> Api\Waiter\DashboardController@orders
+ *   GET  /tips                          -> Api\Waiter\DashboardController@tips
+ *   GET  /ratings                       -> Api\Waiter\DashboardController@ratings
+ *   GET  /menu                          -> Api\Waiter\MenuController@index
+ *   GET  /requests                      -> Api\Waiter\DashboardController@pendingRequests
+ *   GET  /payments                      -> Api\Waiter\DashboardController@payments
+ *   GET  /my-tables                     -> Api\Waiter\DashboardController@myTables
+ *   GET  /colleagues                    -> Api\Waiter\DashboardController@colleagues
+ *   POST /handover-tables               -> Api\Waiter\DashboardController@handoverTables
+ *   POST /orders/{order}/claim          -> Api\Waiter\DashboardController@claimOrder
+ *   POST /requests/{customerRequest}/complete -> Api\Waiter\DashboardController@completeRequest
+ *
+ * V1 (prefix: /v1, auth:sanctum)
+ *   GET  /restaurants/search            -> V1\RestaurantController@search
+ *   GET  /restaurants/{restaurant}      -> V1\RestaurantController@show
+ *   GET  /restaurants/{restaurant}/categories -> V1\MenuController@categories
+ *   GET  /restaurants/{restaurant}/menu -> V1\MenuController@index
+ *   POST /orders                        -> V1\OrderController@store
+ *   GET  /orders/{order}                -> V1\OrderController@show
+ *   GET  /orders/{order}/status         -> V1\OrderController@status
+ *   PATCH/orders/{order}/status         -> V1\OrderController@updateStatus
+ *   POST /payments/ussd-request         -> V1\PaymentController@ussdRequest
+ *   POST /payments/cash/change-notification -> V1\PaymentController@cashChangeNotification
+ *   POST /payments/cash                 -> V1\PaymentController@cashPayment
+ *   GET  /payments/{order}/status       -> V1\PaymentController@status
+ *   POST /feedback                      -> V1\FeedbackController@store
+ *   POST /tips                         -> V1\TipController@store
+ *
+ * V1/MANAGER (prefix: /v1/manager, auth:sanctum + role:manager)
+ *   apiResource categories, menu, tables -> Api\Manager\*Controller (index, store, show, update, destroy)
+ *
+ * BOT (prefix: /bot, auth:sanctum) -> WhatsAppBotController
+ *   verifyRestaurant, verifyTag, parseEntry, searchRestaurant, getFullMenu, getCategories,
+ *   getCategoryItems, getItemDetails, createOrder, createOrderByText, getOrderStatus,
+ *   initiatePayment, submitFeedback, submitTip, getTables, callWaiter, getWaiters,
+ *   getActiveOrder, getMenuImage, initiateQuickPayment, getQuickPaymentStatus
+ */
+
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\V1\FeedbackController;
 use App\Http\Controllers\Api\V1\MenuController;
@@ -23,6 +73,10 @@ Route::prefix('waiter')->middleware(['auth:sanctum', 'role:waiter'])->group(func
     Route::get('/ratings', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'ratings']);
     Route::get('/menu', [\App\Http\Controllers\Api\Waiter\MenuController::class, 'index']);
     Route::get('/requests', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'pendingRequests']);
+    Route::get('/payments', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'payments']);
+    Route::get('/my-tables', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'myTables']);
+    Route::get('/colleagues', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'colleagues']);
+    Route::post('/handover-tables', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'handoverTables']);
     Route::post('/orders/{order}/claim', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'claimOrder']);
     Route::post('/requests/{customerRequest}/complete', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'completeRequest']);
 });
@@ -48,6 +102,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     // Payments
     Route::post('/payments/ussd-request', [PaymentController::class, 'ussdRequest']);
+    Route::post('/payments/cash/change-notification', [PaymentController::class, 'cashChangeNotification']);
     Route::post('/payments/cash', [PaymentController::class, 'cashPayment']);
     Route::get('/payments/{order}/status', [PaymentController::class, 'status']);
 

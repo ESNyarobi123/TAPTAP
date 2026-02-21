@@ -3,6 +3,12 @@
         Manager Dashboard
     </x-slot>
 
+    @if(session('info'))
+        <div class="mb-6 p-4 bg-white/10 border border-white/20 rounded-xl">
+            <p class="text-sm font-medium text-white/80">{{ session('info') }}</p>
+        </div>
+    @endif
+
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         <!-- Stat 1: Orders -->
@@ -306,36 +312,7 @@
             </div>
         </div>
 
-        <!-- Waiter Performance / Tips -->
-        <div class="glass-card p-6 rounded-2xl">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-white tracking-tight">Waiter Tips Today</h3>
-                <a href="{{ route('manager.tips.index') }}" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 uppercase tracking-wider">View All</a>
-            </div>
-            <div class="space-y-4">
-                @forelse($waiterTips as $tip)
-                    <div class="flex items-center justify-between p-4 glass rounded-xl card-hover">
-                        <div class="flex items-center gap-4">
-                            <div class="w-11 h-11 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-xl flex items-center justify-center font-bold text-emerald-400 border border-emerald-500/20">
-                                {{ substr($tip->waiter->name ?? 'W', 0, 1) }}
-                            </div>
-                            <div>
-                                <h5 class="font-semibold text-white">{{ $tip->waiter->name ?? 'Unknown Waiter' }}</h5>
-                                <p class="text-[11px] text-white/40 font-medium uppercase tracking-wider">Active Waiter</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="font-bold text-white">Tsh {{ number_format($tip->total_amount) }}</p>
-                            @if($loop->first)
-                                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Top Earner</p>
-                            @endif
-                        </div>
-                    </div>
-                @empty
-                    <p class="text-sm text-white/40 text-center py-8">No tips recorded today</p>
-                @endforelse
-            </div>
-        </div>
+        {{-- Tips are not shown to manager --}}
     </div>
     <script>
         // Auto-refresh stats every 30 seconds
