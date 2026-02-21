@@ -136,6 +136,18 @@
         .sidebar-link { min-height: 44px; }
         .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6); }
         .sidebar-open { transform: translateX(0) !important; }
+        #mobile-sidebar.sidebar-collapsed { width: 5rem; }
+        #mobile-sidebar.sidebar-collapsed .sidebar-link span,
+        #mobile-sidebar.sidebar-collapsed .sidebar-label,
+        #mobile-sidebar.sidebar-collapsed .sidebar-logo-text,
+        #mobile-sidebar.sidebar-collapsed .sidebar-user-text,
+        #mobile-sidebar.sidebar-collapsed .sidebar-link .absolute { display: none !important; }
+        #mobile-sidebar.sidebar-collapsed .sidebar-link { justify-content: center; padding-left: 0; padding-right: 0; margin-left: 0.5rem; margin-right: 0.5rem; }
+        #mobile-sidebar.sidebar-collapsed .sidebar-link > div:first-child { margin: 0; }
+        #mobile-sidebar.sidebar-collapsed nav .px-6 { padding-left: 0; padding-right: 0; }
+        #mobile-sidebar.sidebar-collapsed .sidebar-user-area .flex-1 { display: none; }
+        #mobile-sidebar.sidebar-collapsed .sidebar-user-area { justify-content: center; }
+        body.sidebar-collapsed-main main#main-content { margin-left: 5rem; }
     </style>
 </head>
 <body class="font-sans antialiased text-white min-h-screen pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
@@ -145,33 +157,37 @@
     <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden md:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
 
     <div class="flex min-h-screen">
-        <!-- Premium Waiter Sidebar: drawer on mobile, persistent on md+ -->
-        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 -translate-x-full md:translate-x-0 transition-transform duration-300 ease-out border-r border-white/5">
-            <!-- Logo Area -->
-            <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 flex items-center justify-center overflow-hidden">
+        <!-- Premium Waiter Sidebar: drawer on mobile, persistent on md+ with toggle -->
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 -translate-x-full md:translate-x-0 transition-[transform,width] duration-300 ease-out border-r border-white/5 md:w-72">
+            <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5 shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-11 h-11 flex shrink-0 items-center justify-center overflow-hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
                             <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                             <path d="M7 2v20"></path>
                             <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
                         </svg>
                     </div>
-                    <div>
+                    <div class="sidebar-logo-text min-w-0">
                         <span class="text-xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
                         <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Waiter Portal</span>
                     </div>
                 </div>
-                <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                    </svg>
-                </button>
+                <div class="flex items-center gap-1 shrink-0">
+                    <button type="button" id="sidebar-toggle" class="hidden md:flex min-h-[44px] min-w-[44px] items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Collapse sidebar" title="Collapse sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-collapse" title="Collapse"><path d="m15 18-6-6 6-6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-expand" class="hidden" title="Expand"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                    <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex-1 py-6 custom-scrollbar overflow-y-auto">
-                <div class="mb-4 px-6">
+            <nav class="flex-1 py-6 custom-scrollbar overflow-y-auto overflow-x-hidden">
+                <div class="mb-4 px-6 sidebar-label">
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Main Menu</p>
                 </div>
                 
@@ -235,7 +251,7 @@
                     @endif
                 </a>
 
-                <div class="mt-8 mb-4 px-6">
+                <div class="mt-8 mb-4 px-6 sidebar-label">
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Performance</p>
                 </div>
 
@@ -258,13 +274,12 @@
                 </a>
             </nav>
 
-            <!-- User Profile Area -->
-            <div class="p-4 border-t border-white/5">
+            <div class="p-4 border-t border-white/5 shrink-0 sidebar-user-area">
                 <div class="glass-card rounded-xl p-4 flex items-center gap-3" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
-                    <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20">
+                    <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0">
                         {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
-                    <div class="flex-1 min-w-0">
+                    <div class="flex-1 min-w-0 sidebar-user-text">
                         <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
                         <p class="text-[10px] font-medium text-white/40 truncate">Waiter Account</p>
                     </div>
@@ -293,7 +308,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-all duration-300 md:ml-72" tabindex="-1">
+        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-[margin] duration-300 md:ml-72" tabindex="-1">
             <!-- Mobile Header -->
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -315,9 +330,11 @@
 
             <!-- Desktop Header & Content -->
             <div class="p-4 lg:p-8 flex-1">
-                <!-- Desktop Top Bar (sidebar persistent on md+, no menu button) -->
                 <div class="hidden md:flex justify-between items-center mb-8">
                     <div class="flex items-center gap-5">
+                        <button type="button" id="sidebar-toggle-top" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 glass rounded-xl hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Toggle sidebar" title="Toggle sidebar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                        </button>
                         <div>
                             <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">Waiter Portal</p>
                             <h1 class="text-3xl font-bold text-white tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
@@ -423,6 +440,31 @@
                 });
             });
         });
+
+        var WAITER_SIDEBAR_KEY = 'waiterSidebarCollapsed';
+        function isWaiterSidebarCollapsed() { return document.getElementById('mobile-sidebar').classList.contains('sidebar-collapsed'); }
+        function setWaiterSidebarCollapsed(collapsed) {
+            var s = document.getElementById('mobile-sidebar');
+            var ic = document.getElementById('sidebar-toggle-icon-collapse');
+            var ie = document.getElementById('sidebar-toggle-icon-expand');
+            if (collapsed) {
+                s.classList.add('sidebar-collapsed');
+                document.body.classList.add('sidebar-collapsed-main');
+                if (ic) ic.classList.add('hidden');
+                if (ie) ie.classList.remove('hidden');
+                try { localStorage.setItem(WAITER_SIDEBAR_KEY, '1'); } catch (e) {}
+            } else {
+                s.classList.remove('sidebar-collapsed');
+                document.body.classList.remove('sidebar-collapsed-main');
+                if (ic) ic.classList.remove('hidden');
+                if (ie) ie.classList.add('hidden');
+                try { localStorage.setItem(WAITER_SIDEBAR_KEY, '0'); } catch (e) {}
+            }
+        }
+        function toggleWaiterSidebar() { setWaiterSidebarCollapsed(!isWaiterSidebarCollapsed()); }
+        document.getElementById('sidebar-toggle') && document.getElementById('sidebar-toggle').addEventListener('click', toggleWaiterSidebar);
+        document.getElementById('sidebar-toggle-top') && document.getElementById('sidebar-toggle-top').addEventListener('click', toggleWaiterSidebar);
+        try { if (localStorage.getItem(WAITER_SIDEBAR_KEY) === '1') setWaiterSidebarCollapsed(true); } catch (e) {}
 
         window.addEventListener('load', function() {
             if (typeof lucide !== 'undefined') {
