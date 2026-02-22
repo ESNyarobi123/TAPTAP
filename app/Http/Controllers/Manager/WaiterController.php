@@ -21,14 +21,55 @@ class WaiterController extends Controller
             ->withCount('orders')
             ->get();
 
-        $assignmentHistory = WaiterRestaurantAssignment::query()
-            ->where('restaurant_id', $restaurantId)
-            ->with('user:id,name,global_waiter_number')
-            ->orderByDesc('linked_at')
-            ->limit(100)
-            ->get();
+        return view('manager.waiters.index', compact('waiters'));
+    }
 
-        return view('manager.waiters.index', compact('waiters', 'assignmentHistory'));
+    /**
+     * History page: link/unlink events with filters.
+     */
+    public function history(Request $request)
+    {
+        $restaurantId = Auth::user()->restaurant_id;
+
+        $query = WaiterRestaurantAssignment::query()
+            ->where('restaurant_id', $restaurantId)
+            ->with('user:id,name,global_waiter_number');
+
+        $status = $request->string('status')->toString();
+        if ($status === 'active') {
+            $query->whereNull('unlinked_at');
+        } elseif ($status === 'unlinked') {
+            $query->whereNotNull('unlinked_at');
+        }
+
+        $search = $request->string('q')->trim();
+        if ($search !== '') {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('global_waiter_number', 'like', '%'.strtoupper($search).'%');
+            });
+        }
+
+        $dateFrom = $request->string('date_from')->trim();
+        if ($dateFrom !== '') {
+            $query->whereDate('linked_at', '>=', $dateFrom);
+        }
+        $dateTo = $request->string('date_to')->trim();
+        if ($dateTo !== '') {
+            $query->whereDate('linked_at', '<=', $dateTo);
+        }
+
+        $assignmentHistory = $query->orderByDesc('linked_at')->limit(200)->get();
+
+        return view('manager.waiters.history', [
+            'assignmentHistory' => $assignmentHistory,
+            'filters' => [
+                'status' => $status,
+                'q' => $search,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+            ],
+        ]);
     }
 
     /**

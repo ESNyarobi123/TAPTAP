@@ -174,6 +174,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::put('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::get('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'index'])->name('waiters.index');
+    Route::get('/waiters/history', [\App\Http\Controllers\Manager\WaiterController::class, 'history'])->name('waiters.history');
     Route::get('/waiters/search', [\App\Http\Controllers\Manager\WaiterController::class, 'search'])->name('waiters.search');
     Route::post('/waiters/{waiter}/link', [\App\Http\Controllers\Manager\WaiterController::class, 'link'])->name('waiters.link');
     Route::post('/waiters/{waiter}/unlink', [\App\Http\Controllers\Manager\WaiterController::class, 'unlink'])->name('waiters.unlink');
