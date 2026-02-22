@@ -127,7 +127,7 @@ class Restaurant extends Model
             return null;
         }
 
-        return asset('storage/'.$this->menu_image);
+        return route('storage.serve', ['path' => $this->menu_image]);
     }
 
     /**

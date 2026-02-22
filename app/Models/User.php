@@ -35,8 +35,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Profile photo fetch URL. Path: storage/app/public/profile/{filename}.
-     * Uses absolute URL from APP_URL so it works when hosted online.
+     * Profile photo fetch URL. Served via route so it works on host even without storage:link.
      */
     public function profilePhotoUrl(): ?string
     {
@@ -44,9 +43,7 @@ class User extends Authenticatable
             return null;
         }
 
-        $base = rtrim(config('app.url'), '/');
-        $path = 'storage/'.$this->profile_photo_path;
-        $url = $base.'/'.ltrim($path, '/');
+        $url = route('storage.serve', ['path' => $this->profile_photo_path]);
         $ts = $this->updated_at?->timestamp ?? '';
 
         return $ts ? $url.'?v='.$ts : $url;

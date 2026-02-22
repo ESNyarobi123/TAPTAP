@@ -17,6 +17,9 @@ Route::get('/fix-storage', function () {
     return 'Storage link created!';
 });
 
+// Serve profile & menu_images from storage (works when storage:link missing on host)
+Route::get('/serve-storage/{path}', \App\Http\Controllers\ServeStorageController::class)->where('path', '.*')->name('storage.serve');
+
 // DEBUG: Test Selcom Authentication - DELETE AFTER TESTING!
 Route::get('/test-selcom', function () {
     $credentials = [

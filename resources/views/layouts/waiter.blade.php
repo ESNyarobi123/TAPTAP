@@ -454,7 +454,8 @@
                         </div>
                         <div class="flex flex-col items-center mb-6">
                             @if($layoutPhotoUrl)
-                                <img src="{{ $layoutPhotoUrl }}" alt="Profile" class="w-24 h-24 rounded-2xl object-cover border-2 border-violet-500/30 mb-3">
+                                <img src="{{ $layoutPhotoUrl }}" alt="" class="profile-modal-photo w-24 h-24 rounded-2xl object-cover border-2 border-violet-500/30 mb-3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="profile-modal-photo-fallback w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 hidden flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3" style="display:none;">{{ substr($layoutWaiter->name, 0, 1) }}</div>
                             @else
                                 <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3">
                                     {{ substr($layoutWaiter->name, 0, 1) }}
