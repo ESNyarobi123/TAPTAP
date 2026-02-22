@@ -196,9 +196,22 @@
                             </a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-bold text-slate-300 hover:text-white transition-colors">Log in</a>
-                            <a href="{{ route('restaurant.register') }}" class="bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-slate-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] text-sm">
-                                Get Started
-                            </a>
+                            <div class="relative group/getstarted" id="nav-getstarted-wrap">
+                                <button type="button" id="nav-getstarted-btn" class="bg-white text-black px-6 py-2.5 rounded-full font-bold hover:bg-slate-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] text-sm flex items-center gap-1.5">
+                                    Get Started
+                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                </button>
+                                <div class="absolute right-0 top-full mt-2 w-56 py-2 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover/getstarted:opacity-100 group-hover/getstarted:visible transition-all duration-200 z-50" id="nav-getstarted-dropdown" onclick="event.stopPropagation()">
+                                    <a href="{{ route('restaurant.register') }}" class="flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <i data-lucide="store" class="w-4 h-4 text-primary shrink-0"></i>
+                                        Register Restaurant / Manager
+                                    </a>
+                                    <a href="{{ route('waiter.register') }}" class="flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <i data-lucide="user" class="w-4 h-4 text-accent shrink-0"></i>
+                                        Register as Waiter
+                                    </a>
+                                </div>
+                            </div>
                         @endauth
                     @endif
                 </div>
@@ -232,7 +245,15 @@
             <a href="#pricing" class="hover:text-primary">Pricing</a>
             <hr class="border-white/10">
             <a href="{{ route('login') }}">Log in</a>
-            <a href="{{ route('restaurant.register') }}" class="bg-primary text-white text-center py-4 rounded-xl font-bold">Get Started</a>
+            <p class="text-xs font-bold text-white/50 uppercase tracking-wider pt-2">Get Started</p>
+            <a href="{{ route('restaurant.register') }}" class="flex items-center gap-3 py-3 px-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10">
+                <i data-lucide="store" class="w-5 h-5 text-primary"></i>
+                Register Restaurant / Manager
+            </a>
+            <a href="{{ route('waiter.register') }}" class="flex items-center gap-3 py-3 px-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10">
+                <i data-lucide="user" class="w-5 h-5 text-accent"></i>
+                Register as Waiter
+            </a>
         </div>
     </div>
 
@@ -254,10 +275,23 @@
                     Empower your restaurant with an intelligent operating system. Seamless QR ordering, WhatsApp integration, and instant payments—all in one platform.
                 </p>
                 
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                    <a href="{{ route('restaurant.register') }}" class="w-full sm:w-auto px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg shadow-[0_0_40px_rgba(99,102,241,0.4)] hover:shadow-[0_0_60px_rgba(99,102,241,0.6)] hover:-translate-y-1 transition-all">
-                        Start Free Trial
-                    </a>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <div class="relative group/herogetstarted w-full sm:w-auto" id="hero-getstarted-wrap">
+                        <button type="button" id="hero-getstarted-btn" class="w-full sm:w-auto px-10 py-5 bg-primary text-white rounded-2xl font-bold text-lg shadow-[0_0_40px_rgba(99,102,241,0.4)] hover:shadow-[0_0_60px_rgba(99,102,241,0.6)] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                            Get Started
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </button>
+                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 py-2 bg-[#0f172a] border border-white/10 rounded-xl shadow-xl opacity-0 invisible group-hover/herogetstarted:opacity-100 group-hover/herogetstarted:visible transition-all duration-200 z-50" id="hero-getstarted-dropdown" onclick="event.stopPropagation()">
+                            <a href="{{ route('restaurant.register') }}" class="flex items-center gap-3 px-4 py-3.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors rounded-t-xl">
+                                <i data-lucide="store" class="w-5 h-5 text-primary shrink-0"></i>
+                                <span><strong class="text-white">Restaurant / Manager</strong><br><span class="text-xs">Start free trial</span></span>
+                            </a>
+                            <a href="{{ route('waiter.register') }}" class="flex items-center gap-3 px-4 py-3.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors rounded-b-xl">
+                                <i data-lucide="user" class="w-5 h-5 text-accent shrink-0"></i>
+                                <span><strong class="text-white">Waiter</strong><br><span class="text-xs">Sajili na upate code yako</span></span>
+                            </a>
+                        </div>
+                    </div>
                     <a href="#demo" class="w-full sm:w-auto px-10 py-5 bg-white/5 text-white border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-3">
                         <i data-lucide="play-circle" class="w-5 h-5"></i>
                         View Demo
@@ -572,6 +606,31 @@
         closeBtn.addEventListener('click', () => {
             menu.classList.add('hidden');
             menu.classList.remove('flex');
+        });
+
+        // Get Started dropdowns: toggle on click (for touch/mobile) and close on outside click
+        function toggleDropdown(btn, panel) {
+            if (!btn || !panel) return;
+            const isVisible = panel.classList.contains('!opacity-100');
+            document.querySelectorAll('[id$="-getstarted-dropdown"]').forEach(p => {
+                p.classList.remove('!opacity-100', '!visible');
+            });
+            if (!isVisible) {
+                panel.classList.add('!opacity-100', '!visible');
+            }
+        }
+        document.getElementById('nav-getstarted-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown(null, document.getElementById('nav-getstarted-dropdown'));
+        });
+        document.getElementById('hero-getstarted-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleDropdown(null, document.getElementById('hero-getstarted-dropdown'));
+        });
+        document.addEventListener('click', () => {
+            document.querySelectorAll('[id$="-getstarted-dropdown"]').forEach(p => {
+                p.classList.remove('!opacity-100', '!visible');
+            });
         });
     </script>
 </body>
