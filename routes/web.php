@@ -181,6 +181,9 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/waiters/search', [\App\Http\Controllers\Manager\WaiterController::class, 'search'])->name('waiters.search');
     Route::post('/waiters/{waiter}/link', [\App\Http\Controllers\Manager\WaiterController::class, 'link'])->name('waiters.link');
     Route::post('/waiters/{waiter}/unlink', [\App\Http\Controllers\Manager\WaiterController::class, 'unlink'])->name('waiters.unlink');
+    Route::get('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'index'])->name('payroll.index');
+    Route::post('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'store'])->name('payroll.store');
+    Route::get('/payroll/history', [\App\Http\Controllers\Manager\PayrollController::class, 'history'])->name('payroll.history');
     Route::get('/payments', [\App\Http\Controllers\Manager\PaymentController::class, 'index'])->name('payments.index');
     Route::post('/payments/selcom/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateSelcom'])->name('payments.selcom.initiate');
     Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkSelcomStatus'])->name('payments.selcom.status');
@@ -204,6 +207,9 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/dashboard', [\App\Http\Controllers\Waiter\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/history', [\App\Http\Controllers\Waiter\HistoryController::class, 'index'])->name('history');
     Route::post('/profile', [\App\Http\Controllers\Waiter\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/salary-slip', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'index'])->name('salary-slip.index');
+    Route::get('/salary-slip/{period}', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'show'])->name('salary-slip.show')->where('period', '[0-9]{4}-[0-9]{2}');
+    Route::get('/salary-slip/{period}/download', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'download'])->name('salary-slip.download')->where('period', '[0-9]{4}-[0-9]{2}');
     Route::middleware('waiter.linked')->group(function () {
         Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
         Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');

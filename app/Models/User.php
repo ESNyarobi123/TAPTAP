@@ -131,6 +131,11 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class, 'waiter_id');
     }
 
+    public function waiterSalaryPayments()
+    {
+        return $this->hasMany(WaiterSalaryPayment::class);
+    }
+
     /**
      * Get WhatsApp QR URL for this waiter
      */

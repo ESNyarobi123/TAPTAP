@@ -287,6 +287,15 @@
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Account</p>
                 </div>
 
+                <a href="{{ route('waiter.salary-slip.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.salary-slip.*') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.salary-slip.*') ? 'text-amber-400' : 'text-white/60' }}">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Salary Slip</span>
+                </a>
+
                 <a href="{{ route('waiter.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.history') ? 'sidebar-link-active' : 'text-white/60' }}">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.history') ? 'text-slate-300' : 'text-white/60' }}">

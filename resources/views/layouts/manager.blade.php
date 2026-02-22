@@ -267,6 +267,22 @@
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Finance & Feedback</p>
                 </div>
 
+                <a href="{{ route('manager.payroll.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('manager.payroll.*') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('manager.payroll.*') ? 'text-amber-400' : 'text-white/60' }}">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M12 8v4"/><path d="M10 12h4"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Payroll / Malipo</span>
+                </a>
+                <a href="{{ route('manager.payroll.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('manager.payroll.history') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ request()->routeIs('manager.payroll.history') ? 'text-slate-400' : 'text-white/60' }}">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Historia ya Malipo</span>
+                </a>
                 <a href="{{ route('manager.payments.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('manager.payments.index') ? 'sidebar-link-active' : 'text-white/60' }}">
                     <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('manager.payments.index') ? 'text-pink-400' : 'text-white/60' }}">
