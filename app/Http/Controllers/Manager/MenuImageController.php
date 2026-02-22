@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Restaurant;
 
+/**
+ * Menu image: upload saves to storage/app/public/menu_images.
+ * Fetch URL: asset('storage/'.$restaurant->menu_image) via Restaurant::menuImageUrl().
+ */
 class MenuImageController extends Controller
 {
     /**
@@ -16,6 +20,7 @@ class MenuImageController extends Controller
     public function index()
     {
         $restaurant = Restaurant::find(Auth::user()->restaurant_id);
+
         return view('manager.menu-image.index', compact('restaurant'));
     }
 
@@ -30,7 +35,7 @@ class MenuImageController extends Controller
 
         $restaurant = Restaurant::find(Auth::user()->restaurant_id);
 
-        if (!$restaurant) {
+        if (! $restaurant) {
             return back()->with('error', 'Restaurant not found.');
         }
 
@@ -39,7 +44,7 @@ class MenuImageController extends Controller
             Storage::disk('public')->delete($restaurant->menu_image);
         }
 
-        // Store new image
+        // Path: storage/app/public/menu_images/{filename}
         $path = $request->file('menu_image')->store('menu_images', 'public');
         $restaurant->update(['menu_image' => $path]);
 
@@ -53,7 +58,7 @@ class MenuImageController extends Controller
     {
         $restaurant = Restaurant::find(Auth::user()->restaurant_id);
 
-        if (!$restaurant) {
+        if (! $restaurant) {
             return back()->with('error', 'Restaurant not found.');
         }
 

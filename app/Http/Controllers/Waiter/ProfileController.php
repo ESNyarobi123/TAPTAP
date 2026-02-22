@@ -8,6 +8,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Waiter profile: upload saves to storage/app/public/profile.
+ * Fetch URL: User::profilePhotoUrl() => asset('storage/'.$profile_photo_path).
+ */
 class ProfileController extends Controller
 {
     public function update(UpdateWaiterProfileRequest $request): RedirectResponse
@@ -22,6 +26,7 @@ class ProfileController extends Controller
             if ($user->profile_photo_path) {
                 Storage::disk('public')->delete($user->profile_photo_path);
             }
+            // Path: storage/app/public/profile/{filename}
             $path = $request->file('profile_photo')->store('profile', 'public');
             $user->profile_photo_path = $path;
         }

@@ -1115,8 +1115,8 @@ class WhatsAppBotController extends Controller
             ], 404);
         }
 
-        // Return the full URL to the menu image
-        $imageUrl = asset('storage/'.$restaurant->menu_image);
+        // Fetch URL for menu image (path: storage/app/public/menu_images)
+        $imageUrl = $restaurant->menuImageUrl();
 
         return response()->json([
             'success' => true,

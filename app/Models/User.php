@@ -35,7 +35,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Profile photo URL for storage in public disk (storage/app/public/profile).
+     * Profile photo fetch URL. Path: storage/app/public/profile/{filename}.
      */
     public function profilePhotoUrl(): ?string
     {

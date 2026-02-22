@@ -41,7 +41,7 @@
                     <!-- Image Container with Zoom Effect -->
                     <div class="relative overflow-hidden rounded-xl border border-white/10">
                         <img 
-                            src="{{ asset('storage/' . $restaurant->menu_image) }}" 
+                            src="{{ $restaurant->menuImageUrl() }}" 
                             alt="Menu Image" 
                             class="w-full h-auto max-h-[600px] object-contain bg-surface-900 transition-transform duration-500 group-hover:scale-105"
                         >
@@ -52,7 +52,7 @@
                     <!-- Image Info -->
                     <div class="mt-4 flex items-center justify-between">
                         <div class="flex items-center gap-4">
-                            <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank" class="flex items-center gap-2 px-4 py-2 glass rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm font-medium">
+                            <a href="{{ $restaurant->menuImageUrl() }}" target="_blank" class="flex items-center gap-2 px-4 py-2 glass rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm font-medium">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
                                     <polyline points="15 3 21 3 21 9"/>

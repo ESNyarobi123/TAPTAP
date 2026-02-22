@@ -119,6 +119,18 @@ class Restaurant extends Model
     }
 
     /**
+     * Menu image URL for fetch (storage: storage/app/public/menu_images).
+     */
+    public function menuImageUrl(): ?string
+    {
+        if (! $this->menu_image) {
+            return null;
+        }
+
+        return asset('storage/'.$this->menu_image);
+    }
+
+    /**
      * Phone number shown to customers for support (WhatsApp bot). Prefers support_phone, else phone.
      */
     public function getCustomerSupportPhone(): ?string
