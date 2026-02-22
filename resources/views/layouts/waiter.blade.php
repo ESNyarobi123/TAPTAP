@@ -138,6 +138,13 @@
         /* Mobile: show sidebar when toggle is opened – must beat Tailwind transform */
         #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
         .sidebar-open { transform: translateX(0) !important; }
+        /* Desktop: sidebar always visible + main content margin (fallback if Tailwind doesn’t load) */
+        @media (min-width: 768px) {
+            #mobile-sidebar { transform: translateX(0) !important; visibility: visible !important; }
+            #mobile-sidebar.sidebar-collapsed { width: 5rem !important; }
+            main#main-content { margin-left: 18rem; }
+            body.sidebar-collapsed-main main#main-content { margin-left: 5rem; }
+        }
         body.sidebar-mobile-open #sidebar-overlay { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
         #mobile-sidebar.sidebar-collapsed { width: 5rem; }
         #mobile-sidebar.sidebar-collapsed .sidebar-link span,
