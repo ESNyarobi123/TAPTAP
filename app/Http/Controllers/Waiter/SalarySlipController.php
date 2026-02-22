@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Waiter;
 
 use App\Http\Controllers\Controller;
 use App\Models\WaiterSalaryPayment;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SalarySlipController extends Controller
 {
@@ -21,49 +19,41 @@ class SalarySlipController extends Controller
         return view('waiter.salary-slip.index', ['payments' => $payments]);
     }
 
-    public function show(string $period): Response|StreamedResponse
+    public function show(string $period): View
     {
         $payment = $this->findPaymentForCurrentWaiter($period);
 
-        return $this->pdfResponse($payment, false);
+        return $this->payslipView($payment, false);
     }
 
-    public function download(string $period): Response|StreamedResponse
+    public function download(string $period): View
     {
         $payment = $this->findPaymentForCurrentWaiter($period);
 
-        return $this->pdfResponse($payment, true);
+        return $this->payslipView($payment, true);
     }
 
     private function findPaymentForCurrentWaiter(string $period): WaiterSalaryPayment
     {
-        $payment = WaiterSalaryPayment::query()
+        return WaiterSalaryPayment::query()
             ->where('user_id', Auth::id())
             ->where('period_month', $period)
             ->with('restaurant')
             ->firstOrFail();
-
-        return $payment;
     }
 
-    private function pdfResponse(WaiterSalaryPayment $payment, bool $download): Response|StreamedResponse
+    private function payslipView(WaiterSalaryPayment $payment, bool $autoPrint): View
     {
         $restaurant = $payment->restaurant;
         $waiter = $payment->user;
 
-        $pdf = app('dompdf.wrapper')->loadView('payslip', [
+        return view('payslip', [
             'payment' => $payment,
             'restaurantName' => $restaurant?->name ?? config('app.name'),
             'waiterName' => $waiter?->name ?? '—',
             'waiterId' => $waiter?->global_waiter_number ?? $waiter?->waiter_code ?? ('ID-'.$payment->user_id),
+            'forPdf' => false,
+            'autoPrint' => $autoPrint,
         ]);
-
-        $filename = 'payslip-'.str_replace('-', '', $payment->period_month).'-'.preg_replace('/[^a-z0-9]+/i', '-', $waiter?->name ?? 'waiter').'.pdf';
-
-        if ($download) {
-            return $pdf->download($filename);
-        }
-
-        return $pdf->stream($filename);
     }
 }

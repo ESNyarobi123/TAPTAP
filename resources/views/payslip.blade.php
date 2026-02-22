@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Salary Slip - {{ $payment->period_label }}</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #1a1a1a; max-width: 420px; margin: 24px auto; padding: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; color: #1a1a1a; max-width: 420px; margin: 24px auto; padding: 16px; }
         .company { font-size: 11px; color: #444; margin-bottom: 8px; }
         h1 { font-size: 16px; font-weight: bold; margin: 0 0 16px 0; text-align: center; }
         .row { display: table; width: 100%; margin: 4px 0; }
@@ -13,7 +14,15 @@
         .sep { border-bottom: 1px dashed #999; margin: 8px 0; }
         .total { font-weight: bold; margin-top: 4px; }
         .net { font-size: 14px; font-weight: bold; margin-top: 8px; }
+        .no-print { margin-top: 24px; padding: 12px; border: 1px dashed #999; border-radius: 8px; font-size: 12px; background: #f5f5f5; }
+        .no-print kbd { background: #ddd; padding: 2px 6px; border-radius: 4px; }
+        .no-print button { margin-top: 8px; padding: 8px 16px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .no-print button:hover { background: #555; }
+        @media print { .no-print { display: none !important; } }
     </style>
+    @if(!empty($autoPrint))
+    <script>window.onload = function() { window.print(); };</script>
+    @endif
 </head>
 <body>
     @if (!empty($restaurantName))
@@ -69,5 +78,12 @@
         <span class="amount">{{ number_format($payment->net_pay) }}</span>
     </div>
     <div class="sep"></div>
+
+    @if(empty($forPdf))
+    <div class="no-print">
+        <p><strong>Save as PDF:</strong> Press <kbd>Ctrl+P</kbd> (Windows) or <kbd>Cmd+P</kbd> (Mac), then choose &quot;Save as PDF&quot; or &quot;Print to PDF&quot;.</p>
+        <button type="button" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    @endif
 </body>
 </html>
