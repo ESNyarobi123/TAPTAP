@@ -197,13 +197,31 @@
                         return;
                     }
                     const w = data.waiter;
-                    let html = '<div class="p-4 rounded-xl bg-white/5 border border-white/10">';
-                    html += '<p class="font-bold text-white text-lg">' + (w.name || '—') + '</p>';
+                    let html = '<div class="p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">';
+                    html += '<div><p class="font-bold text-white text-lg">' + (w.name || '—') + '</p>';
                     html += '<p class="text-sm text-white/60">' + (w.email || '') + '</p>';
                     html += '<p class="text-sm text-white/60">Simu: ' + (w.phone || '—') + '</p>';
                     if (w.location) html += '<p class="text-sm text-white/60">Mahali: ' + w.location + '</p>';
                     html += '<p class="text-sm font-mono text-cyan-400 mt-2">' + (w.global_waiter_number || '') + '</p>';
-                    html += '<p class="text-xs text-white/40 mt-2">Orders: ' + (w.orders_count || 0) + ' · Ratings: ' + (w.feedback_count || 0) + '</p>';
+                    html += '<p class="text-xs text-white/40 mt-2">Orders: ' + (w.orders_count || 0) + ' · Ratings: ' + (w.feedback_count || 0) + '</p></div>';
+
+                    if (w.work_history && w.work_history.length > 0) {
+                        html += '<div class="pt-3 border-t border-white/10">';
+                        html += '<p class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2">Historia ya kazi (alishafanya kazi sehemu flani, muda flani)</p>';
+                        html += '<ul class="space-y-2">';
+                        w.work_history.forEach(function(h) {
+                            const linkedDate = h.linked_at ? new Date(h.linked_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                            const unlinkedDate = h.unlinked_at ? new Date(h.unlinked_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : null;
+                            const typeLabel = h.employment_type === 'temporary' ? ' (Show-time)' : ' (Muda mrefu)';
+                            if (h.is_active) {
+                                html += '<li class="flex items-start gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0 animate-pulse"></span><span class="text-white/80"><strong class="text-white">' + (h.restaurant_name || '—') + '</strong>' + typeLabel + ' — Anafanya kazi tangu ' + linkedDate + ' <span class="text-emerald-400 font-medium">(Active)</span></span></li>';
+                            } else {
+                                html += '<li class="flex items-start gap-2 text-sm"><span class="w-1.5 h-1.5 rounded-full bg-white/30 mt-1.5 shrink-0"></span><span class="text-white/70">Alifanya kazi <strong class="text-white/90">' + (h.restaurant_name || '—') + '</strong>' + typeLabel + ' — ' + linkedDate + ' hadi ' + (unlinkedDate || '—') + '</span></li>';
+                            }
+                        });
+                        html += '</ul></div>';
+                    }
+
                     if (w.is_linked && w.current_restaurant) {
                         html += '<p class="text-amber-400 text-sm mt-2">Tayari ameunganishwa na: ' + w.current_restaurant + '. Manager wa restaurant ile anafaa kum-unlink kwanza.</p>';
                     } else {

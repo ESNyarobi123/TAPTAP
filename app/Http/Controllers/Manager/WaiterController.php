@@ -93,6 +93,20 @@ class WaiterController extends Controller
             return response()->json(['success' => false, 'message' => 'Waiter hajapatikana. Angalia nambari ya pekee (TIPTAP-W-xxxxx).']);
         }
 
+        $workHistory = WaiterRestaurantAssignment::query()
+            ->where('user_id', $waiter->id)
+            ->with('restaurant:id,name')
+            ->orderByDesc('linked_at')
+            ->get()
+            ->map(fn ($a) => [
+                'restaurant_name' => $a->restaurant?->name ?? '—',
+                'linked_at' => $a->linked_at?->toIso8601String(),
+                'unlinked_at' => $a->unlinked_at?->toIso8601String(),
+                'employment_type' => $a->employment_type,
+                'linked_until' => $a->linked_until?->format('Y-m-d'),
+                'is_active' => $a->unlinked_at === null,
+            ]);
+
         return response()->json([
             'success' => true,
             'waiter' => [
@@ -106,6 +120,7 @@ class WaiterController extends Controller
                 'feedback_count' => $waiter->feedback_count,
                 'current_restaurant' => $waiter->restaurant?->name,
                 'is_linked' => (bool) $waiter->restaurant_id,
+                'work_history' => $workHistory,
             ],
         ]);
     }
