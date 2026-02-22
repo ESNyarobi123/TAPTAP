@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Waiter;
 
 use App\Http\Controllers\Controller;
 use App\Models\WaiterSalaryPayment;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -52,7 +51,7 @@ class SalarySlipController extends Controller
         $restaurant = $payment->restaurant;
         $waiter = $payment->user;
 
-        $pdf = Pdf::loadView('payslip', [
+        $pdf = app('dompdf.wrapper')->loadView('payslip', [
             'payment' => $payment,
             'restaurantName' => $restaurant?->name ?? config('app.name'),
             'waiterName' => $waiter?->name ?? '—',
