@@ -141,6 +141,9 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .bg-surface-900 { background: #0f0a1e; }
+        /* Mobile: show sidebar when toggle is opened – must beat Tailwind transform */
+        #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
+        body.sidebar-mobile-open #sidebar-overlay { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
         #mobile-sidebar.sidebar-collapsed { width: 5rem; }
         #mobile-sidebar.sidebar-collapsed .sidebar-link span,
         #mobile-sidebar.sidebar-collapsed .sidebar-label,
@@ -407,42 +410,30 @@
         function openSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.add('translate-x-0');
-            
+            if (!sidebar || !overlay) return;
+            document.body.classList.add('sidebar-mobile-open');
+            sidebar.classList.add('sidebar-open');
             overlay.classList.remove('hidden');
-            setTimeout(() => {
-                overlay.classList.remove('opacity-0');
-                overlay.classList.add('opacity-100');
-            }, 10);
-            
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
             document.body.style.overflow = 'hidden';
         }
 
         function closeSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
-            
-            sidebar.classList.remove('translate-x-0');
-            sidebar.classList.add('-translate-x-full');
-            
+            if (!sidebar || !overlay) return;
+            sidebar.classList.remove('sidebar-open');
+            document.body.classList.remove('sidebar-mobile-open');
             overlay.classList.remove('opacity-100');
             overlay.classList.add('opacity-0');
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-            }, 300);
-            
+            setTimeout(function() { overlay.classList.add('hidden'); }, 300);
             document.body.style.overflow = '';
         }
 
         function toggleSidebar() {
-            const sidebar = document.getElementById('mobile-sidebar');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                openSidebar();
-            } else {
-                closeSidebar();
-            }
+            if (document.getElementById('mobile-sidebar').classList.contains('sidebar-open')) closeSidebar();
+            else openSidebar();
         }
 
         document.addEventListener('keydown', function(e) {

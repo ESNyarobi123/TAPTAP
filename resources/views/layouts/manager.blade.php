@@ -134,7 +134,11 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .sidebar-link { min-height: 44px; }
         .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6); }
+        /* Mobile: show sidebar when toggle is opened – must beat Tailwind transform */
+        #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
         .sidebar-open { transform: translateX(0) !important; }
+        /* Overlay visible when mobile menu is open */
+        body.sidebar-mobile-open #sidebar-overlay { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
 
         /* Sidebar collapsed (desktop): narrow, icons only */
         #mobile-sidebar.sidebar-collapsed { width: 5rem; }
@@ -406,17 +410,23 @@
         function openSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar || !overlay) return;
+            document.body.classList.add('sidebar-mobile-open');
             sidebar.classList.add('sidebar-open');
             overlay.classList.remove('hidden');
-            setTimeout(() => { overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100'); }, 10);
+            overlay.classList.remove('opacity-0');
+            overlay.classList.add('opacity-100');
             document.body.style.overflow = 'hidden';
         }
         function closeSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
+            if (!sidebar || !overlay) return;
             sidebar.classList.remove('sidebar-open');
-            overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
-            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            document.body.classList.remove('sidebar-mobile-open');
+            overlay.classList.remove('opacity-100');
+            overlay.classList.add('opacity-0');
+            setTimeout(function() { overlay.classList.add('hidden'); }, 300);
             document.body.style.overflow = '';
         }
         function toggleSidebar() {
