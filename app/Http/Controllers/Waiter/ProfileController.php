@@ -33,6 +33,10 @@ class ProfileController extends Controller
 
         $user->save();
 
+        // Refresh auth session so avatar shows new photo on next page load
+        $user->refresh();
+        Auth::login($user);
+
         $msg = 'Profile updated.';
         if ($request->hasFile('profile_photo')) {
             $msg = 'Profile picture updated.';

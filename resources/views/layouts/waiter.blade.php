@@ -300,7 +300,8 @@
             <div class="p-4 border-t border-white/5 shrink-0 sidebar-user-area">
                 <div class="glass-card rounded-xl p-4 flex items-center gap-3" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
                     @if(Auth::user()->profilePhotoUrl())
-                        <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-10 h-10 rounded-lg object-cover border border-violet-500/20 shrink-0">
+                        <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="waiter-sidebar-avatar w-10 h-10 rounded-lg object-cover border border-violet-500/20 shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="waiter-sidebar-avatar-fallback w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0 hidden" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
                     @else
                         <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0">
                             {{ substr(Auth::user()->name, 0, 1) }}
@@ -371,7 +372,8 @@
                     <div class="flex items-center gap-5">
                         <button type="button" onclick="var m=document.getElementById('waiterProfileModal'); if(m){ m.classList.remove('hidden'); m.classList.add('flex'); }" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-all text-left">
                             @if(Auth::user()->profilePhotoUrl())
-                                <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-9 h-9 rounded-lg object-cover border border-violet-500/20">
+                                <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-9 h-9 rounded-lg object-cover border border-violet-500/20" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg hidden flex items-center justify-center font-bold text-white text-sm" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
                             @else
                                 <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">
                                     {{ substr(Auth::user()->name, 0, 1) }}
