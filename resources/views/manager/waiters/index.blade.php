@@ -113,6 +113,63 @@
         @endforelse
     </div>
 
+    <!-- History: Link / Unlink -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-white tracking-tight mb-1">Historia ya Waiters (Link / Unlink)</h2>
+        <p class="text-sm font-medium text-white/40 uppercase tracking-wider mb-6">Orodha ya waiters uliowaling na kuwatolea kwenye restaurant yako</p>
+
+        @if($assignmentHistory->isNotEmpty())
+            <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-white/10">
+                                <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Waiter</th>
+                                <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Nambari</th>
+                                <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Aina</th>
+                                <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Alilingwa</th>
+                                <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Alitolewa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($assignmentHistory as $a)
+                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <td class="px-4 py-3 font-medium text-white">{{ $a->user?->name ?? '—' }}</td>
+                                    <td class="px-4 py-3 font-mono text-sm text-cyan-400">{{ $a->user?->global_waiter_number ?? '—' }}</td>
+                                    <td class="px-4 py-3">
+                                        @if($a->employment_type === 'temporary')
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">Show-time</span>
+                                            @if($a->linked_until)
+                                                <span class="text-white/40 text-xs ml-1">mpaka {{ $a->linked_until->format('d/m/Y') }}</span>
+                                            @endif
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/10 text-white/60 border border-white/10">Muda mrefu</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-white/70">{{ $a->linked_at?->format('d/m/Y H:i') ?? '—' }}</td>
+                                    <td class="px-4 py-3">
+                                        @if($a->unlinked_at)
+                                            <span class="text-sm text-white/70">{{ $a->unlinked_at->format('d/m/Y H:i') }}</span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 text-emerald-400 text-sm font-medium">
+                                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                                                Active
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @else
+            <div class="glass-card py-12 text-center rounded-2xl border border-white/10">
+                <p class="text-white/40">Bado hakuna historia ya link/unlink. Waiters utakao linking au unlink watatokea hapa.</p>
+            </div>
+        @endif
+    </div>
+
     <!-- View Waiter Modal -->
     <div id="viewWaiterModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
         <div class="bg-surface-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10">

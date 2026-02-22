@@ -198,6 +198,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 // Waiter Portal (dashboard allowed when not linked; other routes require linked restaurant)
 Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Waiter\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/history', [\App\Http\Controllers\Waiter\HistoryController::class, 'index'])->name('history');
     Route::middleware('waiter.linked')->group(function () {
         Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
         Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');

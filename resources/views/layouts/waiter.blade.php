@@ -282,6 +282,19 @@
                     </div>
                     <span class="font-semibold text-sm">My Ratings</span>
                 </a>
+
+                <div class="mt-8 mb-4 px-6 sidebar-label">
+                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Account</p>
+                </div>
+
+                <a href="{{ route('waiter.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.history') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.history') ? 'text-slate-300' : 'text-white/60' }}">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">History</span>
+                </a>
             </nav>
 
             <div class="p-4 border-t border-white/5 shrink-0 sidebar-user-area">
