@@ -18,6 +18,11 @@ class DashboardController extends Controller
     public function index()
     {
         $waiter = Auth::user();
+
+        if (! $waiter->restaurant_id) {
+            return view('waiter.not-linked');
+        }
+
         $today = Carbon::today();
 
         // Tips

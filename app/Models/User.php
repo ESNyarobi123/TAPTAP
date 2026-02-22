@@ -3,17 +3,17 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles, HasApiTokens;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,74 @@ class User extends Authenticatable
         'password',
         'restaurant_id',
         'waiter_code',
+        'employment_type',
+        'linked_until',
+        'global_waiter_number',
+        'phone',
+        'location',
     ];
+
+    /**
+     * Generate next global waiter number (e.g. TIPTAP-W-00001).
+     */
+    public static function generateGlobalWaiterNumber(): string
+    {
+        $last = self::whereNotNull('global_waiter_number')
+            ->where('global_waiter_number', 'like', 'TIPTAP-W-%')
+            ->orderByRaw('CAST(SUBSTRING(global_waiter_number, 10) AS UNSIGNED) DESC')
+            ->value('global_waiter_number');
+
+        $num = 1;
+        if ($last && preg_match('/TIPTAP-W-(\d+)$/', $last, $m)) {
+            $num = (int) $m[1] + 1;
+        }
+
+        return 'TIPTAP-W-'.str_pad((string) $num, 5, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Whether this waiter's link to a restaurant is still active (not expired).
+     * Temporary links expire at end of linked_until date.
+     */
+    public function isLinkActive(): bool
+    {
+        if (! $this->restaurant_id) {
+            return false;
+        }
+        if ($this->employment_type !== 'temporary') {
+            return true;
+        }
+        if (! $this->linked_until) {
+            return true;
+        }
+
+        return Carbon::parse($this->linked_until)->endOfDay()->isFuture();
+    }
+
+    /**
+     * Clear link when temporary contract has expired (history is preserved).
+     */
+    public function terminateExpiredLink(): void
+    {
+        if (! $this->restaurant_id || $this->isLinkActive()) {
+            return;
+        }
+        $this->restaurant_id = null;
+        $this->waiter_code = null;
+        $this->employment_type = null;
+        $this->linked_until = null;
+        $this->save();
+    }
+
+    public function scopeActiveAtRestaurant($query, int $restaurantId)
+    {
+        return $query->where('restaurant_id', $restaurantId)
+            ->where(function ($q) {
+                $q->where('employment_type', '!=', 'temporary')
+                    ->orWhereNull('employment_type')
+                    ->orWhere('linked_until', '>=', Carbon::today()->toDateString());
+            });
+    }
 
     public function restaurant()
     {
@@ -53,17 +120,17 @@ class User extends Authenticatable
      */
     public function getWaiterQrUrlAttribute()
     {
-        if (!$this->restaurant_id) {
+        if (! $this->restaurant_id) {
             return null;
         }
 
         $botNumber = \App\Models\Setting::get('whatsapp_bot_number', '255794321510');
         $cleanNumber = preg_replace('/[^0-9]/', '', $botNumber);
-        
+
         // Format: START_{restaurant_id}_W{waiter_id}
-        $message = "START_" . $this->restaurant_id . "_W" . $this->id;
-        
-        return "https://wa.me/" . $cleanNumber . "?text=" . urlencode($message);
+        $message = 'START_'.$this->restaurant_id.'_W'.$this->id;
+
+        return 'https://wa.me/'.$cleanNumber.'?text='.urlencode($message);
     }
 
     /**
@@ -85,6 +152,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'linked_until' => 'date',
             'password' => 'hashed',
         ];
     }

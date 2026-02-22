@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIPTAP – Mfumo wa Waiters na Manager (Link / Unlink)</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; color: #1a1a1a; }
+        h1 { color: #0f0a1e; border-bottom: 2px solid #8b5cf6; padding-bottom: 0.5rem; }
+        h2 { color: #4c1d95; margin-top: 2rem; }
+        h3 { color: #5b21b6; margin-top: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { border: 1px solid #ddd; padding: 0.5rem 0.75rem; text-align: left; }
+        th { background: #f5f3ff; }
+        ul { padding-left: 1.5rem; }
+        .summary { background: #f5f3ff; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .next { background: #ecfdf5; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        code { background: #f1f5f9; padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <h1>TIPTAP: Mfumo Mpya wa Waiters na Manager (Link / Unlink)</h1>
+    <p>Hati hii inaeleza mabadiliko yanayotakiwa kwenye mfumo wa <strong>waiters</strong> na <strong>managers</strong>: waiters wanajisajili wenyewe, na manager <strong>anashiriki (link)</strong> au <strong>anatoa (unlink)</strong> waiter kwenye restaurant yake.</p>
+
+    <h2>1. Mabadiliko makubwa</h2>
+    <table>
+        <thead>
+            <tr><th>Sasa</th><th>Baadaye</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Manager anaunda waiter na kumpa credentials</td>
+                <td>Waiter anajisajili mwenyewe; manager ana <strong>link</strong> / <strong>unlink</strong> tu</td>
+            </tr>
+            <tr>
+                <td>Waiter ana restaurant moja</td>
+                <td>Waiter ana <strong>nambari ya pekee</strong>; anaweza ku-linkiwa kwenye restaurant moja kwa wakati; history inabaki</td>
+            </tr>
+            <tr>
+                <td>—</td>
+                <td>Manager: <strong>search</strong> waiter kwa nambari ya pekee → <strong>link</strong> au <strong>unlink</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Upande wa Waiter</h2>
+    <h3>2.1 Kujisajili (self-registration)</h3>
+    <ul>
+        <li>Sehemu: ukurasa wa <strong>kujisajili kwa waiters</strong> (public).</li>
+        <li>Details: jina la kwanza, jina la mwisho, email, nambari ya simu, location (optional), password.</li>
+        <li>Baada ya kusajili: akaunti inafunguliwa, <strong>nambari ya pekee ya waiter</strong> inatengenezwa; waiter hajaunganishwa na restaurant yoyote mpaka manager ame-link.</li>
+    </ul>
+
+    <h3>2.2 Nambari ya pekee (Unique Waiter Number)</h3>
+    <ul>
+        <li>Mfano: <code>TIPTAP-W-00001</code>, <code>TIPTAP-W-00002</code> (TIPTAP = mfumo, W = Waiter).</li>
+        <li>Inaonekana kwenye <strong>profile ya waiter</strong>; manager atatumia kwa <strong>search</strong> na <strong>link</strong>.</li>
+    </ul>
+
+    <h3>2.3 Login na dashboard</h3>
+    <ul>
+        <li>Ikiwa haja-linkiwa: anaona profile na nambari yake; ujumbe kwamba “Hujaunganishwa na restaurant.”</li>
+        <li>Ikiwa ame-linkiwa: anaona dashboard ya waiter (orders, QR code, code ya restaurant husika).</li>
+    </ul>
+
+    <h3>2.4 Unlink (kuondoka restaurant)</h3>
+    <ul>
+        <li>Manager anafanya unlink; <strong>history (kazi, ratings) inabaki</strong>; waiter anaweza ku-linkiwa na restaurant nyingine baadaye.</li>
+    </ul>
+
+    <h2>3. Upande wa Manager</h2>
+    <h3>3.1 Kuondoa “Add Waiter”</h3>
+    <p>Hatutaki tena manager kuunda waiter mpya na kumpa email/password. Waiter ajisajili mwenyewe; manager ana link tu.</p>
+
+    <h3>3.2 Sehemu ya Waiters: Link na Unlink</h3>
+    <ul>
+        <li><strong>Search waiter</strong> kwa nambari ya pekee (TIPTAP-W-xxxxx).</li>
+        <li><strong>Kuona details</strong> za waiter (jina, simu, email, history ya kazi/ratings) – UI nzuri.</li>
+        <li><strong>Link waiter</strong> kwenye restaurant yako → waiter anaunganishwa; akilogi anaona dashboard ya waiter (QR, code).</li>
+        <li><strong>Unlink waiter</strong> → waiter anaondolewa kwenye restaurant yako; history inabaki.</li>
+    </ul>
+
+    <h3>3.3 Aina mbili ya ku-link: Muda mrefu (Permanent) na Muda / Show-time (Temporary)</h3>
+    <ul>
+        <li><strong>Muda mrefu (Permanent):</strong> Waiter anaunganishwa bila tarehe ya mwisho; anaendelea linked mpaka manager amfanye unlink.</li>
+        <li><strong>Muda / Show-time (Temporary):</strong> Waiter anaunganishwa kwa muda maalum (event, mass, show). Manager anaweka <strong>tarehe ya mwisho</strong>. Baada ya tarehe ile waiter anaondoka wenyewe kwenye mfumo wa restaurant (link inaisha); <strong>history inabaki</strong>.</li>
+        <li>Wote wanajisajili wenyewe, wana nambari ya pekee; history inabaki. Wakati wa Link waiter manager anachagua Permanent au Temporary (na mpaka tarehe ikiwa Temporary).</li>
+    </ul>
+
+    <h3>3.4 Mtiririko ya Link</h3>
+    <ol>
+        <li>Waiter anajisajili → anapata nambari ya pekee (profile).</li>
+        <li>Waiter anampa manager nambari ile.</li>
+        <li>Manager: Waiters → Search (nambari) → anaona details + history.</li>
+        <li>Manager anachagua aina: Muda mrefu au Muda/Show-time (na tarehe ya mwisho) → abonyeze “Link waiter”.</li>
+        <li>Waiter akilogi anaona dashboard ya waiter, QR na code. Waiter wa Show-time baada ya tarehe ya mwisho link inaisha; history inabaki.</li>
+    </ol>
+
+    <h2>4. History na restaurant mpya</h2>
+    <ul>
+        <li>Unlink: history (orders, tips, ratings) <strong>haifutwi</strong>.</li>
+        <li>Waiter akienda restaurant nyingine: search inaonyesha details + history; baada ya link, dashboard inabadilika kuwa restaurant mpya (QR, code mpya); history ya zamani inabaki kuhifadhiwa.</li>
+    </ul>
+
+    <h2>5. Muundo wa nambari ya pekee</h2>
+    <p>Upendekezi: <code>TIPTAP-W-</code> + nambari (5 digits), mfano <code>TIPTAP-W-00001</code>. Inatolewa mara moja kwa registration; haibadiliki.</p>
+
+    <h2>6. Muhtasari wa technical</h2>
+    <div class="summary">
+        <ul>
+            <li><strong>Public:</strong> Ukurasa wa waiter self-registration; baada ya success → profile na unique waiter number.</li>
+            <li><strong>Waiter:</strong> Profile inaonyesha TIPTAP-W-xxxxx; ikiwa haja-linkiwa: ujumbe; ikiwa ame-linkiwa: dashboard kama sasa.</li>
+            <li><strong>Manager:</strong> Waiters page: Search → details + history → Link (chagua Permanent au Temporary + tarehe ya mwisho) / Unlink. Waiters wa Show-time link inaisha kiotomatiki baada ya linked_until. Kuondoa kutengeneza waiter mpya na credentials.</li>
+            <li><strong>Backend:</strong> Unique waiter number; restaurant_id inaweza null; employment_type (permanent/temporary), linked_until (tarehe kwa temporary); history inabaki kwa waiter_id + restaurant_id.</li>
+        </ul>
+    </div>
+
+    <h2>7. Hatua inayofuata</h2>
+    <div class="next">
+        <p>Hati hii inaeleza mfumo kama ulivyoeleza. Ona kama inafanana na dhana yako; ukipenda muundo tofauti wa nambari (mfano TPTP-10001), weza kubadilisha. Baada ya kukubali, implementation inaweza kuanza.</p>
+    </div>
+
+    <p><em>— TIPTAP Waiter & Manager Link System</em></p>
+</body>
+</html>

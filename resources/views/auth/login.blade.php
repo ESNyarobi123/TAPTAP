@@ -62,10 +62,13 @@
                 </button>
             </div>
 
-            <div class="text-center pt-4">
+            <div class="text-center pt-4 space-y-1">
                 <p class="text-white/40 font-medium text-sm">Huna account bado?</p>
-                <a href="{{ route('restaurant.register') }}" class="text-violet-400 font-bold hover:text-cyan-400 transition-colors">
-                    Sajili Restaurant Yako Hapa
+                <a href="{{ route('restaurant.register') }}" class="text-violet-400 font-bold hover:text-cyan-400 transition-colors block">
+                    Sajili Restaurant (Manager)
+                </a>
+                <a href="{{ route('waiter.register') }}" class="text-cyan-400 font-bold hover:text-violet-400 transition-colors block">
+                    Sajili kama Waiter
                 </a>
             </div>
         </form>

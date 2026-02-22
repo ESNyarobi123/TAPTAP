@@ -93,6 +93,9 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name
 Route::get('/register-restaurant', [RestaurantRegistrationController::class, 'create'])->name('restaurant.register');
 Route::post('/register-restaurant', [RestaurantRegistrationController::class, 'store'])->name('restaurant.register.store');
 
+Route::get('/register-waiter', [\App\Http\Controllers\WaiterRegistrationController::class, 'create'])->name('waiter.register');
+Route::post('/register-waiter', [\App\Http\Controllers\WaiterRegistrationController::class, 'store'])->name('waiter.register.store');
+
 Route::get('/dashboard', function () {
     $user = Auth::user();
     if ($user->hasRole('super_admin')) {
@@ -171,8 +174,9 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::put('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [\App\Http\Controllers\Manager\CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::get('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'index'])->name('waiters.index');
-    Route::post('/waiters', [\App\Http\Controllers\Manager\WaiterController::class, 'store'])->name('waiters.store');
-    Route::delete('/waiters/{waiter}', [\App\Http\Controllers\Manager\WaiterController::class, 'destroy'])->name('waiters.destroy');
+    Route::get('/waiters/search', [\App\Http\Controllers\Manager\WaiterController::class, 'search'])->name('waiters.search');
+    Route::post('/waiters/{waiter}/link', [\App\Http\Controllers\Manager\WaiterController::class, 'link'])->name('waiters.link');
+    Route::post('/waiters/{waiter}/unlink', [\App\Http\Controllers\Manager\WaiterController::class, 'unlink'])->name('waiters.unlink');
     Route::get('/payments', [\App\Http\Controllers\Manager\PaymentController::class, 'index'])->name('payments.index');
     Route::post('/payments/selcom/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateSelcom'])->name('payments.selcom.initiate');
     Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkSelcomStatus'])->name('payments.selcom.status');
@@ -191,18 +195,20 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
 });
 
-// Waiter Portal
+// Waiter Portal (dashboard allowed when not linked; other routes require linked restaurant)
 Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Waiter\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
-    Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');
-    Route::get('/orders', [\App\Http\Controllers\Waiter\DashboardController::class, 'orders'])->name('orders');
-    Route::get('/tips', [\App\Http\Controllers\Waiter\DashboardController::class, 'tips'])->name('tips');
-    Route::get('/ratings', [\App\Http\Controllers\Waiter\DashboardController::class, 'ratings'])->name('ratings');
-    Route::post('/requests/{request}/complete', [\App\Http\Controllers\Waiter\DashboardController::class, 'completeRequest'])->name('requests.complete');
-    Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
-    Route::get('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handover'])->name('handover');
-    Route::post('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handoverSubmit'])->name('handover.submit');
+    Route::middleware('waiter.linked')->group(function () {
+        Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
+        Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');
+        Route::get('/orders', [\App\Http\Controllers\Waiter\DashboardController::class, 'orders'])->name('orders');
+        Route::get('/tips', [\App\Http\Controllers\Waiter\DashboardController::class, 'tips'])->name('tips');
+        Route::get('/ratings', [\App\Http\Controllers\Waiter\DashboardController::class, 'ratings'])->name('ratings');
+        Route::post('/requests/{request}/complete', [\App\Http\Controllers\Waiter\DashboardController::class, 'completeRequest'])->name('requests.complete');
+        Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
+        Route::get('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handover'])->name('handover');
+        Route::post('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handoverSubmit'])->name('handover.submit');
+    });
 });
 
 // Kitchen Display System (KDS) - Secret URL Access
