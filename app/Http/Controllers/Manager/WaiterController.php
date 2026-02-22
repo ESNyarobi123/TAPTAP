@@ -121,6 +121,7 @@ class WaiterController extends Controller
                 'current_restaurant' => $waiter->restaurant?->name,
                 'is_linked' => (bool) $waiter->restaurant_id,
                 'work_history' => $workHistory,
+                'profile_photo_url' => $waiter->profilePhotoUrl(),
             ],
         ]);
     }

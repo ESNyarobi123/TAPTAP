@@ -299,9 +299,13 @@
 
             <div class="p-4 border-t border-white/5 shrink-0 sidebar-user-area">
                 <div class="glass-card rounded-xl p-4 flex items-center gap-3" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
-                    <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0">
-                        {{ substr(Auth::user()->name, 0, 1) }}
-                    </div>
+                    @if(Auth::user()->profilePhotoUrl())
+                        <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-10 h-10 rounded-lg object-cover border border-violet-500/20 shrink-0">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0">
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        </div>
+                    @endif
                     <div class="flex-1 min-w-0 sidebar-user-text">
                         <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
                         <p class="text-[10px] font-medium text-white/40 truncate">Waiter Account</p>
@@ -365,6 +369,16 @@
                     </div>
                     
                     <div class="flex items-center gap-5">
+                        <button type="button" onclick="var m=document.getElementById('waiterProfileModal'); if(m){ m.classList.remove('hidden'); m.classList.add('flex'); }" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-all text-left">
+                            @if(Auth::user()->profilePhotoUrl())
+                                <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-9 h-9 rounded-lg object-cover border border-violet-500/20">
+                            @else
+                                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">
+                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                </div>
+                            @endif
+                            <span class="text-[11px] font-semibold text-white/80 hidden lg:inline">My Profile</span>
+                        </button>
                         <div class="glass px-4 py-2.5 rounded-xl flex items-center gap-3">
                             <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
                             <span class="text-[11px] font-semibold text-white/80 uppercase tracking-wider">Connected</span>
@@ -424,9 +438,69 @@
                 </div>
                 <script>setTimeout(() => document.getElementById('toast-info')?.remove(), 5000);</script>
             @endif
+
+            <!-- Waiter Profile Modal (Unique ID, Name, Photo, Copy ID) - available on all waiter pages -->
+            @php $layoutWaiter = Auth::user(); $layoutPhotoUrl = $layoutWaiter->profilePhotoUrl(); @endphp
+            <div id="waiterProfileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+                <div class="bg-surface-900 w-full max-w-md rounded-2xl shadow-2xl border border-white/10 overflow-hidden max-h-[90vh] overflow-y-auto">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="text-xl font-bold text-white tracking-tight">My Profile</h3>
+                            <button type="button" onclick="document.getElementById('waiterProfileModal').classList.add('hidden'); document.getElementById('waiterProfileModal').classList.remove('flex');" class="p-2 hover:bg-white/10 rounded-xl text-white/40 hover:text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex flex-col items-center mb-6">
+                            @if($layoutPhotoUrl)
+                                <img src="{{ $layoutPhotoUrl }}" alt="Profile" class="w-24 h-24 rounded-2xl object-cover border-2 border-violet-500/30 mb-3">
+                            @else
+                                <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3">
+                                    {{ substr($layoutWaiter->name, 0, 1) }}
+                                </div>
+                            @endif
+                            <p class="text-[10px] font-bold text-white/40 uppercase tracking-wider">Unique ID</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <code class="text-lg font-mono font-bold text-cyan-400">{{ $layoutWaiter->global_waiter_number ?? '—' }}</code>
+                                <button type="button" onclick="copyWaiterId('{{ $layoutWaiter->global_waiter_number ?? '' }}', this)" class="p-2 rounded-lg bg-white/10 hover:bg-cyan-500/20 text-white/60 hover:text-cyan-400 transition-all" title="Copy ID">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <form action="{{ route('waiter.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label for="profileName" class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1 block">Jina lako</label>
+                                <input type="text" name="name" id="profileName" value="{{ old('name', $layoutWaiter->name) }}" required maxlength="255" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                                @error('name')
+                                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1 block">Picha ya wasifu</label>
+                                <input type="file" name="profile_photo" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="w-full text-sm text-white/70 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-violet-600 file:text-white file:font-semibold file:cursor-pointer hover:file:bg-violet-500">
+                                <p class="text-white/40 text-xs mt-1">JPG, PNG, GIF au WebP. Ukiweka mpya, ile ya zamani itabadilishwa.</p>
+                                @error('profile_photo')
+                                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Hifadhi mabadiliko</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
+    <script>
+        function copyWaiterId(id, btn) {
+            if (!id) return;
+            navigator.clipboard.writeText(id).then(function() {
+                var orig = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M20 6 9 17l-5-5"/></svg>';
+                setTimeout(function() { btn.innerHTML = orig; }, 2000);
+            });
+        }
+    </script>
     <script>
         function openSidebar() {
             const sidebar = document.getElementById('mobile-sidebar');

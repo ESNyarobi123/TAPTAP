@@ -31,7 +31,20 @@ class User extends Authenticatable
         'global_waiter_number',
         'phone',
         'location',
+        'profile_photo_path',
     ];
+
+    /**
+     * Profile photo URL for storage in public disk (storage/app/public/profile).
+     */
+    public function profilePhotoUrl(): ?string
+    {
+        if (! $this->profile_photo_path) {
+            return null;
+        }
+
+        return asset('storage/'.$this->profile_photo_path);
+    }
 
     /**
      * Generate next global waiter number (e.g. TIPTAP-W-00001).

@@ -43,9 +43,17 @@
         @forelse($waiters as $waiter)
             <div class="glass-card p-6 rounded-2xl card-hover group">
                 <div class="flex items-center gap-5 mb-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-2xl text-violet-400 border border-violet-500/20 group-hover:scale-110 transition-transform">
-                        {{ substr($waiter->name, 0, 1) }}
-                    </div>
+                    @php $waiterPhotoUrl = $waiter->profilePhotoUrl(); @endphp
+                    @if($waiterPhotoUrl)
+                        <img src="{{ $waiterPhotoUrl }}" alt="{{ $waiter->name }}" loading="lazy" class="w-16 h-16 rounded-2xl object-cover border border-violet-500/20 group-hover:scale-110 transition-transform shrink-0 bg-violet-500/10" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="waiter-fallback-avatar w-16 h-16 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-2xl text-violet-400 border border-violet-500/20 shrink-0 hidden">
+                            {{ substr($waiter->name, 0, 1) }}
+                        </div>
+                    @else
+                        <div class="w-16 h-16 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-2xl text-violet-400 border border-violet-500/20 group-hover:scale-110 transition-transform shrink-0">
+                            {{ substr($waiter->name, 0, 1) }}
+                        </div>
+                    @endif
                     <div class="min-w-0">
                         <h4 class="text-xl font-bold text-white truncate">{{ $waiter->name }}</h4>
                         <p class="text-[11px] font-mono text-cyan-400">{{ $waiter->global_waiter_number ?? '—' }}</p>
@@ -95,7 +103,11 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <button onclick="openViewWaiterModal({{ json_encode($waiter) }})" class="flex-1 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
+                    @php
+                        $waiterForModal = $waiter->only(['id','name','email','waiter_code','global_waiter_number','orders_count','created_at','employment_type','linked_until']);
+                        $waiterForModal['profile_photo_url'] = $waiter->profilePhotoUrl();
+                    @endphp
+                    <button onclick="openViewWaiterModal({{ json_encode($waiterForModal) }})" class="flex-1 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
                     <form action="{{ route('manager.waiters.unlink', $waiter) }}" method="POST" onsubmit="return confirm('Unlink waiter huyu? History (orders, ratings) itabaki. Anaweza kuungwa na restaurant nyingine baadaye.');" class="inline">
                         @csrf
                         <button type="submit" class="p-2.5 glass text-amber-400 rounded-xl hover:bg-amber-500 hover:text-white transition-all" title="Unlink waiter">
@@ -132,7 +144,10 @@
                 </div>
 
                 <div class="flex items-center gap-5 mb-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-3xl text-violet-400 border border-violet-500/20" id="viewWaiterInitial">—</div>
+                    <div class="w-20 h-20 rounded-2xl border border-violet-500/20 overflow-hidden shrink-0" id="viewWaiterPhotoWrap">
+                        <img id="viewWaiterPhoto" src="" alt="" class="w-full h-full object-cover hidden">
+                        <div id="viewWaiterInitial" class="w-full h-full bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center font-bold text-3xl text-violet-400">—</div>
+                    </div>
                     <div>
                         <h4 class="text-2xl font-bold text-white" id="viewWaiterName">—</h4>
                         <p class="text-sm text-white/40" id="viewWaiterEmail">—</p>
@@ -198,12 +213,18 @@
                     }
                     const w = data.waiter;
                     let html = '<div class="p-4 rounded-xl bg-white/5 border border-white/10 space-y-4">';
-                    html += '<div><p class="font-bold text-white text-lg">' + (w.name || '—') + '</p>';
+                    html += '<div class="flex items-start gap-4">';
+                    if (w.profile_photo_url) {
+                        html += '<img src="' + w.profile_photo_url + '" alt="" class="w-14 h-14 rounded-xl object-cover border border-violet-500/20 shrink-0">';
+                    } else {
+                        html += '<div class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center font-bold text-xl text-violet-400 border border-violet-500/20 shrink-0">' + (w.name ? w.name.charAt(0) : '—') + '</div>';
+                    }
+                    html += '<div class="min-w-0 flex-1"><p class="font-bold text-white text-lg">' + (w.name || '—') + '</p>';
                     html += '<p class="text-sm text-white/60">' + (w.email || '') + '</p>';
                     html += '<p class="text-sm text-white/60">Simu: ' + (w.phone || '—') + '</p>';
                     if (w.location) html += '<p class="text-sm text-white/60">Mahali: ' + w.location + '</p>';
                     html += '<p class="text-sm font-mono text-cyan-400 mt-2">' + (w.global_waiter_number || '') + '</p>';
-                    html += '<p class="text-xs text-white/40 mt-2">Orders: ' + (w.orders_count || 0) + ' · Ratings: ' + (w.feedback_count || 0) + '</p></div>';
+                    html += '<p class="text-xs text-white/40 mt-2">Orders: ' + (w.orders_count || 0) + ' · Ratings: ' + (w.feedback_count || 0) + '</p></div></div>';
 
                     if (w.work_history && w.work_history.length > 0) {
                         html += '<div class="pt-3 border-t border-white/10">';
@@ -257,7 +278,17 @@
             document.getElementById('viewWaiterEmail').textContent = waiter.email || '—';
             document.getElementById('viewWaiterCode').textContent = waiter.waiter_code || '—';
             document.getElementById('viewWaiterGlobalCode').textContent = waiter.global_waiter_number || '—';
-            document.getElementById('viewWaiterInitial').textContent = (waiter.name && waiter.name.charAt(0)) || '—';
+            var photoEl = document.getElementById('viewWaiterPhoto');
+            var initialEl = document.getElementById('viewWaiterInitial');
+            if (waiter.profile_photo_url) {
+                photoEl.src = waiter.profile_photo_url;
+                photoEl.classList.remove('hidden');
+                initialEl.classList.add('hidden');
+            } else {
+                photoEl.classList.add('hidden');
+                initialEl.classList.remove('hidden');
+                initialEl.textContent = (waiter.name && waiter.name.charAt(0)) || '—';
+            }
             document.getElementById('viewWaiterOrders').textContent = waiter.orders_count ?? 0;
             const date = waiter.created_at ? new Date(waiter.created_at) : null;
             document.getElementById('viewWaiterJoined').textContent = date ? date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
