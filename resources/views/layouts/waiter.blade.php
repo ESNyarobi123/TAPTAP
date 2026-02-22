@@ -135,12 +135,12 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .sidebar-link { min-height: 44px; }
         .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6); }
-        /* Mobile: show sidebar when toggle is opened – must beat Tailwind transform */
+        #mobile-sidebar { transition: transform 0.3s ease-out, width 0.3s ease-out; }
+        #mobile-sidebar.sidebar-closed-mobile { transform: translateX(-100%) !important; }
         #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
-        .sidebar-open { transform: translateX(0) !important; }
-        /* Desktop: sidebar always visible + main content margin (fallback if Tailwind doesn’t load) */
         @media (min-width: 768px) {
-            #mobile-sidebar { transform: translateX(0) !important; visibility: visible !important; }
+            #mobile-sidebar,
+            #mobile-sidebar.sidebar-closed-mobile { transform: translateX(0) !important; visibility: visible !important; }
             #mobile-sidebar.sidebar-collapsed { width: 5rem !important; }
             main#main-content { margin-left: 18rem; }
             body.sidebar-collapsed-main main#main-content { margin-left: 5rem; }
@@ -168,7 +168,7 @@
 
     <div class="flex min-h-screen">
         <!-- Premium Waiter Sidebar: drawer on mobile, persistent on md+ with toggle -->
-        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-50 w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 -translate-x-full md:translate-x-0 transition-[transform,width] duration-300 ease-out border-r border-white/5 md:w-72">
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 border-r border-white/5 sidebar-closed-mobile" style="width: 18rem;">
             <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5 shrink-0">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-11 h-11 flex shrink-0 items-center justify-center overflow-hidden">
@@ -419,8 +419,9 @@
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             if (!sidebar || !overlay) return;
-            document.body.classList.add('sidebar-mobile-open');
+            sidebar.classList.remove('sidebar-closed-mobile');
             sidebar.classList.add('sidebar-open');
+            document.body.classList.add('sidebar-mobile-open');
             overlay.classList.remove('hidden');
             overlay.classList.remove('opacity-0');
             overlay.classList.add('opacity-100');
@@ -431,6 +432,7 @@
             const overlay = document.getElementById('sidebar-overlay');
             if (!sidebar || !overlay) return;
             sidebar.classList.remove('sidebar-open');
+            sidebar.classList.add('sidebar-closed-mobile');
             document.body.classList.remove('sidebar-mobile-open');
             overlay.classList.remove('opacity-100');
             overlay.classList.add('opacity-0');
