@@ -31,6 +31,8 @@ class WaiterController extends Controller
     {
         $restaurantId = Auth::user()->restaurant_id;
 
+        $this->ensureCurrentLinkedWaitersHaveAssignmentRecords($restaurantId);
+
         $query = WaiterRestaurantAssignment::query()
             ->where('restaurant_id', $restaurantId)
             ->with('user:id,name,global_waiter_number');
@@ -187,5 +189,43 @@ class WaiterController extends Controller
         }
 
         return back()->with('success', "{$name} ameondolewa kwenye restaurant yako. History yake (orders, ratings) imebaki. Anaweza kuungwa na restaurant nyingine.");
+    }
+
+    /**
+     * Backfill: waiters currently linked to this restaurant but without an assignment
+     * record (e.g. linked before the feature) get one so they appear in history.
+     */
+    private function ensureCurrentLinkedWaitersHaveAssignmentRecords(int $restaurantId): void
+    {
+        $linkedUserIds = User::role('waiter')
+            ->where('restaurant_id', $restaurantId)
+            ->pluck('id');
+
+        if ($linkedUserIds->isEmpty()) {
+            return;
+        }
+
+        $existing = WaiterRestaurantAssignment::query()
+            ->where('restaurant_id', $restaurantId)
+            ->whereNull('unlinked_at')
+            ->whereIn('user_id', $linkedUserIds)
+            ->pluck('user_id');
+
+        $missing = $linkedUserIds->diff($existing);
+
+        foreach ($missing as $userId) {
+            $user = User::find($userId);
+            if (! $user) {
+                continue;
+            }
+            WaiterRestaurantAssignment::create([
+                'user_id' => $user->id,
+                'restaurant_id' => $restaurantId,
+                'linked_at' => $user->updated_at ?? now(),
+                'unlinked_at' => null,
+                'employment_type' => $user->employment_type,
+                'linked_until' => $user->linked_until,
+            ]);
+        }
     }
 }
