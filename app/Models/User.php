@@ -36,7 +36,7 @@ class User extends Authenticatable
 
     /**
      * Profile photo fetch URL. Path: storage/app/public/profile/{filename}.
-     * Cache-bust so avatar updates after new upload.
+     * Uses absolute URL from APP_URL so it works when hosted online.
      */
     public function profilePhotoUrl(): ?string
     {
@@ -44,7 +44,9 @@ class User extends Authenticatable
             return null;
         }
 
-        $url = asset('storage/'.$this->profile_photo_path);
+        $base = rtrim(config('app.url'), '/');
+        $path = 'storage/'.$this->profile_photo_path;
+        $url = $base.'/'.ltrim($path, '/');
         $ts = $this->updated_at?->timestamp ?? '';
 
         return $ts ? $url.'?v='.$ts : $url;

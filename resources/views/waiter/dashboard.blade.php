@@ -3,30 +3,10 @@
         Dashboard
     </x-slot>
 
-    <!-- Welcome Hero + Avatar (Top Waiter) -->
-    @php
-        $waiter = Auth::user();
-        $photoUrl = $waiter->profilePhotoUrl();
-    @endphp
-    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div>
-            <h2 class="text-3xl font-bold text-white tracking-tight">Hello, {{ $waiter->name }}! 👋</h2>
-            <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
-        </div>
-        <button type="button" onclick="document.getElementById('waiterProfileModal').classList.remove('hidden'); document.getElementById('waiterProfileModal').classList.add('flex');" class="flex items-center gap-3 p-3 rounded-2xl glass border border-white/10 hover:bg-white/10 transition-all group">
-            @if($photoUrl)
-                <img src="{{ $photoUrl }}" alt="Profile" class="w-14 h-14 rounded-xl object-cover border-2 border-violet-500/30 group-hover:border-violet-400">
-            @else
-                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center font-bold text-2xl text-white border-2 border-violet-500/30 group-hover:border-violet-400">
-                    {{ substr($waiter->name, 0, 1) }}
-                </div>
-            @endif
-            <div class="text-left">
-                <p class="text-[10px] font-bold text-violet-400 uppercase tracking-wider">Top Waiter</p>
-                <p class="text-sm font-semibold text-white">My Profile & ID</p>
-            </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/40 group-hover:text-white"><path d="m9 18 6-6-6-6"/></svg>
-        </button>
+    <!-- Welcome Hero (picha ya profile iko juu kwenye header, karibu na CONNECTED) -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-white tracking-tight">Hello, {{ Auth::user()->name }}! 👋</h2>
+        <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
     </div>
 
     <!-- Bento Grid Layout -->
