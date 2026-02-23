@@ -24,16 +24,18 @@ class DashboardController extends Controller
     {
         $waiter = Auth::user();
         $today = Carbon::today();
+        $isLinked = $waiter->restaurant_id !== null;
 
         $tipsToday = Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount');
         $tipsThisWeek = Tip::where('waiter_id', $waiter->id)->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('amount');
 
         $myActiveOrders = Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count();
-        $restaurantActiveOrders = Order::whereIn('status', ['pending', 'preparing', 'ready'])->count();
-        $readyToServeOrders = Order::where('status', 'ready')->count();
+        $restaurantActiveOrders = $isLinked ? Order::where('restaurant_id', $waiter->restaurant_id)->whereIn('status', ['pending', 'preparing', 'ready'])->count() : 0;
+        $readyToServeOrders = $isLinked ? Order::where('restaurant_id', $waiter->restaurant_id)->where('status', 'ready')->count() : 0;
 
-        $unassignedOrders = $waiter->is_online
+        $unassignedOrders = $isLinked && $waiter->is_online
             ? Order::with('items.menuItem')
+                ->where('restaurant_id', $waiter->restaurant_id)
                 ->whereNull('waiter_id')
                 ->whereIn('status', ['pending', 'preparing', 'ready'])
                 ->latest()
@@ -51,15 +53,16 @@ class DashboardController extends Controller
                 ])
             : collect();
 
-        $pendingRequests = $waiter->is_online
+        $pendingRequests = $isLinked && $waiter->is_online
             ? CustomerRequest::where('status', 'pending')
+                ->where('restaurant_id', $waiter->restaurant_id)
                 ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
                 ->latest()->get()->map(fn ($req) => [
-                'id' => $req->id,
-                'type' => $req->type,
-                'table_number' => $req->table_number,
-                'created_at' => $req->created_at->toIso8601String(),
-            ])
+                    'id' => $req->id,
+                    'type' => $req->type,
+                    'table_number' => $req->table_number,
+                    'created_at' => $req->created_at->toIso8601String(),
+                ])
             : collect();
 
         $feedbackVisibleAt = Carbon::now()->subMinutes(config('services.feedback.visible_after_minutes', 60));
@@ -87,9 +90,24 @@ class DashboardController extends Controller
                 'created_at' => $order->created_at->toIso8601String(),
             ]);
 
+        $waiterPayload = [
+            'id' => $waiter->id,
+            'name' => $waiter->name,
+            'global_waiter_number' => $waiter->global_waiter_number,
+        ];
+        if ($isLinked) {
+            $waiterPayload['waiter_code'] = $waiter->waiter_code;
+            $waiterPayload['waiter_qr_url'] = $waiter->waiter_qr_url;
+        } else {
+            $waiterPayload['waiter_code'] = null;
+            $waiterPayload['waiter_qr_url'] = null;
+        }
+
         return response()->json([
             'success' => true,
             'data' => [
+                'is_linked' => $isLinked,
+                'waiter' => $waiterPayload,
                 'is_online' => $waiter->is_online,
                 'last_online_at' => $waiter->last_online_at?->toIso8601String(),
                 'stats' => [
@@ -118,23 +136,28 @@ class DashboardController extends Controller
     {
         $waiter = Auth::user();
         $today = Carbon::today();
+        $isLinked = $waiter->restaurant_id !== null;
 
         $tipsTodayAmount = Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount');
+
+        $readyToServe = $isLinked ? Order::where('restaurant_id', $waiter->restaurant_id)->where('status', 'ready')->count() : 0;
+        $pendingRequestsCount = $isLinked && $waiter->is_online
+            ? CustomerRequest::where('restaurant_id', $waiter->restaurant_id)->where('status', 'pending')
+                ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+                ->count()
+            : 0;
 
         return response()->json([
             'success' => true,
             'data' => [
+                'is_linked' => $isLinked,
                 'is_online' => $waiter->is_online,
                 'tips_today' => $tipsTodayAmount,
                 'tips_today_amount' => $tipsTodayAmount,
                 'total_tips_received' => Tip::where('waiter_id', $waiter->id)->sum('amount'),
                 'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
-                'ready_to_serve' => Order::where('status', 'ready')->count(),
-                'pending_requests' => $waiter->is_online
-                    ? CustomerRequest::where('status', 'pending')
-                        ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
-                        ->count()
-                    : 0,
+                'ready_to_serve' => $readyToServe,
+                'pending_requests' => $pendingRequestsCount,
             ],
         ]);
     }
