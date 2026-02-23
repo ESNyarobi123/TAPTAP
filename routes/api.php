@@ -58,7 +58,7 @@
  * BOT (prefix: /bot, auth:sanctum) -> WhatsAppBotController
  *   verifyRestaurant, verifyTag, parseEntry, searchRestaurant, getFullMenu, getCategories,
  *   getCategoryItems, getItemDetails, createOrder, createOrderByText, getOrderStatus,
- *   initiatePayment, submitFeedback, submitTip, getTables, callWaiter, getWaiters,
+ *   initiatePayment, submitFeedback, submitTip, getTables, waiterStatus, callWaiter, getWaiters,
  *   getActiveOrder, getMenuImage, initiateQuickPayment, getQuickPaymentStatus
  */
 
