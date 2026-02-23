@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Salary Slip - {{ $payment->period_label }}</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; color: #1a1a1a; max-width: 420px; margin: 24px auto; padding: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; color: #1a1a1a; max-width: 420px; margin: 24px auto; padding: 16px; -webkit-text-size-adjust: 100%; }
         .company { font-size: 11px; color: #444; margin-bottom: 8px; }
         h1 { font-size: 16px; font-weight: bold; margin: 0 0 16px 0; text-align: center; }
-        .row { display: table; width: 100%; margin: 4px 0; }
+        .row { display: table; width: 100%; margin: 4px 0; table-layout: fixed; }
         .label { display: table-cell; }
-        .amount { display: table-cell; text-align: right; font-variant-numeric: tabular-nums; }
+        .amount { display: table-cell; text-align: right; font-variant-numeric: tabular-nums; word-break: break-all; }
         .sep { border-bottom: 1px dashed #999; margin: 8px 0; }
         .total { font-weight: bold; margin-top: 4px; }
         .net { font-size: 14px; font-weight: bold; margin-top: 8px; }
         .no-print { margin-top: 24px; padding: 12px; border: 1px dashed #999; border-radius: 8px; font-size: 12px; background: #f5f5f5; }
         .no-print kbd { background: #ddd; padding: 2px 6px; border-radius: 4px; }
-        .no-print button { margin-top: 8px; padding: 8px 16px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        .no-print button { margin-top: 8px; padding: 12px 20px; min-height: 44px; background: #333; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; -webkit-tap-highlight-color: transparent; }
         .no-print button:hover { background: #555; }
+        @media (max-width: 480px) { body { padding: 12px; margin: 12px auto; } h1 { font-size: 14px; } .no-print button { width: 100%; } }
         @media print { .no-print { display: none !important; } }
     </style>
     @if(!empty($autoPrint))

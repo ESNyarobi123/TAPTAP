@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Waiter;
 
 use App\Http\Controllers\Controller;
 use App\Models\WaiterSalaryPayment;
+use App\Notifications\SalaryPaymentConfirmed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -11,6 +12,10 @@ class SalarySlipController extends Controller
 {
     public function index(): View
     {
+        Auth::user()->unreadNotifications()
+            ->where('type', SalaryPaymentConfirmed::class)
+            ->update(['read_at' => now()]);
+
         $payments = WaiterSalaryPayment::query()
             ->where('user_id', Auth::id())
             ->orderByDesc('period_month')
@@ -22,6 +27,7 @@ class SalarySlipController extends Controller
     public function show(string $period): View
     {
         $payment = $this->findPaymentForCurrentWaiter($period);
+        $this->authorize('view', $payment);
 
         return $this->payslipView($payment, false);
     }
@@ -29,6 +35,7 @@ class SalarySlipController extends Controller
     public function download(string $period): View
     {
         $payment = $this->findPaymentForCurrentWaiter($period);
+        $this->authorize('view', $payment);
 
         return $this->payslipView($payment, true);
     }

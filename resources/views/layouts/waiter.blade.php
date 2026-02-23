@@ -288,12 +288,18 @@
                 </div>
 
                 <a href="{{ route('waiter.salary-slip.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.salary-slip.*') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.salary-slip.*') ? 'text-amber-400' : 'text-white/60' }}">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
                         </svg>
+                        @if(!empty($unreadSalaryCount) && $unreadSalaryCount > 0)
+                            <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white" title="Slip mpya">{{ $unreadSalaryCount }}</span>
+                        @endif
                     </div>
                     <span class="font-semibold text-sm">Salary Slip</span>
+                    @if(!empty($unreadSalaryCount) && $unreadSalaryCount > 0)
+                        <span class="text-[10px] font-semibold text-amber-400 shrink-0">Slip mpya</span>
+                    @endif
                 </a>
 
                 <a href="{{ route('waiter.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.history') ? 'sidebar-link-active' : 'text-white/60' }}">
@@ -303,6 +309,15 @@
                         </svg>
                     </div>
                     <span class="font-semibold text-sm">History</span>
+                </a>
+
+                <a href="{{ route('waiter.help.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.help.index') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ request()->routeIs('waiter.help.index') ? 'text-sky-400' : 'text-white/60' }}">
+                            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Help</span>
                 </a>
             </nav>
 

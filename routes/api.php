@@ -23,6 +23,8 @@
  *   POST /handover-tables               -> Api\Waiter\DashboardController@handoverTables
  *   POST /orders/{order}/claim          -> Api\Waiter\DashboardController@claimOrder
  *   POST /requests/{customerRequest}/complete -> Api\Waiter\DashboardController@completeRequest
+ *   GET  /salary-slips                  -> Api\Waiter\SalarySlipController@index
+ *   GET  /salary-slips/{period}         -> Api\Waiter\SalarySlipController@show
  *
  * V1 (prefix: /v1, auth:sanctum)
  *   GET  /restaurants/search            -> V1\RestaurantController@search
@@ -42,6 +44,15 @@
  *
  * V1/MANAGER (prefix: /v1/manager, auth:sanctum + role:manager)
  *   apiResource categories, menu, tables -> Api\Manager\*Controller (index, store, show, update, destroy)
+ *   GET  /waiters                        -> Api\Manager\WaiterController@index
+ *   GET  /waiters/search?q=              -> Api\Manager\WaiterController@search (unique code e.g. TIPTAP-W-00001)
+ *   GET  /waiters/history                -> Api\Manager\WaiterController@history
+ *   POST /waiters/{waiter}/link          -> Api\Manager\WaiterController@link (body: employment_type, linked_until?)
+ *   POST /waiters/{waiter}/unlink        -> Api\Manager\WaiterController@unlink
+ *   GET  /payroll                        -> Api\Manager\PayrollController@index
+ *   POST /payroll                        -> Api\Manager\PayrollController@store
+ *   GET  /payroll/history                -> Api\Manager\PayrollController@history
+ *   GET  /payroll/export                 -> Api\Manager\PayrollController@export
  *
  * BOT (prefix: /bot, auth:sanctum) -> WhatsAppBotController
  *   verifyRestaurant, verifyTag, parseEntry, searchRestaurant, getFullMenu, getCategories,
@@ -79,6 +90,8 @@ Route::prefix('waiter')->middleware(['auth:sanctum', 'role:waiter'])->group(func
     Route::post('/handover-tables', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'handoverTables']);
     Route::post('/orders/{order}/claim', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'claimOrder']);
     Route::post('/requests/{customerRequest}/complete', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'completeRequest']);
+    Route::get('/salary-slips', [\App\Http\Controllers\Api\Waiter\SalarySlipController::class, 'index']);
+    Route::get('/salary-slips/{period}', [\App\Http\Controllers\Api\Waiter\SalarySlipController::class, 'show'])->where('period', '[0-9]{4}-[0-9]{2}');
 });
 
 Route::get('/user', function (Request $request) {
@@ -121,6 +134,19 @@ Route::prefix('v1/manager')->middleware(['auth:sanctum', 'role:manager'])->group
 
     // Tables
     Route::apiResource('tables', \App\Http\Controllers\Api\Manager\TableController::class);
+
+    // Waiters (link / unlink / search by unique code; waiter_code is generated on link)
+    Route::get('/waiters', [\App\Http\Controllers\Api\Manager\WaiterController::class, 'index']);
+    Route::get('/waiters/search', [\App\Http\Controllers\Api\Manager\WaiterController::class, 'search']);
+    Route::get('/waiters/history', [\App\Http\Controllers\Api\Manager\WaiterController::class, 'history']);
+    Route::post('/waiters/{waiter}/link', [\App\Http\Controllers\Api\Manager\WaiterController::class, 'link']);
+    Route::post('/waiters/{waiter}/unlink', [\App\Http\Controllers\Api\Manager\WaiterController::class, 'unlink']);
+
+    // Payroll
+    Route::get('/payroll', [\App\Http\Controllers\Api\Manager\PayrollController::class, 'index']);
+    Route::post('/payroll', [\App\Http\Controllers\Api\Manager\PayrollController::class, 'store']);
+    Route::get('/payroll/history', [\App\Http\Controllers\Api\Manager\PayrollController::class, 'history']);
+    Route::get('/payroll/export', [\App\Http\Controllers\Api\Manager\PayrollController::class, 'export']);
 });
 
 // WhatsApp Bot Routes

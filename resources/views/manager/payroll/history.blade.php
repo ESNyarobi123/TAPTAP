@@ -6,10 +6,19 @@
             <h2 class="text-2xl font-bold text-white tracking-tight">Historia ya Malipo</h2>
             <p class="text-sm font-medium text-white/40 uppercase tracking-wider mt-0.5">Malipo yote uliyothibitisha na jumla ya mshahara kwa kila mwezi</p>
         </div>
-        <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-            Rudi kwa Payroll
-        </a>
+        <div class="flex flex-wrap items-center gap-3">
+            <a href="{{ route('manager.payroll.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                Export CSV
+            </a>
+            <a href="{{ route('manager.payroll.export', ['year' => now()->year]) }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
+                Export {{ now()->year }}
+            </a>
+            <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                Rudi kwa Payroll
+            </a>
+        </div>
     </div>
 
     @if ($byMonth->isEmpty())
@@ -27,6 +36,21 @@
             <p class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1">Jumla ya malipo yote (Net Pay)</p>
             <p class="text-2xl font-bold text-white">{{ number_format($grandTotal) }}</p>
         </div>
+
+        @if(isset($byYear) && $byYear->isNotEmpty())
+        <div class="glass-card rounded-2xl p-6 mb-6 border border-white/10">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-3">Jumla kwa kila mwaka</p>
+            <div class="flex flex-wrap gap-6">
+                @foreach($byYear as $year => $data)
+                    <div class="flex flex-col">
+                        <span class="text-white/50 text-sm">{{ $year }}</span>
+                        <span class="text-lg font-bold text-white">{{ number_format($data['total_net']) }}</span>
+                        <span class="text-xs text-white/40">net</span>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         <div class="space-y-8">
             @foreach ($byMonth as $period => $data)

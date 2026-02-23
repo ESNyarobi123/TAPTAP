@@ -310,6 +310,15 @@
                     </div>
                     <span class="font-semibold text-sm">QR & Mobile API</span>
                 </a>
+
+                <a href="{{ route('manager.help.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('manager.help.index') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ request()->routeIs('manager.help.index') ? 'text-sky-400' : 'text-white/60' }}">
+                            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Help</span>
+                </a>
             </nav>
 
             <!-- User Profile Area -->

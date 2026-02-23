@@ -184,6 +184,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'index'])->name('payroll.index');
     Route::post('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'store'])->name('payroll.store');
     Route::get('/payroll/history', [\App\Http\Controllers\Manager\PayrollController::class, 'history'])->name('payroll.history');
+    Route::get('/payroll/export', [\App\Http\Controllers\Manager\PayrollController::class, 'export'])->name('payroll.export');
     Route::get('/payments', [\App\Http\Controllers\Manager\PaymentController::class, 'index'])->name('payments.index');
     Route::post('/payments/selcom/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateSelcom'])->name('payments.selcom.initiate');
     Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkSelcomStatus'])->name('payments.selcom.status');
@@ -200,6 +201,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::delete('/menu-image', [\App\Http\Controllers\Manager\MenuImageController::class, 'destroy'])->name('menu-image.destroy');
 
     Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
+    Route::get('/help', [\App\Http\Controllers\Manager\HelpController::class, 'index'])->name('help.index');
 });
 
 // Waiter Portal (dashboard allowed when not linked; other routes require linked restaurant)
@@ -210,6 +212,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
     Route::get('/salary-slip', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'index'])->name('salary-slip.index');
     Route::get('/salary-slip/{period}', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'show'])->name('salary-slip.show')->where('period', '[0-9]{4}-[0-9]{2}');
     Route::get('/salary-slip/{period}/download', [\App\Http\Controllers\Waiter\SalarySlipController::class, 'download'])->name('salary-slip.download')->where('period', '[0-9]{4}-[0-9]{2}');
+    Route::get('/help', [\App\Http\Controllers\Waiter\HelpController::class, 'index'])->name('help.index');
     Route::middleware('waiter.linked')->group(function () {
         Route::get('/dashboard/stats', [\App\Http\Controllers\Waiter\DashboardController::class, 'getStats'])->name('dashboard.stats');
         Route::get('/menu', [\App\Http\Controllers\Waiter\MenuController::class, 'index'])->name('menu');

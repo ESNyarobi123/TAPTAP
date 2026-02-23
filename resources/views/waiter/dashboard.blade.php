@@ -9,6 +9,19 @@
         <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
     </div>
 
+    @if(isset($salaryNotifications) && $salaryNotifications->isNotEmpty())
+    <div class="mb-6 space-y-3">
+        @foreach($salaryNotifications as $n)
+            @php $data = $n->data; @endphp
+            <a href="{{ $data['url'] ?? route('waiter.salary-slip.index') }}" class="block p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 hover:bg-amber-500/20 transition-colors">
+                <p class="font-semibold">Malipo yamethibitishwa – {{ $data['period_label'] ?? 'Salary Slip' }}</p>
+                <p class="text-sm text-amber-200/80 mt-0.5">{{ $data['message'] ?? 'Angalia Salary Slip.' }}</p>
+                <span class="text-xs text-amber-400 mt-2 inline-block">Angalia slip →</span>
+            </a>
+        @endforeach
+    </div>
+    @endif
+
     <!-- Bento Grid Layout -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         

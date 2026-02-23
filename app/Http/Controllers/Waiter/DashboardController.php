@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Table;
 use App\Models\Tip;
 use App\Models\User;
+use App\Notifications\SalaryPaymentConfirmed;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,12 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
+        $salaryNotifications = $waiter->unreadNotifications()
+            ->where('type', SalaryPaymentConfirmed::class)
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('waiter.dashboard', compact(
             'tipsToday',
             'tipsThisWeek',
@@ -73,7 +80,8 @@ class DashboardController extends Controller
             'unassignedOrders',
             'pendingRequests',
             'recentFeedback',
-            'myOrders'
+            'myOrders',
+            'salaryNotifications'
         ));
     }
 
