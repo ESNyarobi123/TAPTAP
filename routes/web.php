@@ -138,10 +138,12 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::get('waiters/search', [\App\Http\Controllers\Admin\WaiterController::class, 'search'])->name('waiters.search');
 
     // Orders
+    Route::get('orders/export', [\App\Http\Controllers\Admin\OrderController::class, 'export'])->name('orders.export');
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
 
     // Payments
     Route::get('payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
+    Route::get('payments/export', [\App\Http\Controllers\Admin\PaymentController::class, 'export'])->name('payments.export');
     Route::get('payments/{payment}', [\App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('payments.show');
 
     // Withdrawals

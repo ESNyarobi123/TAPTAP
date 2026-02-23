@@ -1,10 +1,10 @@
 <x-admin-layout>
-    <x-slot name="header">Waiters – Orodha na Unique Codes</x-slot>
+    <x-slot name="header">Waiters & Unique Codes</x-slot>
 
     <p class="text-white/50 text-sm mb-6 max-w-2xl">Ona waiters wote kwenye mfumo, nambari zao za pekee (TIPTAP-W-xxxxx), na restaurant walizounganishwa. Tafuta kwa jina, barua pepe, au nambari ya pekee.</p>
 
-    {{-- Search by unique code (like manager) --}}
-    <div class="glass-card rounded-2xl p-6 mb-8 border border-white/10">
+    {{-- Search by unique code --}}
+    <div class="glass-card rounded-2xl p-6 mb-6 border border-white/10">
         <h3 class="text-lg font-bold text-white mb-1">Tafuta kwa nambari ya pekee</h3>
         <p class="text-sm text-white/50 mb-4">Ingiza nambari ya waiter (k.m. TIPTAP-W-00001) ili kuona maelezo yake.</p>
         <div class="flex flex-wrap gap-3 items-end">
@@ -22,11 +22,11 @@
         <div id="searchError" class="mt-4 hidden p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm"></div>
     </div>
 
-    {{-- Filter / search list --}}
-    <div class="glass-card rounded-2xl overflow-hidden">
+    {{-- List --}}
+    <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
         <div class="p-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
             <div>
-                <h3 class="text-xl font-bold text-white tracking-tight">Orodha ya Waiters</h3>
+                <h2 class="text-xl font-black text-white tracking-tight">Orodha ya Waiters</h2>
                 <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Jina, barua pepe, unique code, restaurant</p>
             </div>
             <form method="GET" action="{{ route('admin.waiters.index') }}" class="flex gap-3 w-full md:w-auto">
@@ -45,13 +45,13 @@
             <table class="w-full min-w-[720px]">
                 <thead>
                     <tr class="bg-white/5">
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Waiter</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Unique Code</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Restaurant</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Waiter Code</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-bold text-white/40 uppercase tracking-wider">Orders</th>
-                        <th class="px-6 py-4 text-right text-[10px] font-bold text-white/40 uppercase tracking-wider">Actions</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Waiter</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Unique Code</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Restaurant</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Waiter Code</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Status</th>
+                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Orders</th>
+                        <th class="px-6 py-4 text-right text-[10px] font-black text-white/40 uppercase tracking-widest">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">

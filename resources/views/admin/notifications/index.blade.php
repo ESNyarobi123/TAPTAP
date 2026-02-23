@@ -1,15 +1,14 @@
 <x-admin-layout>
-    <x-slot name="header">
-        Push Notifications
-    </x-slot>
+    <x-slot name="header">Push Notifications</x-slot>
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <p class="text-white/50 text-sm">Send instant alerts to managers and waiters. Choose target audience and optional restaurant.</p>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Notification Form -->
             <div class="lg:col-span-2">
-                <div class="glass-card rounded-2xl p-8">
+                <div class="glass-card rounded-2xl p-8 border border-white/10">
                     <div class="mb-8">
-                        <h3 class="text-2xl font-black text-white tracking-tight">Broadcast Message</h3>
+                        <h2 class="text-2xl font-black text-white tracking-tight">Broadcast Message</h2>
                         <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Send instant alerts to restaurant staff</p>
                     </div>
 
@@ -55,9 +54,8 @@
                 </div>
             </div>
 
-            <!-- Preview & Tips -->
             <div class="space-y-8">
-                <div class="glass-card rounded-2xl p-6 border border-violet-500/20">
+                <div class="glass-card rounded-2xl p-6 border border-white/10 border-violet-500/20">
                     <h3 class="text-xl font-black text-white tracking-tight mb-6">Mobile Preview</h3>
                     <div class="bg-white/5 rounded-xl p-5 border border-white/10">
                         <div class="flex items-center gap-3 mb-4">
@@ -74,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="glass-card rounded-2xl p-6">
+                <div class="glass-card rounded-2xl p-6 border border-white/10">
                     <h3 class="text-xl font-black text-white tracking-tight mb-4">Pro Tips</h3>
                     <ul class="space-y-4">
                         <li class="flex gap-3">
