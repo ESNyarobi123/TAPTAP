@@ -33,7 +33,7 @@
                             <span class="font-bold text-white">#{{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}</span>
                         </td>
                         <td class="px-6 py-5">
-                            <span class="text-sm text-white font-bold">{{ $payment->order->restaurant->name }}</span>
+                            <span class="text-sm text-white font-bold">{{ $payment->order?->restaurant?->name ?? '—' }}</span>
                         </td>
                         <td class="px-6 py-5">
                             <span class="text-sm text-white font-black">Tsh {{ number_format($payment->amount, 0) }}</span>

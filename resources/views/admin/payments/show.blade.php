@@ -44,15 +44,19 @@
                 <div class="space-y-8">
                     <div>
                         <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Associated Order</p>
-                        <a href="{{ route('admin.orders.show', $payment->order_id) }}" class="text-white font-bold hover:text-violet-400 transition-all flex items-center gap-2">
-                            Order #{{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}
-                            <i data-lucide="external-link" class="w-3 h-3"></i>
-                        </a>
+                        @if ($payment->order)
+                            <a href="{{ route('admin.orders.show', $payment->order_id) }}" class="text-white font-bold hover:text-violet-400 transition-all flex items-center gap-2">
+                                Order #{{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }}
+                                <i data-lucide="external-link" class="w-3 h-3"></i>
+                            </a>
+                        @else
+                            <p class="text-white/60 font-medium">Order #{{ str_pad($payment->order_id, 6, '0', STR_PAD_LEFT) }} (imefutwa)</p>
+                        @endif
                     </div>
 
                     <div>
                         <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2">Restaurant</p>
-                        <p class="text-white font-bold">{{ $payment->order->restaurant->name }}</p>
+                        <p class="text-white font-bold">{{ $payment->order?->restaurant?->name ?? '—' }}</p>
                     </div>
                 </div>
             </div>
