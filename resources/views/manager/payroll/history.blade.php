@@ -1,96 +1,99 @@
 <x-manager-layout>
     <x-slot name="header">Historia ya Malipo</x-slot>
 
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Historia ya Malipo</h2>
-            <p class="text-sm font-medium text-white/40 uppercase tracking-wider mt-0.5">Malipo yote uliyothibitisha na jumla ya mshahara kwa kila mwezi</p>
-        </div>
-        <div class="flex flex-wrap items-center gap-3">
-            <a href="{{ route('manager.payroll.export') }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                Export CSV
-            </a>
-            <a href="{{ route('manager.payroll.export', ['year' => now()->year]) }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
-                Export {{ now()->year }}
-            </a>
-            <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 glass rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                Rudi kwa Payroll
-            </a>
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Historia ya Malipo</h1>
+                <p class="mt-1 text-white/50">Malipo yote uliyothibitisha na jumla ya mshahara kwa kila mwezi na mwaka.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ route('manager.payroll.export') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 hover:text-white transition-all text-sm font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                    Export CSV (yote)
+                </a>
+                <a href="{{ route('manager.payroll.export', ['year' => now()->year]) }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm font-semibold">
+                    Export {{ now()->year }}
+                </a>
+                <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-violet-500/30 bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 transition-all text-sm font-semibold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                    Rudi kwa Payroll
+                </a>
+            </div>
         </div>
     </div>
 
     @if ($byMonth->isEmpty())
-        <div class="glass-card py-16 text-center rounded-2xl border border-white/10">
-            <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white/20">
+        <div class="glass-card py-20 text-center rounded-2xl border border-white/10">
+            <div class="w-20 h-20 mx-auto mb-5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-white/30">
                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/>
                 </svg>
             </div>
             <h3 class="text-xl font-bold text-white mb-2">Hakuna malipo bado</h3>
-            <p class="text-white/40">Thibitisha malipo kwenye <a href="{{ route('manager.payroll.index') }}" class="text-cyan-400 hover:underline">Payroll</a>.</p>
+            <p class="text-white/50 max-w-sm mx-auto mb-6">Thibitisha malipo kwa waiters kwenye ukurasa wa Payroll, kisha historia itaonekana hapa.</p>
+            <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                Nenda kwa Payroll
+            </a>
         </div>
     @else
-        <div class="glass-card rounded-2xl p-6 mb-6 border border-white/10">
-            <p class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1">Jumla ya malipo yote (Net Pay)</p>
-            <p class="text-2xl font-bold text-white">{{ number_format($grandTotal) }}</p>
-        </div>
-
-        @if(isset($byYear) && $byYear->isNotEmpty())
-        <div class="glass-card rounded-2xl p-6 mb-6 border border-white/10">
-            <p class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-3">Jumla kwa kila mwaka</p>
-            <div class="flex flex-wrap gap-6">
-                @foreach($byYear as $year => $data)
-                    <div class="flex flex-col">
-                        <span class="text-white/50 text-sm">{{ $year }}</span>
-                        <span class="text-lg font-bold text-white">{{ number_format($data['total_net']) }}</span>
-                        <span class="text-xs text-white/40">net</span>
+        {{-- Summary cards --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="rounded-2xl p-6 border border-white/10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10">
+                <p class="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-1">Jumla (Net Pay)</p>
+                <p class="text-2xl font-bold text-white">{{ number_format($grandTotal) }}</p>
+                <p class="text-xs text-white/40 mt-1">Malipo yote</p>
+            </div>
+            @if(isset($byYear) && $byYear->isNotEmpty())
+                @foreach($byYear->take(3) as $year => $data)
+                    <div class="rounded-2xl p-6 border border-white/10 bg-white/5">
+                        <p class="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-1">{{ $year }}</p>
+                        <p class="text-xl font-bold text-white">{{ number_format($data['total_net']) }}</p>
+                        <p class="text-xs text-white/40 mt-1">net · {{ number_format($data['total_gross']) }} gross</p>
                     </div>
                 @endforeach
-            </div>
+            @endif
         </div>
-        @endif
 
-        <div class="space-y-8">
+        {{-- By month --}}
+        <div class="space-y-6">
             @foreach ($byMonth as $period => $data)
                 @php
-                    $parts = explode('-', $period);
-                    $label = count($parts) === 2 ? \Carbon\Carbon::createFromFormat('Y-m', $period)->format('F Y') : $period;
+                    $label = count(explode('-', $period)) === 2 ? \Carbon\Carbon::createFromFormat('Y-m', $period)->format('F Y') : $period;
                 @endphp
-                <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
-                    <div class="px-6 py-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
-                        <h3 class="text-lg font-bold text-white">{{ $label }}</h3>
-                        <div class="flex gap-6 text-sm">
-                            <span class="text-white/50">Gross: <strong class="text-white">{{ number_format($data['total_gross']) }}</strong></span>
-                            <span class="text-white/50">Net: <strong class="text-emerald-400">{{ number_format($data['total_net']) }}</strong></span>
+                <div class="glass-card rounded-2xl border border-white/10 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 bg-white/5">
+                        <h2 class="text-lg font-bold text-white">{{ $label }}</h2>
+                        <div class="flex items-center gap-6 text-sm">
+                            <span class="text-white/50">Gross <strong class="text-white font-semibold ml-1">{{ number_format($data['total_gross']) }}</strong></span>
+                            <span class="text-white/50">Net <strong class="text-emerald-400 font-semibold ml-1">{{ number_format($data['total_net']) }}</strong></span>
                         </div>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                        <table class="w-full text-left min-w-[640px]">
                             <thead>
-                                <tr class="border-b border-white/10">
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Waiter</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">ID</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Basic</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Allowances</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">PAYE</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">NSSF</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Net Pay</th>
-                                    <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-white/50">Alipolipwa</th>
+                                <tr class="border-b border-white/10 bg-white/5">
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50">Waiter</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50">ID</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Basic</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Allowances</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">PAYE</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">NSSF</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Net Pay</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50">Alipolipwa</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data['payments'] as $p)
-                                    <tr class="border-b border-white/5 hover:bg-white/5">
-                                        <td class="px-4 py-3 font-medium text-white">{{ $p->user?->name ?? '—' }}</td>
-                                        <td class="px-4 py-3 font-mono text-sm text-cyan-400">{{ $p->user?->global_waiter_number ?? '—' }}</td>
-                                        <td class="px-4 py-3 text-right text-white/80">{{ number_format($p->basic_salary) }}</td>
-                                        <td class="px-4 py-3 text-right text-white/80">{{ number_format($p->allowances) }}</td>
-                                        <td class="px-4 py-3 text-right text-white/80">{{ number_format($p->paye) }}</td>
-                                        <td class="px-4 py-3 text-right text-white/80">{{ number_format($p->nssf) }}</td>
-                                        <td class="px-4 py-3 text-right font-semibold text-emerald-400">{{ number_format($p->net_pay) }}</td>
-                                        <td class="px-4 py-3 text-sm text-white/60">{{ $p->paid_at?->format('d/m/Y H:i') ?? '—' }}</td>
+                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td class="px-5 py-3.5 font-medium text-white">{{ $p->user?->name ?? '—' }}</td>
+                                        <td class="px-5 py-3.5 font-mono text-sm text-cyan-400">{{ $p->user?->global_waiter_number ?? '—' }}</td>
+                                        <td class="px-5 py-3.5 text-right text-white/80 tabular-nums">{{ number_format($p->basic_salary) }}</td>
+                                        <td class="px-5 py-3.5 text-right text-white/80 tabular-nums">{{ number_format($p->allowances) }}</td>
+                                        <td class="px-5 py-3.5 text-right text-white/80 tabular-nums">{{ number_format($p->paye) }}</td>
+                                        <td class="px-5 py-3.5 text-right text-white/80 tabular-nums">{{ number_format($p->nssf) }}</td>
+                                        <td class="px-5 py-3.5 text-right font-semibold text-emerald-400 tabular-nums">{{ number_format($p->net_pay) }}</td>
+                                        <td class="px-5 py-3.5 text-sm text-white/60">{{ $p->paid_at?->format('d/m/Y H:i') ?? '—' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
