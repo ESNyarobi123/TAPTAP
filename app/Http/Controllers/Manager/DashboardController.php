@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $totalOrdersToday = Order::whereDate('created_at', $today)->count();
         $revenueToday = Order::whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount');
         $avgRating = Feedback::avg('rating') ?? 0;
-        $waitersOnline = User::role('waiter')->where('restaurant_id', $restaurantId)->count(); // Simplified online check
+        $waitersOnline = User::role('waiter')->where('restaurant_id', $restaurantId)->online()->count();
 
         // Live Orders
         $pendingOrders = Order::with('items.menuItem')->where('status', 'pending')->latest()->get();
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             'total_orders_today' => Order::whereDate('created_at', $today)->count(),
             'revenue_today' => Order::whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount'),
             'avg_rating' => number_format(Feedback::avg('rating') ?? 0, 1),
-            'waiters_online' => User::role('waiter')->where('restaurant_id', $restaurantId)->count(),
+            'waiters_online' => User::role('waiter')->where('restaurant_id', $restaurantId)->online()->count(),
         ];
 
         return response()->json($stats);

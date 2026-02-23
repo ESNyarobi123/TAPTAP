@@ -57,10 +57,20 @@
                     <div class="min-w-0">
                         <h4 class="text-xl font-bold text-white truncate">{{ $waiter->name }}</h4>
                         <p class="text-[11px] font-mono text-cyan-400">{{ $waiter->global_waiter_number ?? '—' }}</p>
-                        <p class="text-[11px] font-medium text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 mt-1">
-                            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                            Active
-                        </p>
+                        @if($waiter->is_online)
+                            <p class="text-[11px] font-medium text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 mt-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                                Online
+                            </p>
+                        @else
+                            <p class="text-[11px] font-medium text-white/50 uppercase tracking-wider flex items-center gap-1.5 mt-1">
+                                <span class="w-1.5 h-1.5 bg-white/40 rounded-full"></span>
+                                Offline
+                                @if($waiter->last_online_at)
+                                    <span class="text-white/40 normal-case font-normal">· mwisho {{ $waiter->last_online_at->diffForHumans() }}</span>
+                                @endif
+                            </p>
+                        @endif
                         @if($waiter->employment_type === 'temporary' && $waiter->linked_until)
                             <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30 mt-1">Show-time · mpaka {{ $waiter->linked_until->format('d/m/Y') }}</span>
                         @else

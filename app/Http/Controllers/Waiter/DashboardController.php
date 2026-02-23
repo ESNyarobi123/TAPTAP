@@ -40,15 +40,19 @@ class DashboardController extends Controller
         // 3. Orders Ready to Serve (High priority)
         $readyToServeOrders = Order::where('status', 'ready')->count();
 
-        // 4. Unassigned Orders (Orders that need a waiter)
-        $unassignedOrders = Order::with('items.menuItem')
-            ->whereNull('waiter_id')
-            ->whereIn('status', ['pending', 'preparing', 'ready'])
-            ->latest()
-            ->get();
+        // 4. Unassigned Orders (only visible to online waiters)
+        $unassignedOrders = $waiter->is_online
+            ? Order::with('items.menuItem')
+                ->whereNull('waiter_id')
+                ->whereIn('status', ['pending', 'preparing', 'ready'])
+                ->latest()
+                ->get()
+            : collect();
 
-        // Customer Requests (pending for restaurant, limited to avoid lag)
-        $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->limit(20)->get();
+        // Customer Requests (only visible to online waiters; limited to avoid lag)
+        $pendingRequests = $waiter->is_online
+            ? CustomerRequest::where('status', 'pending')->latest()->limit(20)->get()
+            : collect();
 
         // Recent Feedback
         $recentFeedback = Feedback::where(function ($query) use ($waiter) {
@@ -154,7 +158,7 @@ class DashboardController extends Controller
             'tips_today' => Tip::where('waiter_id', $waiter->id)->whereDate('created_at', $today)->sum('amount'),
             'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
             'ready_to_serve' => Order::where('status', 'ready')->count(),
-            'pending_requests' => CustomerRequest::where('status', 'pending')->count(),
+            'pending_requests' => $waiter->is_online ? CustomerRequest::where('status', 'pending')->count() : 0,
         ];
 
         return response()->json($stats);
@@ -213,5 +217,28 @@ class DashboardController extends Controller
             : 'Tables unassigned successfully.';
 
         return back()->with('success', $message);
+    }
+
+    /**
+     * Toggle online/offline. When going offline, last_online_at is set.
+     */
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'is_online' => 'required|boolean',
+        ]);
+
+        $waiter = Auth::user();
+        $isOnline = (bool) $request->is_online;
+
+        $waiter->is_online = $isOnline;
+        $waiter->last_online_at = $isOnline ? null : now();
+        $waiter->save();
+
+        $msg = $isOnline
+            ? 'Uko sasa Online. Utapokea maombi na maagizo.'
+            : 'Uko sasa Offline. Hutapokea maombi mapya au maagizo.';
+
+        return back()->with('success', $msg);
     }
 }

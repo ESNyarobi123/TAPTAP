@@ -994,10 +994,19 @@ class WhatsAppBotController extends Controller
             $tableNumber = $table->name;
         }
 
-        // Waiter: from request or from table's linked waiter (link table and waiter)
+        // Waiter: from request or from table's linked waiter (only if that waiter is online)
         $waiterId = $request->waiter_id;
         if (! $waiterId && $table && $table->waiter_id) {
-            $waiterId = $table->waiter_id;
+            $tableWaiter = User::find($table->waiter_id);
+            if ($tableWaiter && $tableWaiter->is_online) {
+                $waiterId = $table->waiter_id;
+            }
+        }
+        if ($waiterId) {
+            $waiterForRequest = User::find($waiterId);
+            if (! $waiterForRequest || ! $waiterForRequest->is_online) {
+                $waiterId = null;
+            }
         }
 
         // Get waiter info if waiter_id is set

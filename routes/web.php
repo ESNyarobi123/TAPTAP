@@ -229,6 +229,7 @@ Route::middleware(['auth', 'role:waiter'])->prefix('waiter')->name('waiter.')->g
         Route::post('/orders/{order}/claim', [\App\Http\Controllers\Waiter\DashboardController::class, 'claimOrder'])->name('orders.claim');
         Route::get('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handover'])->name('handover');
         Route::post('/handover', [\App\Http\Controllers\Waiter\DashboardController::class, 'handoverSubmit'])->name('handover.submit');
+        Route::post('/status', [\App\Http\Controllers\Waiter\DashboardController::class, 'updateStatus'])->name('status.update');
     });
 });
 

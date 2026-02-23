@@ -3,10 +3,40 @@
         Dashboard
     </x-slot>
 
-    <!-- Welcome Hero (picha ya profile iko juu kwenye header, karibu na CONNECTED) -->
-    <div class="mb-8">
-        <h2 class="text-3xl font-bold text-white tracking-tight">Hello, {{ Auth::user()->name }}! 👋</h2>
-        <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
+    <!-- Welcome Hero -->
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Hello, {{ Auth::user()->name }}! 👋</h2>
+            <p class="text-white/50 font-medium mt-1">Here's what's happening in the restaurant today.</p>
+        </div>
+        @auth
+        @if(Auth::user()->restaurant_id)
+        {{-- Online / Offline toggle --}}
+        <div class="flex items-center gap-4">
+            @if(Auth::user()->is_online)
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-sm font-semibold">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    Online
+                </span>
+                <form action="{{ route('waiter.status.update') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="is_online" value="0">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-rose-500/20 text-white/80 hover:text-rose-300 border border-white/10 text-sm font-semibold transition-all">Nimekamilisha – Nenda Offline</button>
+                </form>
+            @else
+                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white/60 border border-white/10 text-sm font-semibold">
+                    <span class="w-2 h-2 bg-white/50 rounded-full"></span>
+                    Offline
+                </span>
+                <form action="{{ route('waiter.status.update') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="is_online" value="1">
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold transition-all">Niko Kazini – Nenda Online</button>
+                </form>
+            @endif
+        </div>
+        @endif
+        @endauth
     </div>
 
     @if(isset($salaryNotifications) && $salaryNotifications->isNotEmpty())

@@ -32,31 +32,35 @@ class DashboardController extends Controller
         $restaurantActiveOrders = Order::whereIn('status', ['pending', 'preparing', 'ready'])->count();
         $readyToServeOrders = Order::where('status', 'ready')->count();
 
-        $unassignedOrders = Order::with('items.menuItem')
-            ->whereNull('waiter_id')
-            ->whereIn('status', ['pending', 'preparing', 'ready'])
-            ->latest()
-            ->get()
-            ->map(fn ($order) => [
-                'id' => $order->id,
-                'table_number' => $order->table_number,
-                'status' => $order->status,
-                'total_amount' => $order->total_amount,
-                'created_at' => $order->created_at->toIso8601String(),
-                'items' => $order->items->map(fn ($item) => [
-                    'name' => $item->name ?? ($item->menuItem?->name ?? 'Custom Order'),
-                    'quantity' => $item->quantity,
-                ]),
-            ]);
+        $unassignedOrders = $waiter->is_online
+            ? Order::with('items.menuItem')
+                ->whereNull('waiter_id')
+                ->whereIn('status', ['pending', 'preparing', 'ready'])
+                ->latest()
+                ->get()
+                ->map(fn ($order) => [
+                    'id' => $order->id,
+                    'table_number' => $order->table_number,
+                    'status' => $order->status,
+                    'total_amount' => $order->total_amount,
+                    'created_at' => $order->created_at->toIso8601String(),
+                    'items' => $order->items->map(fn ($item) => [
+                        'name' => $item->name ?? ($item->menuItem?->name ?? 'Custom Order'),
+                        'quantity' => $item->quantity,
+                    ]),
+                ])
+            : collect();
 
-        $pendingRequests = CustomerRequest::where('status', 'pending')
-            ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
-            ->latest()->get()->map(fn ($req) => [
+        $pendingRequests = $waiter->is_online
+            ? CustomerRequest::where('status', 'pending')
+                ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+                ->latest()->get()->map(fn ($req) => [
                 'id' => $req->id,
                 'type' => $req->type,
                 'table_number' => $req->table_number,
                 'created_at' => $req->created_at->toIso8601String(),
-            ]);
+            ])
+            : collect();
 
         $feedbackVisibleAt = Carbon::now()->subMinutes(config('services.feedback.visible_after_minutes', 60));
         $recentFeedback = Feedback::where(function ($query) use ($waiter) {
@@ -86,6 +90,8 @@ class DashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
+                'is_online' => $waiter->is_online,
+                'last_online_at' => $waiter->last_online_at?->toIso8601String(),
                 'stats' => [
                     'tips_today' => $tipsToday,
                     'tips_today_amount' => $tipsToday,
@@ -118,14 +124,17 @@ class DashboardController extends Controller
         return response()->json([
             'success' => true,
             'data' => [
+                'is_online' => $waiter->is_online,
                 'tips_today' => $tipsTodayAmount,
                 'tips_today_amount' => $tipsTodayAmount,
                 'total_tips_received' => Tip::where('waiter_id', $waiter->id)->sum('amount'),
                 'my_active_orders' => Order::where('waiter_id', $waiter->id)->whereIn('status', ['pending', 'preparing', 'ready'])->count(),
                 'ready_to_serve' => Order::where('status', 'ready')->count(),
-                'pending_requests' => CustomerRequest::where('status', 'pending')
-                    ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
-                    ->count(),
+                'pending_requests' => $waiter->is_online
+                    ? CustomerRequest::where('status', 'pending')
+                        ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
+                        ->count()
+                    : 0,
             ],
         ]);
     }
@@ -281,6 +290,9 @@ class DashboardController extends Controller
     public function pendingRequests(): JsonResponse
     {
         $waiter = Auth::user();
+        if (! $waiter->is_online) {
+            return response()->json(['success' => true, 'data' => []]);
+        }
         $requests = CustomerRequest::with('waiter')
             ->where('status', 'pending')
             ->where(fn ($q) => $q->whereNull('waiter_id')->orWhere('waiter_id', $waiter->id))
@@ -426,6 +438,32 @@ class DashboardController extends Controller
             'message' => $targetWaiterId
                 ? 'Tables handed over successfully.'
                 : 'Tables unassigned successfully.',
+        ]);
+    }
+
+    /**
+     * Toggle waiter online/offline. When going offline, last_online_at is set.
+     */
+    public function updateStatus(Request $request): JsonResponse
+    {
+        $request->validate([
+            'is_online' => 'required|boolean',
+        ]);
+
+        $waiter = Auth::user();
+        $isOnline = (bool) $request->is_online;
+
+        $waiter->is_online = $isOnline;
+        $waiter->last_online_at = $isOnline ? null : now();
+        $waiter->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $isOnline ? 'You are now online. You will receive calls and orders.' : 'You are now offline. You will not receive new calls or orders.',
+            'data' => [
+                'is_online' => $waiter->is_online,
+                'last_online_at' => $waiter->last_online_at?->toIso8601String(),
+            ],
         ]);
     }
 }

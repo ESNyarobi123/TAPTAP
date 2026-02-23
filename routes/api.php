@@ -25,6 +25,7 @@
  *   POST /requests/{customerRequest}/complete -> Api\Waiter\DashboardController@completeRequest
  *   GET  /salary-slips                  -> Api\Waiter\SalarySlipController@index
  *   GET  /salary-slips/{period}         -> Api\Waiter\SalarySlipController@show
+ *   PATCH /status                       -> Api\Waiter\DashboardController@updateStatus (body: is_online)
  *
  * V1 (prefix: /v1, auth:sanctum)
  *   GET  /restaurants/search            -> V1\RestaurantController@search
@@ -92,6 +93,7 @@ Route::prefix('waiter')->middleware(['auth:sanctum', 'role:waiter'])->group(func
     Route::post('/requests/{customerRequest}/complete', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'completeRequest']);
     Route::get('/salary-slips', [\App\Http\Controllers\Api\Waiter\SalarySlipController::class, 'index']);
     Route::get('/salary-slips/{period}', [\App\Http\Controllers\Api\Waiter\SalarySlipController::class, 'show'])->where('period', '[0-9]{4}-[0-9]{2}');
+    Route::patch('/status', [\App\Http\Controllers\Api\Waiter\DashboardController::class, 'updateStatus']);
 });
 
 Route::get('/user', function (Request $request) {

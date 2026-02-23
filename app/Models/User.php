@@ -32,6 +32,8 @@ class User extends Authenticatable
         'phone',
         'location',
         'profile_photo_path',
+        'is_online',
+        'last_online_at',
     ];
 
     /**
@@ -175,6 +177,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'linked_until' => 'date',
             'password' => 'hashed',
+            'is_online' => 'boolean',
+            'last_online_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Scope: waiters who are currently online (for restaurant).
+     */
+    public function scopeOnline($query)
+    {
+        return $query->where('is_online', true);
     }
 }
