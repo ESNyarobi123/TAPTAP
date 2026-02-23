@@ -4,7 +4,7 @@
     </x-slot>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
         <!-- Total Restaurants -->
         <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
             <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-violet-500/20 to-violet-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
@@ -21,6 +21,23 @@
                 <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-total-restaurants">{{ $stats['total_restaurants'] }}</h3>
             </div>
         </div>
+
+        <!-- Total Waiters -->
+        <a href="{{ route('admin.waiters.index') }}" class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group block">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <div class="relative z-10">
+                <div class="flex justify-between items-start mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-xl flex items-center justify-center border border-amber-500/20 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <span class="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-[10px] font-bold rounded-full uppercase tracking-wider border border-amber-500/20">View all</span>
+                </div>
+                <p class="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-1">Total Waiters</p>
+                <h3 class="text-3xl font-bold text-white tracking-tight" id="stat-total-waiters">{{ $stats['total_waiters'] ?? 0 }}</h3>
+            </div>
+        </a>
 
         <!-- Active Orders -->
         <div class="glass-card rounded-2xl p-6 card-hover relative overflow-hidden group">
@@ -175,6 +192,7 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('stat-total-restaurants').textContent = data.total_restaurants;
+                    if (document.getElementById('stat-total-waiters')) document.getElementById('stat-total-waiters').textContent = data.total_waiters ?? 0;
                     document.getElementById('stat-active-orders').textContent = data.active_orders;
                     document.getElementById('stat-total-revenue').textContent = 'Tsh ' + (data.total_revenue / 1000).toFixed(1) + 'K';
                     document.getElementById('stat-pending-withdrawals').textContent = data.pending_withdrawals;

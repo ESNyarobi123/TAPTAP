@@ -133,6 +133,10 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     // Users
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
 
+    // Waiters (all waiters + unique codes + search like manager)
+    Route::get('waiters', [\App\Http\Controllers\Admin\WaiterController::class, 'index'])->name('waiters.index');
+    Route::get('waiters/search', [\App\Http\Controllers\Admin\WaiterController::class, 'search'])->name('waiters.search');
+
     // Orders
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
 

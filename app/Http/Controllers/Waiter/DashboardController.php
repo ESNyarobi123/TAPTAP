@@ -47,8 +47,8 @@ class DashboardController extends Controller
             ->latest()
             ->get();
 
-        // Customer Requests (All pending requests for the restaurant)
-        $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->get();
+        // Customer Requests (pending for restaurant, limited to avoid lag)
+        $pendingRequests = CustomerRequest::where('status', 'pending')->latest()->limit(20)->get();
 
         // Recent Feedback
         $recentFeedback = Feedback::where(function ($query) use ($waiter) {

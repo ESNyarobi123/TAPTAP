@@ -234,6 +234,15 @@
                     <span class="font-semibold text-sm">User Management</span>
                 </a>
 
+                <a href="{{ route('admin.waiters.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('admin.waiters.*') ? 'sidebar-link-active' : 'text-white/60' }}">
+                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.waiters.*') ? 'text-amber-400' : 'text-white/60' }}">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M12 8v4"/><path d="M10 12h4"/>
+                        </svg>
+                    </div>
+                    <span class="font-semibold text-sm">Waiters & Codes</span>
+                </a>
+
                 <div class="mt-8 mb-4 px-6 sidebar-label">
                     <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Financials</p>
                 </div>

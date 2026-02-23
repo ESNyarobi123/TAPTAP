@@ -153,7 +153,7 @@
                                     </div>
 
                                     <div class="sm:col-span-2 xl:col-span-2 flex flex-col justify-end">
-                                        <button type="submit" class="w-full px-5 py-3 rounded-xl font-semibold text-sm transition-all {{ $payment ? 'bg-white/10 hover:bg-white/15 text-white border border-white/10' : 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:shadow-lg hover:shadow-violet-500/25' }}">
+                                        <button type="submit" class="payroll-submit w-full px-5 py-3 rounded-xl font-semibold text-sm transition-all {{ $payment ? 'bg-white/10 hover:bg-white/15 text-white border border-white/10' : 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:shadow-lg hover:shadow-violet-500/25' }}" data-label="{{ $payment ? 'Update' : 'Thibitisha Nimewalipa' }}">
                                             {{ $payment ? 'Update' : 'Thibitisha Nimewalipa' }}
                                         </button>
                                     </div>
@@ -169,4 +169,16 @@
             Mwezi unaotumika: <strong class="text-white/60">{{ \Carbon\Carbon::createFromFormat('Y-m', $currentMonth)->format('F Y') }}</strong>. Badilisha kipindi kwa kuchagua mwezi hapo juu.
         </p>
     @endif
+
+    <script>
+        document.querySelectorAll('form[action="{{ route('manager.payroll.store') }}"]').forEach(function(form) {
+            form.addEventListener('submit', function() {
+                var btn = form.querySelector('button[type="submit"]');
+                if (btn && !btn.disabled) {
+                    btn.disabled = true;
+                    btn.textContent = 'Inaendesha...';
+                }
+            });
+        });
+    </script>
 </x-manager-layout>
