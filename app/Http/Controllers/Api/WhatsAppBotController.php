@@ -962,6 +962,32 @@ class WhatsAppBotController extends Controller
     }
 
     /**
+     * Check if a waiter is online (for bot: before showing "call waiter" or sending request).
+     * GET /api/bot/waiter/{waiterId}/status
+     */
+    public function waiterStatus(string $waiterId)
+    {
+        $waiter = User::role('waiter')->find($waiterId);
+
+        if (! $waiter) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Waiter not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'waiter_id' => (int) $waiter->id,
+                'name' => $waiter->name,
+                'is_online' => (bool) $waiter->is_online,
+                'last_online_at' => $waiter->last_online_at?->toIso8601String(),
+            ],
+        ]);
+    }
+
+    /**
      * Call Waiter from Bot
      */
     public function callWaiter(Request $request)
@@ -1050,11 +1076,15 @@ class WhatsAppBotController extends Controller
     {
         $waiters = User::role('waiter')
             ->where('restaurant_id', $restaurantId)
-            ->get(['id', 'name']);
+            ->get(['id', 'name', 'is_online']);
 
         return response()->json([
             'success' => true,
-            'data' => $waiters,
+            'data' => $waiters->map(fn ($w) => [
+                'id' => $w->id,
+                'name' => $w->name,
+                'is_online' => (bool) $w->is_online,
+            ]),
         ]);
     }
 
