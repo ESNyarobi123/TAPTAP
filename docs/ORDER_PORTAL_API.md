@@ -6,9 +6,11 @@ API za Order Portal (waiter anaingia kwa password ya manager).
 - **Web:** `{APP_URL}/order-portal` (mfano: `https://yoursite.com/order-portal`)
 - **API:** `{APP_URL}/api/order-portal` (mfano: `https://yoursite.com/api/order-portal`) — routes ziko pia kwenye `routes/api.php`
 
-**Authentication:** Session (cookie). Ili kupata JSON, tuma header:  
-`Accept: application/json`  
-na kwa requests baada ya login: `Cookie` yenye session (browser/Postman inaweza kuhifadhi cookie baada ya login).
+**Authentication (chagua moja):**
+- **Browser / Postman:** Session (cookie). Tuma `Accept: application/json`; baada ya login tuma cookie (kawaida automatic).
+- **App ya simu (Flutter, n.k.):** **Bearer token.** Baada ya login, response ina `data.token`. Hifadhi token, kisha kwa kila request tuma header:  
+  `Authorization: Bearer {token}`  
+  (Hii inafanya kazi bila cookies, hivyo app haitarudishwa kwenye login.)
 
 ---
 
@@ -55,6 +57,7 @@ Tuma **JSON** na header `Accept: application/json` ili kupata response ya JSON.
   "success": true,
   "message": "Umefanikiwa kuingia.",
   "data": {
+    "token": "abc123...",
     "restaurant_id": 2,
     "restaurant_name": "Samaki Samaki",
     "user_id": 13,
@@ -62,6 +65,11 @@ Tuma **JSON** na header `Accept: application/json` ili kupata response ya JSON.
   }
 }
 ```
+
+| Field | Maelezo |
+|-------|---------|
+| token | Tumia kwa app ya simu: tuma `Authorization: Bearer {token}` kwenye kila request. Token ina muda wa siku 30. |
+| restaurant_id, user_id, ... | Taarifa za waiter na restaurant. |
 
 ### Response – password vibaya (422)
 
@@ -81,7 +89,10 @@ Tuma **JSON** na header `Accept: application/json` ili kupata response ya JSON.
 }
 ```
 
-**Kumbuka:** Baada ya login, server atatuma **session cookie**. Kwa kila request inayofuata (orders, payments), tuma cookie hiyo (browser/Postman kawaida hufanya hivyo automatically).
+**Kwa app ya simu (Flutter):** Hifadhi `data.token` na kwa kila API call (orders, logout, n.k.) ongeza header:  
+`Authorization: Bearer {token}`  
+Bila hii, server hajui wewe ni nani na utarudishwa 401 / kwenye login.  
+**Kwa browser:** Unaweza kutumia session cookie (automatic) au token.
 
 ---
 
@@ -89,7 +100,7 @@ Tuma **JSON** na header `Accept: application/json` ili kupata response ya JSON.
 
 **POST** `/order-portal/logout`
 
-Tuma `Accept: application/json` ikiwa unataka JSON.
+Tuma `Accept: application/json` ikiwa unataka JSON. Kwa app (token): tuma `Authorization: Bearer {token}` ili token ibatilishwe.
 
 ### Response (200)
 
@@ -442,7 +453,7 @@ Header: `Accept: application/json`
 
 ## Jumla
 
-- **Login:** POST `/order-portal/login` na body `{ "password": "..." }`, header `Accept: application/json` → response JSON na session cookie.
+- **Login:** POST `/order-portal/login` na body `{ "password": "..." }`, header `Accept: application/json` → response JSON na `data.token` (tumia kwa app: `Authorization: Bearer {token}`) na/au session cookie.
 - **Orders:** GET/POST/PUT/DELETE `/order-portal/orders` (na `/orders/{id}`) zote zinaruhusu JSON ikiwa utatuma `Accept: application/json` na cookie ya session.
 - **Payments:** POST initiate, GET status – response zote ni JSON.
 - Waiter anaona na kudhibiti **orders zake tu** (waiter_id = user aliyelogin).

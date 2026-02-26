@@ -7,6 +7,8 @@ use App\Models\OrderPortalPassword;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class LoginController extends Controller
@@ -63,10 +65,17 @@ class LoginController extends Controller
         ]);
 
         if ($request->expectsJson()) {
+            $token = Str::random(64);
+            Cache::put('order_portal_token:'.$token, [
+                'restaurant_id' => $credential->restaurant_id,
+                'user_id' => $user->id,
+            ], now()->addDays(30));
+
             return response()->json([
                 'success' => true,
                 'message' => 'Umefanikiwa kuingia.',
                 'data' => [
+                    'token' => $token,
                     'restaurant_id' => $credential->restaurant_id,
                     'restaurant_name' => $credential->restaurant?->name,
                     'user_id' => $user->id,
@@ -80,6 +89,10 @@ class LoginController extends Controller
 
     public function destroy(Request $request): RedirectResponse|JsonResponse
     {
+        $bearer = $request->bearerToken();
+        if ($bearer) {
+            Cache::forget('order_portal_token:'.$bearer);
+        }
         session()->forget(['order_portal_restaurant_id', 'order_portal_user_id']);
 
         if ($request->expectsJson()) {
