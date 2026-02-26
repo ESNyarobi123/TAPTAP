@@ -55,7 +55,7 @@
         </div>
     </header>
 
-    <main class="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6 lg:py-8 pb-[env(safe-area-inset-bottom)]">
+    <main class="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6 lg:py-8 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         @if (session('success'))
             <div class="mb-4 sm:mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium" role="alert">{{ session('success') }}</div>
         @endif
