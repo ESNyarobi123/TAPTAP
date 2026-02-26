@@ -225,6 +225,7 @@ class WaiterController extends Controller
     /**
      * Generate or regenerate Order Portal password for a linked waiter.
      * Password is shown once; when waiter is unlinked it is revoked.
+     * One row per (restaurant_id, user_id): update if exists, create if not.
      */
     public function generateOrderPortalPassword(User $waiter): RedirectResponse
     {
@@ -234,17 +235,25 @@ class WaiterController extends Controller
 
         $plainPassword = OrderPortalPassword::generateRandomPassword();
 
-        OrderPortalPassword::query()
+        $existing = OrderPortalPassword::query()
             ->where('restaurant_id', $waiter->restaurant_id)
             ->where('user_id', $waiter->id)
-            ->update(['revoked_at' => now()]);
+            ->first();
 
-        OrderPortalPassword::create([
-            'restaurant_id' => $waiter->restaurant_id,
-            'user_id' => $waiter->id,
-            'password' => $plainPassword,
-            'generated_at' => now(),
-        ]);
+        if ($existing) {
+            $existing->update([
+                'password' => $plainPassword,
+                'generated_at' => now(),
+                'revoked_at' => null,
+            ]);
+        } else {
+            OrderPortalPassword::create([
+                'restaurant_id' => $waiter->restaurant_id,
+                'user_id' => $waiter->id,
+                'password' => $plainPassword,
+                'generated_at' => now(),
+            ]);
+        }
 
         return back()
             ->with('success', 'Order Portal password imetengenezwa. Mwambie waiter nambari yake ya pekee na password hii.')
