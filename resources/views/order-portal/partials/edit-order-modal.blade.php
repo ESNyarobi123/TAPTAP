@@ -1,10 +1,10 @@
-<div id="editOrderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
-    <div class="bg-[#0f0a1e] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-        <div class="p-6 border-b border-white/10 flex justify-between items-center">
+<div id="editOrderModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] hidden flex items-end sm:items-center justify-center p-4 sm:p-6">
+    <div class="bg-[#0f0a1e] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10 max-h-[90vh] flex flex-col">
+        <div class="p-4 sm:p-6 border-b border-white/10 flex justify-between items-center shrink-0">
             <h3 class="text-xl font-bold text-white tracking-tight">Edit Order (Details)</h3>
             <button type="button" onclick="closeEditOrderModal()" class="p-2 hover:bg-white/10 rounded-xl text-white/40 hover:text-white">✕</button>
         </div>
-        <form id="editOrderForm" method="POST" class="p-6 space-y-4">
+        <form id="editOrderForm" method="POST" class="p-4 sm:p-6 space-y-4 overflow-y-auto min-h-0">
             @csrf
             @method('PUT')
             <div>

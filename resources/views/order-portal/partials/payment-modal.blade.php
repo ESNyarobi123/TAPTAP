@@ -1,6 +1,6 @@
-<div id="paymentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
-    <div class="bg-[#0f0a1e] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-        <div class="p-6">
+<div id="paymentModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] hidden flex items-end sm:items-center justify-center p-4 sm:p-6">
+    <div class="bg-[#0f0a1e] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-white/10 max-h-[90vh] overflow-y-auto">
+        <div class="p-4 sm:p-6">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h3 class="text-xl font-bold text-white tracking-tight">Process Payment</h3>
