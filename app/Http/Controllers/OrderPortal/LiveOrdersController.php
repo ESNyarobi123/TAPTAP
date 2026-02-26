@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class LiveOrdersController extends Controller
 {
@@ -41,7 +43,7 @@ class LiveOrdersController extends Controller
             ->where('waiter_id', $this->waiterId());
     }
 
-    public function index()
+    public function index(): View|JsonResponse
     {
         $today = Carbon::today();
         $restaurantId = $this->restaurantId();
@@ -76,13 +78,63 @@ class LiveOrdersController extends Controller
 
         $restaurant = $this->restaurant();
 
+        if (request()->expectsJson()) {
+            return response()->json([
+                'data' => [
+                    'pending' => $pendingOrders->map(fn ($o) => $this->orderToArray($o)),
+                    'preparing' => $preparingOrders->map(fn ($o) => $this->orderToArray($o)),
+                    'served' => $servedOrders->map(fn ($o) => $this->orderToArray($o)),
+                    'paid' => $paidOrders->map(fn ($o) => $this->orderToArray($o)),
+                ],
+                'meta' => [
+                    'tables' => $tables->map(fn ($t) => ['id' => $t->id, 'name' => $t->name ?? (string) $t->id]),
+                    'menu_items' => $menuItems->map(fn ($m) => [
+                        'id' => $m->id,
+                        'name' => $m->name,
+                        'price' => $m->price,
+                        'image_url' => $m->image ? $m->imageUrl() : null,
+                    ]),
+                    'restaurant' => [
+                        'id' => $restaurant->id,
+                        'name' => $restaurant->name,
+                    ],
+                ],
+            ]);
+        }
+
         return view('order-portal.orders', compact(
             'pendingOrders', 'preparingOrders', 'servedOrders', 'paidOrders',
             'tables', 'menuItems', 'restaurant'
         ));
     }
 
-    public function store(Request $request): RedirectResponse
+    /**
+     * @return array<string, mixed>
+     */
+    private function orderToArray(Order $order): array
+    {
+        $order->loadMissing('items.menuItem');
+
+        return [
+            'id' => $order->id,
+            'table_number' => $order->table_number,
+            'customer_phone' => $order->customer_phone,
+            'customer_name' => $order->customer_name,
+            'total_amount' => $order->total_amount,
+            'status' => $order->status,
+            'created_at' => $order->created_at->toIso8601String(),
+            'items' => $order->items->map(fn ($i) => [
+                'id' => $i->id,
+                'menu_item_id' => $i->menu_item_id,
+                'name' => $i->name,
+                'quantity' => $i->quantity,
+                'price' => $i->price,
+                'total' => $i->total,
+            ])->values()->all(),
+        ];
+    }
+
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $request->validate([
             'table_number' => 'required|string|max:50',
@@ -125,20 +177,29 @@ class LiveOrdersController extends Controller
             $order->items()->create($item);
         }
 
+        if ($request->expectsJson()) {
+            $order->load('items.menuItem');
+
+            return response()->json([
+                'message' => 'Order created successfully.',
+                'data' => $this->orderToArray($order),
+            ], Response::HTTP_CREATED);
+        }
+
         return redirect()->back()->with('success', 'Order created successfully.');
     }
 
-    public function update(Request $request, int $order): RedirectResponse
+    public function update(Request $request, int $order): RedirectResponse|JsonResponse
     {
-        $order = $this->orderQuery()->findOrFail($order);
+        $orderModel = $this->orderQuery()->findOrFail($order);
 
         if ($request->has('status')) {
             $request->validate(['status' => 'in:pending,preparing,served,paid']);
-            $order->update(['status' => $request->status]);
+            $orderModel->update(['status' => $request->status]);
         }
 
         if ($request->has('table_number')) {
-            $order->update([
+            $orderModel->update([
                 'table_number' => $request->table_number,
                 'customer_phone' => $request->customer_phone ?? '',
                 'customer_name' => $request->customer_name ?? '',
@@ -153,7 +214,7 @@ class LiveOrdersController extends Controller
             ]);
             $restaurantId = $this->restaurantId();
             $totalAmount = 0;
-            $order->items()->delete();
+            $orderModel->items()->delete();
             foreach ($request->items as $itemData) {
                 $qty = (int) ($itemData['quantity'] ?? 0);
                 if ($qty < 1) {
@@ -165,7 +226,7 @@ class LiveOrdersController extends Controller
                 }
                 $subtotal = $menuItem->price * $qty;
                 $totalAmount += $subtotal;
-                $order->items()->create([
+                $orderModel->items()->create([
                     'menu_item_id' => $menuItem->id,
                     'name' => $menuItem->name,
                     'quantity' => $qty,
@@ -173,16 +234,31 @@ class LiveOrdersController extends Controller
                     'total' => $subtotal,
                 ]);
             }
-            $order->update(['total_amount' => $totalAmount]);
+            $orderModel->update(['total_amount' => $totalAmount]);
+        }
+
+        if ($request->expectsJson()) {
+            $orderModel->load('items.menuItem');
+
+            return response()->json([
+                'message' => 'Order updated successfully.',
+                'data' => $this->orderToArray($orderModel),
+            ]);
         }
 
         return redirect()->back()->with('success', 'Order updated successfully.');
     }
 
-    public function destroy(int $order): RedirectResponse
+    public function destroy(int $order): RedirectResponse|JsonResponse
     {
-        $order = $this->orderQuery()->findOrFail($order);
-        $order->delete();
+        $orderModel = $this->orderQuery()->findOrFail($order);
+        $orderModel->delete();
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'message' => 'Order deleted.',
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Order deleted.');
     }

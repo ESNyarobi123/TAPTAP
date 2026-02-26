@@ -181,12 +181,20 @@
                                 </div>
                             @endforeach
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})" 
-                                    class="flex-1 bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})"
+                                    class="flex-1 min-w-[120px] bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                                 Process Payment
                             </button>
-                                <form action="{{ route('manager.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Delete this order?')">
+                            <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Thibitisha mteja kashalipia (mfano kwa WhatsApp/cash)?');">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="paid">
+                                <button type="submit" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm border border-emerald-500/30 transition-all" title="Mteja kashalipia nje (WhatsApp/cash)">
+                                    Confirm paid
+                                </button>
+                            </form>
+                                <form action="{{ route('manager.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Delete this order?')" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="h-full px-3 rounded-xl hover:bg-white/10 text-white/40 hover:text-rose-400 transition-all" title="Delete Order">

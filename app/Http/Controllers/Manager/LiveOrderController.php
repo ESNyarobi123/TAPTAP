@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class LiveOrderController extends Controller
 {
@@ -92,8 +91,9 @@ class LiveOrderController extends Controller
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-        
+
         if ($request->has('status')) {
+            $request->validate(['status' => 'in:pending,preparing,served,paid']);
             $order->update(['status' => $request->status]);
         }
 

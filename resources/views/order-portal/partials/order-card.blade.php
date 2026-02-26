@@ -64,6 +64,12 @@
             @endif
             @if($status === 'served')
                 <button type="button" onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})" class="min-h-[40px] sm:min-h-[36px] px-3 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity touch-action-manipulation shadow-lg shadow-violet-500/20">Pay</button>
+                <form action="{{ route('order-portal.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Thibitisha mteja kashalipia (mfano kwa WhatsApp/cash)?');">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="paid">
+                    <button type="submit" class="min-h-[40px] sm:min-h-[36px] px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors touch-action-manipulation border border-emerald-500/30" title="Mteja kashalipia nje (WhatsApp/cash)">Confirm paid</button>
+                </form>
             @endif
         </div>
     </div>

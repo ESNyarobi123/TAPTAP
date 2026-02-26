@@ -62,6 +62,16 @@
  *   getCategoryItems, getItemDetails, createOrder, createOrderByText, getOrderStatus,
  *   initiatePayment, submitFeedback, submitTip, getTables, waiterStatus, callWaiter, getWaiters,
  *   getActiveOrder, getMenuImage, initiateQuickPayment, getQuickPaymentStatus
+ *
+ * ORDER PORTAL (prefix: /order-portal, auth: session via password)
+ *   POST /order-portal/login              -> OrderPortal\LoginController@store (body: password)
+ *   POST /order-portal/logout             -> OrderPortal\LoginController@destroy (order.portal)
+ *   GET  /order-portal/orders             -> OrderPortal\LiveOrdersController@index (order.portal)
+ *   POST /order-portal/orders             -> OrderPortal\LiveOrdersController@store (order.portal)
+ *   PUT  /order-portal/orders/{order}     -> OrderPortal\LiveOrdersController@update (order.portal)
+ *   DELETE /order-portal/orders/{order}   -> OrderPortal\LiveOrdersController@destroy (order.portal)
+ *   POST /order-portal/payments/selcom/initiate -> OrderPortal\LiveOrdersController@paymentInitiate (order.portal)
+ *   GET  /order-portal/payments/selcom/status/{order} -> OrderPortal\LiveOrdersController@paymentStatus (order.portal)
  */
 
 use App\Http\Controllers\Api\AuthController;
@@ -186,3 +196,19 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
 // WhatsApp Webhook (Meta/WhatsApp Cloud API)
 Route::get('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'verify']);
 Route::post('/whatsapp/webhook', [App\Http\Controllers\Api\WhatsAppWebhookController::class, 'handle']);
+
+// Order Portal API (session auth via password; use Accept: application/json + Cookie for JSON)
+Route::prefix('order-portal')->middleware('web')->group(function () {
+    Route::post('/login', [\App\Http\Controllers\OrderPortal\LoginController::class, 'store']);
+    Route::post('/logout', [\App\Http\Controllers\OrderPortal\LoginController::class, 'destroy'])
+        ->middleware('order.portal');
+
+    Route::middleware('order.portal')->group(function () {
+        Route::get('/orders', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'index']);
+        Route::post('/orders', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'store']);
+        Route::put('/orders/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'update']);
+        Route::delete('/orders/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'destroy']);
+        Route::post('/payments/selcom/initiate', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'paymentInitiate']);
+        Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'paymentStatus']);
+    });
+});
