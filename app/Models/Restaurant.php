@@ -119,7 +119,7 @@ class Restaurant extends Model
     }
 
     /**
-     * Menu image URL for fetch (storage: storage/app/public/menu_images).
+     * Menu image URL for fetch (storage: storage/app/public/menu or menu_images).
      */
     public function menuImageUrl(): ?string
     {

@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Menu image: upload saves to storage/app/public/menu_images.
- * Fetch URL: asset('storage/'.$restaurant->menu_image) via Restaurant::menuImageUrl().
+ * Menu image: upload saves to storage/app/public/menu.
+ * Fetch URL via Restaurant::menuImageUrl() (storage.serve or asset).
  */
 class MenuImageController extends Controller
 {
@@ -44,8 +44,8 @@ class MenuImageController extends Controller
             Storage::disk('public')->delete($restaurant->menu_image);
         }
 
-        // Path: storage/app/public/menu_images/{filename}
-        $path = $request->file('menu_image')->store('menu_images', 'public');
+        // Path: storage/app/public/menu/{filename}
+        $path = $request->file('menu_image')->store('menu', 'public');
         $restaurant->update(['menu_image' => $path]);
 
         return back()->with('success', 'Menu image uploaded successfully!');

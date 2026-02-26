@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * Serve profile and menu_images from storage (works when storage:link is missing on host).
+ * Serve profile, menu and menu_images from storage (works when storage:link is missing on host).
  */
 class ServeStorageController extends Controller
 {
     public function __invoke(Request $request, string $path): StreamedResponse
     {
         $path = str_replace(['../', '..'], '', $path);
-        $allowed = ['profile/', 'menu_images/'];
+        $allowed = ['profile/', 'menu/', 'menu_images/'];
         $ok = false;
         foreach ($allowed as $prefix) {
             if (str_starts_with($path, $prefix)) {

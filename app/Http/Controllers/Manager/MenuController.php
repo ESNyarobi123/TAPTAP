@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\MenuItem;
 use App\Models\Category;
-
-use Illuminate\Support\Facades\Storage;
+use App\Models\MenuItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
@@ -16,6 +15,7 @@ class MenuController extends Controller
     {
         $categories = Category::all();
         $menuItems = MenuItem::with('category')->latest()->get();
+
         return view('manager.menu.index', compact('categories', 'menuItems'));
     }
 
@@ -35,7 +35,7 @@ class MenuController extends Controller
         $data['is_available'] = $request->has('is_available') ? 1 : 0;
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('menu_items', 'public');
+            $data['image'] = $request->file('image')->store('menu', 'public');
         }
 
         MenuItem::create($data);
@@ -62,7 +62,7 @@ class MenuController extends Controller
             if ($menuItem->image) {
                 Storage::disk('public')->delete($menuItem->image);
             }
-            $data['image'] = $request->file('image')->store('menu_items', 'public');
+            $data['image'] = $request->file('image')->store('menu', 'public');
         }
 
         $menuItem->update($data);

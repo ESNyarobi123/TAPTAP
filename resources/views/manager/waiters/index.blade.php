@@ -1,11 +1,20 @@
 <x-manager-layout>
     <x-slot name="header">Waiters & Staff</x-slot>
 
-    @if (session('success'))
+    @if (session('success') && !session('order_portal_password_generated'))
         <div class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">{{ session('success') }}</div>
     @endif
     @if (session('error'))
         <div class="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm">{{ session('error') }}</div>
+    @endif
+    @if (session('order_portal_password_generated'))
+        <div class="mb-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm">
+            {{ session('success') }}
+            <p class="mt-2 font-semibold">Password ya Order Portal (onyesha waiter mara moja):</p>
+            <p class="mt-1 font-mono text-lg tracking-wider bg-black/20 px-3 py-2 rounded-lg inline-block">{{ session('order_portal_password_generated') }}</p>
+            <p class="mt-2 text-white/70">Waiter: <strong>{{ session('order_portal_waiter_name') }}</strong> · Nambari: <code>{{ session('order_portal_waiter_number') }}</code></p>
+            <p class="mt-1 text-white/50 text-xs">Login: <a href="{{ $orderPortalLoginUrl ?? route('order-portal.login') }}" class="text-cyan-400 underline" target="_blank">{{ $orderPortalLoginUrl ?? url('/order-portal/login') }}</a></p>
+        </div>
     @endif
 
     <!-- Link Waiter Card -->
@@ -112,13 +121,20 @@
                     </div>
                 </div>
 
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     @php
                         $waiterForModal = $waiter->only(['id','name','email','waiter_code','global_waiter_number','orders_count','created_at','employment_type','linked_until']);
                         $waiterForModal['profile_photo_url'] = $waiter->profilePhotoUrl();
+                        $hasOrderPortal = in_array($waiter->id, $waiterIdsWithOrderPortal ?? []);
                     @endphp
-                    <button onclick="openViewWaiterModal({{ json_encode($waiterForModal) }})" class="flex-1 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
-                    <form action="{{ route('manager.waiters.unlink', $waiter) }}" method="POST" onsubmit="return confirm('Unlink waiter huyu? History (orders, ratings) itabaki. Anaweza kuungwa na restaurant nyingine baadaye.');" class="inline">
+                    <button onclick="openViewWaiterModal({{ json_encode($waiterForModal) }})" class="flex-1 min-w-0 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
+                    <form action="{{ route('manager.waiters.generate-order-portal-password', $waiter) }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="px-3 py-2.5 rounded-xl font-semibold text-sm transition-all {{ $hasOrderPortal ? 'glass text-cyan-400 hover:bg-cyan-500/20' : 'bg-cyan-600 hover:bg-cyan-500 text-white' }}" title="{{ $hasOrderPortal ? 'Regenerate Order Portal password' : 'Generate Order Portal password' }}">
+                            {{ $hasOrderPortal ? 'Regenerate' : 'Order Portal' }}
+                        </button>
+                    </form>
+                    <form action="{{ route('manager.waiters.unlink', $waiter) }}" method="POST" onsubmit="return confirm('Unlink waiter huyu? History (orders, ratings) itabaki. Password ya Order Portal itaisha. Anaweza kuungwa na restaurant nyingine baadaye.');" class="inline">
                         @csrf
                         <button type="submit" class="p-2.5 glass text-amber-400 rounded-xl hover:bg-amber-500 hover:text-white transition-all" title="Unlink waiter">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><line x1="4" x2="20" y1="12" y2="12"/></svg>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomerRequest;
 use App\Models\Feedback;
 use App\Models\Order;
+use App\Models\OrderPortalPassword;
 use App\Models\Table;
 use App\Models\Tip;
 use App\Models\User;
@@ -75,6 +76,13 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $hasOrderPortalAccess = OrderPortalPassword::query()
+            ->where('user_id', $waiter->id)
+            ->where('restaurant_id', $waiter->restaurant_id)
+            ->whereNull('revoked_at')
+            ->exists();
+        $orderPortalLoginUrl = route('order-portal.login');
+
         return view('waiter.dashboard', compact(
             'tipsToday',
             'tipsThisWeek',
@@ -85,7 +93,9 @@ class DashboardController extends Controller
             'pendingRequests',
             'recentFeedback',
             'myOrders',
-            'salaryNotifications'
+            'salaryNotifications',
+            'hasOrderPortalAccess',
+            'orderPortalLoginUrl'
         ));
     }
 

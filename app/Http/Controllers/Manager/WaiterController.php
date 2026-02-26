@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manager;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LinkWaiterRequest;
+use App\Models\OrderPortalPassword;
 use App\Models\User;
 use App\Models\WaiterRestaurantAssignment;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +22,15 @@ class WaiterController extends Controller
             ->withCount('orders')
             ->get();
 
-        return view('manager.waiters.index', compact('waiters'));
+        $waiterIdsWithOrderPortal = OrderPortalPassword::query()
+            ->where('restaurant_id', $restaurantId)
+            ->whereNull('revoked_at')
+            ->pluck('user_id')
+            ->all();
+
+        $orderPortalLoginUrl = route('order-portal.login');
+
+        return view('manager.waiters.index', compact('waiters', 'waiterIdsWithOrderPortal', 'orderPortalLoginUrl'));
     }
 
     /**
@@ -204,7 +213,44 @@ class WaiterController extends Controller
             ]);
         }
 
+        OrderPortalPassword::query()
+            ->where('user_id', $waiter->id)
+            ->where('restaurant_id', $restaurantId)
+            ->whereNull('revoked_at')
+            ->update(['revoked_at' => now()]);
+
         return back()->with('success', "{$name} ameondolewa kwenye restaurant yako. History yake (orders, ratings) imebaki. Anaweza kuungwa na restaurant nyingine.");
+    }
+
+    /**
+     * Generate or regenerate Order Portal password for a linked waiter.
+     * Password is shown once; when waiter is unlinked it is revoked.
+     */
+    public function generateOrderPortalPassword(User $waiter): RedirectResponse
+    {
+        if ($waiter->restaurant_id !== Auth::user()->restaurant_id || ! $waiter->hasRole('waiter')) {
+            return back()->with('error', 'Unauthorized.');
+        }
+
+        $plainPassword = OrderPortalPassword::generateRandomPassword();
+
+        OrderPortalPassword::query()
+            ->where('restaurant_id', $waiter->restaurant_id)
+            ->where('user_id', $waiter->id)
+            ->update(['revoked_at' => now()]);
+
+        OrderPortalPassword::create([
+            'restaurant_id' => $waiter->restaurant_id,
+            'user_id' => $waiter->id,
+            'password' => $plainPassword,
+            'generated_at' => now(),
+        ]);
+
+        return back()
+            ->with('success', 'Order Portal password imetengenezwa. Mwambie waiter nambari yake ya pekee na password hii.')
+            ->with('order_portal_password_generated', $plainPassword)
+            ->with('order_portal_waiter_name', $waiter->name)
+            ->with('order_portal_waiter_number', $waiter->global_waiter_number);
     }
 
     /**

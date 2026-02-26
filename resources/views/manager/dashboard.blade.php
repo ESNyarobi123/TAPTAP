@@ -127,11 +127,11 @@
                                 @foreach($order->items->take(3) as $item)
                                     @php
                                         $itemName = $item->menuItem ? $item->menuItem->name : ($item->name ?? 'Item');
-                                        $itemImage = $item->menuItem ? $item->menuItem->image : null;
+                                        $itemImageUrl = $item->menuItem ? $item->menuItem->imageUrl() : null;
                                     @endphp
                                     <div class="w-7 h-7 rounded-full border-2 border-surface-900 bg-white/10 flex items-center justify-center text-[9px] font-bold text-white overflow-hidden" title="{{ $itemName }}">
-                                        @if($itemImage)
-                                            <img src="{{ asset('storage/' . $itemImage) }}" class="w-full h-full object-cover">
+                                        @if($itemImageUrl)
+                                            <img src="{{ $itemImageUrl }}" alt="" class="w-full h-full object-cover">
                                         @else
                                             {{ substr($itemName, 0, 1) }}
                                         @endif

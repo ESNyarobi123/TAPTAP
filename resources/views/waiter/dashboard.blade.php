@@ -373,6 +373,21 @@
                 </div>
             </div>
 
+            @if(!empty($hasOrderPortalAccess) && !empty($orderPortalLoginUrl))
+            <!-- TIPTAP ORDER Portal -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-900/50 to-cyan-900/50 p-6 text-white shadow-xl border border-violet-500/20">
+                <div class="mb-3 flex items-center justify-between">
+                    <h3 class="text-lg font-bold tracking-tight">TIPTAP ORDER (Live Orders)</h3>
+                    <span class="rounded-lg bg-emerald-500/20 px-2 py-1 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase">Active</span>
+                </div>
+                <p class="text-sm text-white/70 mb-4">Una ufikiaji wa Live Orders portal. Ingia kwa <strong class="text-cyan-300">nambari yako ya waiter</strong> ({{ Auth::user()->global_waiter_number ?? Auth::user()->waiter_code ?? 'N/A' }}) na <strong class="text-cyan-300">password uliyopewa na manager</strong>.</p>
+                <a href="{{ $orderPortalLoginUrl }}" target="_blank" class="inline-flex items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-500 py-2.5 px-4 text-sm font-semibold transition-all shadow-lg shadow-violet-600/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    Fungua Live Orders Portal
+                </a>
+            </div>
+            @endif
+
             <!-- Recent Ratings -->
             <div class="rounded-2xl glass-card p-6">
                 <div class="mb-5 flex items-center justify-between">

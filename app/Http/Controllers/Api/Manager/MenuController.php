@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Manager;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\MenuItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,9 +16,10 @@ class MenuController extends Controller
     public function index()
     {
         $menuItems = MenuItem::with('category')->latest()->get();
+
         return response()->json([
             'success' => true,
-            'data' => $menuItems
+            'data' => $menuItems,
         ]);
     }
 
@@ -43,7 +44,7 @@ class MenuController extends Controller
         $data['is_available'] = filter_var($request->input('is_available', true), FILTER_VALIDATE_BOOLEAN);
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('menu_items', 'public');
+            $data['image'] = $request->file('image')->store('menu', 'public');
         }
 
         $menuItem = MenuItem::create($data);
@@ -51,7 +52,7 @@ class MenuController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Menu item created successfully',
-            'data' => $menuItem
+            'data' => $menuItem,
         ], 201);
     }
 
@@ -62,7 +63,7 @@ class MenuController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $menuItem->load('category')
+            'data' => $menuItem->load('category'),
         ]);
     }
 
@@ -82,16 +83,16 @@ class MenuController extends Controller
         ]);
 
         $data = $request->all();
-        
+
         if ($request->has('is_available')) {
-             $data['is_available'] = filter_var($request->input('is_available'), FILTER_VALIDATE_BOOLEAN);
+            $data['is_available'] = filter_var($request->input('is_available'), FILTER_VALIDATE_BOOLEAN);
         }
 
         if ($request->hasFile('image')) {
             if ($menuItem->image) {
                 Storage::disk('public')->delete($menuItem->image);
             }
-            $data['image'] = $request->file('image')->store('menu_items', 'public');
+            $data['image'] = $request->file('image')->store('menu', 'public');
         }
 
         $menuItem->update($data);
@@ -99,7 +100,7 @@ class MenuController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Menu item updated successfully',
-            'data' => $menuItem
+            'data' => $menuItem,
         ]);
     }
 
@@ -115,7 +116,7 @@ class MenuController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Menu item deleted successfully'
+            'message' => 'Menu item deleted successfully',
         ]);
     }
 }

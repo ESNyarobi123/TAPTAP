@@ -187,6 +187,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/waiters/search', [\App\Http\Controllers\Manager\WaiterController::class, 'search'])->name('waiters.search');
     Route::post('/waiters/{waiter}/link', [\App\Http\Controllers\Manager\WaiterController::class, 'link'])->name('waiters.link');
     Route::post('/waiters/{waiter}/unlink', [\App\Http\Controllers\Manager\WaiterController::class, 'unlink'])->name('waiters.unlink');
+    Route::post('/waiters/{waiter}/generate-order-portal-password', [\App\Http\Controllers\Manager\WaiterController::class, 'generateOrderPortalPassword'])->name('waiters.generate-order-portal-password');
     Route::get('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'index'])->name('payroll.index');
     Route::post('/payroll', [\App\Http\Controllers\Manager\PayrollController::class, 'store'])->name('payroll.store');
     Route::get('/payroll/history', [\App\Http\Controllers\Manager\PayrollController::class, 'history'])->name('payroll.history');
@@ -248,4 +249,20 @@ Route::prefix('kitchen')->name('kitchen.')->group(function () {
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::post('/kitchen/generate-token', [\App\Http\Controllers\KitchenController::class, 'generateToken'])->name('kitchen.generate');
     Route::post('/kitchen/revoke-token', [\App\Http\Controllers\KitchenController::class, 'revokeToken'])->name('kitchen.revoke');
+});
+
+// TIPTAP ORDER Portal (waiter login with manager-generated password)
+Route::prefix('order-portal')->name('order-portal.')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\OrderPortal\LoginController::class, 'create'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\OrderPortal\LoginController::class, 'store']);
+    Route::post('/logout', [\App\Http\Controllers\OrderPortal\LoginController::class, 'destroy'])->name('logout');
+
+    Route::middleware('order.portal')->group(function () {
+        Route::get('/orders', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'index'])->name('orders');
+        Route::post('/orders', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'store'])->name('orders.store');
+        Route::put('/orders/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'update'])->name('orders.update');
+        Route::delete('/orders/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'destroy'])->name('orders.destroy');
+        Route::post('/payments/selcom/initiate', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'paymentInitiate'])->name('payments.selcom.initiate');
+        Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\OrderPortal\LiveOrdersController::class, 'paymentStatus'])->name('payments.selcom.status');
+    });
 });
