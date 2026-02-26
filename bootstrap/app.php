@@ -19,6 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'waiter.linked' => \App\Http\Middleware\EnsureWaiterIsLinked::class,
             'order.portal' => \App\Http\Middleware\EnsureOrderPortalAuthenticated::class,
         ]);
+
+        // Order Portal API (app nje ya browser) haitumii CSRF token
+        $middleware->validateCsrfTokens(except: [
+            'api/order-portal/*',
+            'order-portal/login',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
