@@ -21,15 +21,24 @@ class LiveOrdersController extends Controller
         return (int) session('order_portal_restaurant_id');
     }
 
+    private function waiterId(): int
+    {
+        return (int) session('order_portal_user_id');
+    }
+
     private function restaurant(): Restaurant
     {
         return Restaurant::findOrFail($this->restaurantId());
     }
 
+    /**
+     * Orders for this restaurant that belong to this waiter only (waiter_id = logged-in waiter).
+     */
     private function orderQuery()
     {
         return Order::withoutGlobalScopes()
-            ->where('restaurant_id', $this->restaurantId());
+            ->where('restaurant_id', $this->restaurantId())
+            ->where('waiter_id', $this->waiterId());
     }
 
     public function index()
@@ -104,6 +113,7 @@ class LiveOrdersController extends Controller
 
         $order = Order::withoutGlobalScopes()->create([
             'restaurant_id' => $restaurantId,
+            'waiter_id' => $this->waiterId(),
             'table_number' => $request->table_number,
             'customer_phone' => $request->customer_phone ?? '',
             'customer_name' => $request->customer_name ?? '',
@@ -240,7 +250,7 @@ class LiveOrdersController extends Controller
             ->where('method', 'ussd')
             ->orderByDesc('created_at')
             ->first();
-            
+
         if (! $payment || ! $payment->transaction_reference) {
             return response()->json(['status' => 'error', 'message' => 'No active payment found'], 400);
         }

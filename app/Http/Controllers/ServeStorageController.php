@@ -14,7 +14,7 @@ class ServeStorageController extends Controller
     public function __invoke(Request $request, string $path): StreamedResponse
     {
         $path = str_replace(['../', '..'], '', $path);
-        $allowed = ['profile/', 'menu/', 'menu_images/'];
+        $allowed = ['profile/', 'menu/', 'menu_images/', 'menu_items/'];
         $ok = false;
         foreach ($allowed as $prefix) {
             if (str_starts_with($path, $prefix)) {
