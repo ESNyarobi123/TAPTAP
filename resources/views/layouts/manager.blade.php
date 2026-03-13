@@ -9,8 +9,6 @@
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
@@ -19,8 +17,60 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-size-page-title: clamp(28px, 2vw + 1rem, 32px);
+            --font-size-section-heading: clamp(18px, 1vw + 0.75rem, 20px);
+            --font-size-body: 15px;
+            --font-size-badge: 11px;
+        }
+
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: var(--font-family-sans);
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea,
+        label {
+            font-family: var(--font-family-sans);
+            font-weight: 400;
+            font-size: var(--font-size-body);
+        }
+
+        h1,
+        .heading-page {
+            font-size: var(--font-size-page-title);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        h2,
+        h3,
+        .section-heading {
+            font-size: var(--font-size-section-heading);
+            font-weight: 600;
+        }
+
+        label,
+        button,
+        .btn,
+        .action-link {
+            font-weight: 500;
+        }
+
+        .badge,
+        .status-pill,
+        .tag-pill,
+        .uppercase-pill {
+            font-weight: 500;
+            font-size: var(--font-size-badge);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         body { 
