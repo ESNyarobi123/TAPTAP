@@ -2,6 +2,31 @@
     <x-slot name="header">Payroll / Malipo</x-slot>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        .manager-payroll-page,
+        .manager-payroll-page * {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+
+        .manager-payroll-page h1,
+        .manager-payroll-page h2,
+        .manager-payroll-page h3 {
+            font-weight: 700;
+        }
+
+        .manager-payroll-page .section-heading,
+        .manager-payroll-page label,
+        .manager-payroll-page button,
+        .manager-payroll-page .status-pill,
+        .manager-payroll-page .badge {
+            font-weight: 500;
+        }
+    </style>
+
+    <div class="manager-payroll-page">
+
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap');
 
         .payroll-root { font-family: 'Figtree', sans-serif; }
@@ -501,10 +526,10 @@
         function set(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
 
         /* ── Submit: disable + auto-collapse ── */
-        document.querySelectorAll('.payroll-form').forEach(function(form){
-            form.addEventListener('submit', function(){
+        document.querySelectorAll('form[action="{{ route('manager.payroll.store') }}"]').forEach(function(form) {
+            form.addEventListener('submit', function() {
                 var btn = form.querySelector('button[type="submit"]');
-                if(btn && !btn.disabled){
+                if (btn && !btn.disabled) {
                     btn.disabled = true;
                     btn.textContent = 'Inaendesha…';
                 }
@@ -515,6 +540,7 @@
             });
         });
 
-    })();
+        });
     </script>
+</div>
 </x-manager-layout>
