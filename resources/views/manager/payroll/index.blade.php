@@ -540,7 +540,7 @@
             });
         });
 
-        });
+        })();
     </script>
 </div>
 </x-manager-layout>
