@@ -17,19 +17,23 @@ class DashboardController extends Controller
         $today = Carbon::today();
 
         // Stats
-        $totalOrdersToday = Order::whereDate('created_at', $today)->count();
-        $revenueToday = Order::whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount');
-        $avgRating = Feedback::avg('rating') ?? 0;
-        $waitersOnline = User::role('waiter')->where('restaurant_id', $restaurantId)->online()->count();
+        $totalOrdersToday = Order::where('restaurant_id', $restaurantId)->whereDate('created_at', $today)->count();
+        $revenueToday = Order::where('restaurant_id', $restaurantId)->whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount');
+        $avgRating = Feedback::whereHas('order', function($q) use ($restaurantId) {
+            $q->where('restaurant_id', $restaurantId);
+        })->avg('rating') ?? 0;
+        $waitersOnline = User::role('waiter')->where('restaurant_id', $restaurantId)->where('is_online', true)->count();
 
         // Live Orders
-        $pendingOrders = Order::with('items.menuItem')->where('status', 'pending')->latest()->get();
-        $preparingOrders = Order::with('items.menuItem')->where('status', 'preparing')->latest()->get();
-        $servedOrders = Order::with('items.menuItem')->where('status', 'served')->latest()->get();
-        $paidOrders = Order::with('items.menuItem')->where('status', 'paid')->whereDate('created_at', $today)->latest()->take(10)->get();
+        $pendingOrders = Order::with('items.menuItem')->where('restaurant_id', $restaurantId)->where('status', 'pending')->latest()->get();
+        $preparingOrders = Order::with('items.menuItem')->where('restaurant_id', $restaurantId)->where('status', 'preparing')->latest()->get();
+        $servedOrders = Order::with('items.menuItem')->where('restaurant_id', $restaurantId)->where('status', 'served')->latest()->get();
+        $paidOrders = Order::with('items.menuItem')->where('restaurant_id', $restaurantId)->where('status', 'paid')->whereDate('created_at', $today)->latest()->take(10)->get();
 
         // Feedback
-        $recentFeedback = Feedback::with('order')->latest()->take(5)->get();
+        $recentFeedback = Feedback::with('order')->whereHas('order', function($q) use ($restaurantId) {
+            $q->where('restaurant_id', $restaurantId);
+        })->latest()->take(5)->get();
 
         // Tips: not shown to manager (policy: don't show tips to manager)
         $waiterTips = collect();
@@ -54,10 +58,12 @@ class DashboardController extends Controller
         $today = Carbon::today();
 
         $stats = [
-            'total_orders_today' => Order::whereDate('created_at', $today)->count(),
-            'revenue_today' => Order::whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount'),
-            'avg_rating' => number_format(Feedback::avg('rating') ?? 0, 1),
-            'waiters_online' => User::role('waiter')->where('restaurant_id', $restaurantId)->online()->count(),
+            'total_orders_today' => Order::where('restaurant_id', $restaurantId)->whereDate('created_at', $today)->count(),
+            'revenue_today' => Order::where('restaurant_id', $restaurantId)->whereDate('created_at', $today)->where('status', 'paid')->sum('total_amount'),
+            'avg_rating' => number_format(Feedback::whereHas('order', function($q) use ($restaurantId) {
+                $q->where('restaurant_id', $restaurantId);
+            })->avg('rating') ?? 0, 1),
+            'waiters_online' => User::role('waiter')->where('restaurant_id', $restaurantId)->where('is_online', true)->count(),
         ];
 
         return response()->json($stats);

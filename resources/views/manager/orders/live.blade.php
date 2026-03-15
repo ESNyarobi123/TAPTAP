@@ -44,7 +44,14 @@
                 @forelse($pendingOrders as $order)
                     <div class="glass p-4 rounded-xl card-hover group">
                         <div class="flex justify-between items-start mb-3">
-                            <span class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-rose-500/20">Table #{{ $order->table_number }}</span>
+                            <div class="flex flex-col gap-1">
+                                <span class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-rose-500/20">Table #{{ $order->table_number }}</span>
+                                @if($order->waiter)
+                                    <span class="text-[10px] font-medium text-cyan-400">{{ $order->waiter->name }}</span>
+                                @else
+                                    <span class="text-[10px] font-medium text-white/30">Unassigned</span>
+                                @endif
+                            </div>
                             <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
                         <div class="space-y-1.5 mb-4">
@@ -106,7 +113,14 @@
                 @forelse($preparingOrders as $order)
                     <div class="glass p-4 rounded-xl card-hover">
                         <div class="flex justify-between items-start mb-3">
-                            <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-amber-500/20">Table #{{ $order->table_number }}</span>
+                            <div class="flex flex-col gap-1">
+                                <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-amber-500/20">Table #{{ $order->table_number }}</span>
+                                @if($order->waiter)
+                                    <span class="text-[10px] font-medium text-cyan-400">{{ $order->waiter->name }}</span>
+                                @else
+                                    <span class="text-[10px] font-medium text-white/30">Unassigned</span>
+                                @endif
+                            </div>
                             <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
                         <div class="space-y-1.5 mb-4">
@@ -171,7 +185,14 @@
                 @forelse($servedOrders as $order)
                     <div class="glass p-4 rounded-xl card-hover">
                         <div class="flex justify-between items-start mb-3">
-                            <span class="bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">Table #{{ $order->table_number }}</span>
+                            <div class="flex flex-col gap-1">
+                                <span class="bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">Table #{{ $order->table_number }}</span>
+                                @if($order->waiter)
+                                    <span class="text-[10px] font-medium text-cyan-400">{{ $order->waiter->name }}</span>
+                                @else
+                                    <span class="text-[10px] font-medium text-white/30">Unassigned</span>
+                                @endif
+                            </div>
                             <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
                         <div class="space-y-1.5 mb-4">
@@ -186,11 +207,11 @@
                                     class="flex-1 min-w-[120px] bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                                 Process Payment
                             </button>
-                            <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Thibitisha mteja kashalipia (mfano kwa WhatsApp/cash)?');">
+                            <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Confirm customer has paid (e.g. via WhatsApp/cash)?');">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="status" value="paid">
-                                <button type="submit" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm border border-emerald-500/30 transition-all" title="Mteja kashalipia nje (WhatsApp/cash)">
+                                <button type="submit" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm border border-emerald-500/30 transition-all" title="Customer paid outside (WhatsApp/cash)">
                                     Confirm paid
                                 </button>
                             </form>
@@ -231,7 +252,14 @@
                 @forelse($paidOrders as $order)
                     <div class="glass p-4 rounded-xl">
                         <div class="flex justify-between items-start mb-2">
-                            <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                            <div class="flex flex-col gap-1">
+                                <span class="text-sm font-bold text-white">Table #{{ $order->table_number }}</span>
+                                @if($order->waiter)
+                                    <span class="text-[10px] font-medium text-cyan-400">{{ $order->waiter->name }}</span>
+                                @else
+                                    <span class="text-[10px] font-medium text-white/30">Unassigned</span>
+                                @endif
+                            </div>
                             <div class="flex items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400">
                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
@@ -242,7 +270,7 @@
                                     <button type="submit" class="text-white/40 hover:text-rose-400 transition-all">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4c1 0 2 1 2 2v2"></path>
                                         </svg>
                                     </button>
                                 </form>

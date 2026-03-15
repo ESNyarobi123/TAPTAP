@@ -141,12 +141,12 @@
         @media (min-width: 768px) {
             #mobile-sidebar,
             #mobile-sidebar.sidebar-closed-mobile { transform: translateX(0) !important; visibility: visible !important; }
-            #mobile-sidebar.sidebar-collapsed { width: 5rem !important; }
-            main#main-content { margin-left: 18rem; }
-            body.sidebar-collapsed-main main#main-content { margin-left: 5rem; }
+            #mobile-sidebar.sidebar-collapsed { width: 3.5rem !important; }
+            main#main-content { margin-left: 13rem; }
+            body.sidebar-collapsed-main main#main-content { margin-left: 3.5rem; }
         }
         body.sidebar-mobile-open #sidebar-overlay { display: block !important; opacity: 1 !important; pointer-events: auto !important; }
-        #mobile-sidebar.sidebar-collapsed { width: 5rem; }
+        #mobile-sidebar.sidebar-collapsed { width: 3.5rem; }
         #mobile-sidebar.sidebar-collapsed .sidebar-link span,
         #mobile-sidebar.sidebar-collapsed .sidebar-label,
         #mobile-sidebar.sidebar-collapsed .sidebar-logo-text,
@@ -168,10 +168,10 @@
 
     <div class="flex min-h-screen">
         <!-- Premium Waiter Sidebar: drawer on mobile, persistent on md+ with toggle -->
-        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 border-r border-white/5 sidebar-closed-mobile" style="width: 18rem;">
-            <div class="p-6 pb-4 flex justify-between items-center border-b border-white/5 shrink-0">
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 z-[100] w-52 sidebar-gradient flex flex-col h-screen shadow-2xl shadow-black/50 border-r border-white/5 sidebar-closed-mobile" style="width: 13rem;">
+            <div class="p-4 pb-3 flex justify-between items-center border-b border-white/5 shrink-0">
                 <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-11 h-11 flex shrink-0 items-center justify-center overflow-hidden">
+                    <div class="w-8 h-8 flex shrink-0 items-center justify-center overflow-hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
                             <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                             <path d="M7 2v20"></path>
@@ -179,8 +179,8 @@
                         </svg>
                     </div>
                     <div class="sidebar-logo-text min-w-0">
-                        <span class="text-xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
-                        <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Waiter Portal</span>
+                        <span class="text-base font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
+                        <span class="text-[9px] font-semibold text-white/40 uppercase tracking-[0.2em]">Waiter</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
@@ -196,44 +196,41 @@
                 </div>
             </div>
 
-            <nav class="flex-1 py-6 custom-scrollbar overflow-y-auto overflow-x-hidden">
-                <div class="mb-4 px-6 sidebar-label">
-                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Main Menu</p>
+            <nav class="flex-1 py-4 custom-scrollbar overflow-y-auto overflow-x-hidden">
+                <div class="mb-3 px-4 sidebar-label">
+                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">Main</p>
                 </div>
                 
-                <a href="{{ route('waiter.dashboard') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.dashboard') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.dashboard') ? 'text-violet-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.dashboard') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.dashboard') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.dashboard') ? 'text-violet-400' : 'text-white/50' }}">
                             <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">Dashboard</span>
-                    @if(request()->routeIs('waiter.dashboard'))
-                        <div class="absolute right-3 w-1.5 h-8 bg-gradient-to-b from-violet-500 to-cyan-500 rounded-full"></div>
-                    @endif
+                    <span class="font-medium text-xs">Dashboard</span>
                 </a>
 
-                <a href="{{ route('waiter.menu') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.menu') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.menu') ? 'text-emerald-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.menu') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.menu') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.menu') ? 'text-emerald-400' : 'text-white/50' }}">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">Menu Card</span>
+                    <span class="font-medium text-xs">Menu</span>
                 </a>
 
-                <a href="{{ route('waiter.orders') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.orders') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.orders') ? 'text-blue-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.orders') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.orders') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.orders') ? 'text-blue-400' : 'text-white/50' }}">
                             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">Active Orders</span>
+                    <span class="font-medium text-xs">Orders</span>
                 </a>
 
-                <a href="{{ route('waiter.dashboard') }}#requests" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl text-white/60">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/60">
+                <a href="{{ route('waiter.dashboard') }}#requests" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] text-white/55">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-rose-500/20 to-pink-500/20 flex items-center justify-center shrink-0 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/50">
                             <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
                         </svg>
                         @php
@@ -242,102 +239,99 @@
                                 : 0;
                         @endphp
                         @if($pendingCount > 0)
-                            <span class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full flex items-center justify-center text-[9px] font-bold text-white animate-pulse">{{ $pendingCount }}</span>
+                            <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-rose-500 rounded-full flex items-center justify-center text-[8px] font-bold text-white animate-pulse">{{ $pendingCount }}</span>
                         @endif
                     </div>
-                    <span class="font-semibold text-sm">Customer Calls</span>
+                    <span class="font-medium text-xs">Calls</span>
                     @if($pendingCount > 0)
-                        <span class="ml-auto bg-rose-500/20 text-rose-400 text-[10px] font-bold px-2.5 py-1 rounded-full">{{ $pendingCount }} New</span>
+                        <span class="ml-auto bg-rose-500/20 text-rose-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full">{{ $pendingCount }}</span>
                     @endif
                 </a>
 
-                <a href="{{ route('waiter.handover') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.handover') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.handover') ? 'text-teal-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.handover') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.handover') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.handover') ? 'text-teal-400' : 'text-white/50' }}">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">Hand Over Tables</span>
-                    @if(request()->routeIs('waiter.handover'))
-                        <div class="absolute right-3 w-1.5 h-8 bg-gradient-to-b from-teal-500 to-cyan-500 rounded-full"></div>
-                    @endif
+                    <span class="font-medium text-xs">Handover</span>
                 </a>
 
-                <div class="mt-8 mb-4 px-6 sidebar-label">
-                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Performance</p>
+                <div class="mt-5 mb-3 px-4 sidebar-label">
+                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">Stats</p>
                 </div>
 
-                <a href="{{ route('waiter.tips') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.tips') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.tips') ? 'text-amber-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.tips') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.tips') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.tips') ? 'text-amber-400' : 'text-white/50' }}">
                             <circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">My Tips</span>
+                    <span class="font-medium text-xs">Tips</span>
                 </a>
 
-                <a href="{{ route('waiter.ratings') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.ratings') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.ratings') ? 'text-orange-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.ratings') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.ratings') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.ratings') ? 'text-orange-400' : 'text-white/50' }}">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">My Ratings</span>
+                    <span class="font-medium text-xs">Ratings</span>
                 </a>
 
-                <div class="mt-8 mb-4 px-6 sidebar-label">
-                    <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">Account</p>
+                <div class="mt-5 mb-3 px-4 sidebar-label">
+                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">Account</p>
                 </div>
 
-                <a href="{{ route('waiter.salary-slip.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.salary-slip.*') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.salary-slip.*') ? 'text-amber-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.salary-slip.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.salary-slip.*') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center shrink-0 relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.salary-slip.*') ? 'text-amber-400' : 'text-white/50' }}">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
                         </svg>
                         @if(!empty($unreadSalaryCount) && $unreadSalaryCount > 0)
-                            <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white" title="Slip mpya">{{ $unreadSalaryCount }}</span>
+                            <span class="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center rounded-full bg-amber-500 text-[9px] font-bold text-white" title="New">{{ $unreadSalaryCount }}</span>
                         @endif
                     </div>
-                    <span class="font-semibold text-sm">Salary Slip</span>
+                    <span class="font-medium text-xs">Salary</span>
                     @if(!empty($unreadSalaryCount) && $unreadSalaryCount > 0)
-                        <span class="text-[10px] font-semibold text-amber-400 shrink-0">Slip mpya</span>
+                        <span class="text-[9px] font-semibold text-amber-400 shrink-0">New</span>
                     @endif
                 </a>
 
-                <a href="{{ route('waiter.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.history') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.history') ? 'text-slate-300' : 'text-white/60' }}">
+                <a href="{{ route('waiter.history') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.history') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.history') ? 'text-slate-300' : 'text-white/50' }}">
                             <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">History</span>
+                    <span class="font-medium text-xs">History</span>
                 </a>
 
-                <a href="{{ route('waiter.help.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-3 px-6 py-3.5 mx-3 rounded-xl {{ request()->routeIs('waiter.help.index') ? 'sidebar-link-active' : 'text-white/60' }}">
-                    <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-500/20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="{{ request()->routeIs('waiter.help.index') ? 'text-sky-400' : 'text-white/60' }}">
+                <a href="{{ route('waiter.help.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-2 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('waiter.help.index') ? 'sidebar-link-active' : 'text-white/55' }}">
+                    <div class="w-7 h-7 rounded-md bg-gradient-to-br from-sky-500/20 to-blue-500/20 flex items-center justify-center shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('waiter.help.index') ? 'text-sky-400' : 'text-white/50' }}">
                             <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
                         </svg>
                     </div>
-                    <span class="font-semibold text-sm">Help</span>
+                    <span class="font-medium text-xs">Help</span>
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-white/5 shrink-0 sidebar-user-area">
-                <div class="glass-card rounded-xl p-4 flex items-center gap-3" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
+            <div class="p-3 border-t border-white/5 shrink-0 sidebar-user-area">
+                <div class="glass-card rounded-lg p-3 flex items-center gap-2" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
                     @if(Auth::user()->profilePhotoUrl())
                         <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="waiter-sidebar-avatar w-10 h-10 rounded-lg object-cover border border-violet-500/20 shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="waiter-sidebar-avatar-fallback w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0 hidden" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
                     @else
-                        <div class="w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0">
+                        <div class="w-8 h-8 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-lg shadow-violet-500/20 shrink-0">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                     @endif
                     <div class="flex-1 min-w-0 sidebar-user-text">
-                        <p class="text-sm font-semibold text-white truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-[10px] font-medium text-white/40 truncate">Waiter Account</p>
+                        <p class="text-xs font-semibold text-white truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[9px] font-medium text-white/40 truncate">Waiter</p>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/40 transition-transform cursor-pointer" :class="open ? 'rotate-180' : ''">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/40 transition-transform cursor-pointer shrink-0" :class="open ? 'rotate-180' : ''">
                         <path d="m18 15-6-6-6 6"/>
                     </svg>
 
@@ -362,7 +356,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-[margin] duration-300 md:ml-72" tabindex="-1">
+        <main id="main-content" class="flex-1 min-h-screen flex flex-col w-full relative z-0 transition-[margin] duration-300 md:ml-52" tabindex="-1">
             <!-- Mobile Header -->
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">

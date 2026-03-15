@@ -5,893 +5,652 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Kitchen Display - {{ $restaurant->name }}</title>
-    
-    <!-- Premium Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f0a1e 0%, #1a1333 50%, #0d0816 100%);
-            min-height: 100vh;
-            color: white;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-            animation: pulse-bg 8s ease-in-out infinite;
-        }
-
-        .bg-animation::after {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            left: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-            animation: pulse-bg 8s ease-in-out infinite reverse;
-        }
-
-        @keyframes pulse-bg {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-
-        /* Header */
-        .header {
-            background: rgba(15, 10, 30, 0.9);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 2rem;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            max-width: 1920px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .logo-text h1 {
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .logo-text span {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-        }
-
-        .header-stats {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .stat-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-        }
-
-        .stat-badge.urgent {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .stat-badge.preparing {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: rgba(245, 158, 11, 0.3);
-        }
-
-        .stat-badge.pending {
-            background: rgba(139, 92, 246, 0.15);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .stat-value {
-            font-size: 1.75rem;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-        }
-
-        .stat-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        .header-time {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .current-time {
-            font-size: 2.5rem;
-            font-weight: 900;
-            font-variant-numeric: tabular-nums;
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .last-refresh {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 7rem 2rem 2rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .orders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            max-width: 1920px;
-            margin: 0 auto;
-        }
-
-        /* Order Card */
-        .order-card {
-            background: rgba(28, 22, 51, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideIn 0.5s ease-out;
-        }
-
-        .order-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .order-card.vip {
-            border: 2px solid rgba(245, 158, 11, 0.5);
-            box-shadow: 0 0 40px rgba(245, 158, 11, 0.2);
-        }
-
-        .order-card.sla-red {
-            border-color: rgba(239, 68, 68, 0.5);
-            animation: pulse-urgent 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-urgent {
-            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Order Header */
-        .order-header {
-            padding: 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .order-table {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .table-number {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 900;
-            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
-        }
-
-        .order-card.vip .table-number {
-            background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4);
-        }
-
-        .table-info h3 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-        }
-
-        .table-info span {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 600;
-        }
-
-        .vip-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(239, 68, 68, 0.2) 100%);
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            border-radius: 12px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: #f59e0b;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Timer */
-        .order-timer {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .timer-value {
-            font-size: 1.5rem;
-            font-weight: 900;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .timer-value.green { color: #10b981; }
-        .timer-value.yellow { color: #f59e0b; }
-        .timer-value.red { color: #ef4444; animation: blink 1s ease-in-out infinite; }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .timer-label {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Order Items */
-        .order-items {
-            padding: 1rem 1.25rem;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .order-items::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .order-items::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .order-items::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 10px;
-        }
-
-        .order-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .order-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-
-        .order-item.cooking {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.3);
-        }
-
-        .order-item.ready {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.3);
-        }
-
-        .item-quantity {
-            width: 36px;
-            height: 36px;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: #a78bfa;
-        }
-
-        .order-item.cooking .item-quantity {
-            background: rgba(245, 158, 11, 0.2);
-            border-color: rgba(245, 158, 11, 0.3);
-            color: #fbbf24;
-        }
-
-        .order-item.ready .item-quantity {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.3);
-            color: #34d399;
-        }
-
-        .item-details {
-            flex: 1;
-        }
-
-        .item-name {
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .item-notes {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-style: italic;
-            margin-top: 2px;
-        }
-
-        .item-status {
-            padding: 0.35rem 0.75rem;
-            border-radius: 8px;
-            font-size: 0.6rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .item-status.pending {
-            background: rgba(139, 92, 246, 0.2);
-            color: #a78bfa;
-        }
-
-        .item-status.cooking {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fbbf24;
-        }
-
-        .item-status.ready {
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-        }
-
-        /* Order Actions */
-        .order-actions {
-            padding: 1rem 1.25rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 0.85rem;
-            border: none;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .action-btn.start {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
-        }
-
-        .action-btn.start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
-        }
-
-        .action-btn.ready {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .action-btn.ready:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        .action-btn.secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .action-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Empty State */
-        .empty-state {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 6rem 2rem;
-            text-align: center;
-        }
-
-        .empty-icon {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-            border: 2px solid rgba(139, 92, 246, 0.2);
-            border-radius: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .empty-icon svg {
-            color: rgba(139, 92, 246, 0.5);
-        }
-
-        .empty-state h2 {
-            font-size: 1.75rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-state p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 1rem;
-        }
-
-        /* Connection Status */
-        .connection-status {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            background: rgba(28, 22, 51, 0.9);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            z-index: 100;
-        }
-
-        .connection-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #10b981;
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        .connection-status.disconnected .connection-dot {
-            background: #ef4444;
-            animation: none;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-        }
-
-        .connection-text {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Sound Notification Toast */
-        .notification-toast {
-            position: fixed;
-            top: 5.5rem;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(6, 182, 212, 0.9) 100%);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            z-index: 200;
-            transform: translateX(150%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
-        }
-
-        .notification-toast.show {
-            transform: translateX(0);
-        }
-
-        .notification-toast span {
-            font-weight: 700;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .header-stats {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .orders-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+        :root{--bg:#0a0514;--card:rgba(20,15,40,0.8);--border:rgba(255,255,255,0.08);--primary:#8b5cf6;--success:#10b981;--warning:#f59e0b;--danger:#ef4444}
+        body{background:linear-gradient(135deg,var(--bg) 0%,#120a24 50%,#080310 100%);min-height:100vh;color:white}
+        .orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:0.15;pointer-events:none}
+        .orb-1{width:600px;height:600px;background:var(--primary);top:-200px;right:-200px;animation:float 20s ease-in-out infinite}
+        .orb-2{width:400px;height:400px;background:#06b6d4;bottom:-100px;left:-100px;animation:float 15s ease-in-out infinite reverse}
+        @keyframes float{0%,100%{transform:translate(0,0)scale(1)}50%{transform:translate(30px,-30px)scale(1.1)}}
+        .header{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(10,5,20,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:100;display:flex;align-items:center;padding:0 24px}
+        .header-content{width:100%;max-width:1920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+        .brand{display:flex;align-items:center;gap:12px}
+        .brand-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--primary) 0%,#06b6d4 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(139,92,246,0.4);font-size:1.5rem}
+        .brand h1{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .brand span{font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.15em}
+        .stats{display:flex;gap:12px}
+        .stat{display:flex;align-items:center;gap:10px;padding:8px 16px;background:var(--card);border:1px solid var(--border);border-radius:100px}
+        .stat.urgent{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);animation:pulse-red 2s ease-in-out infinite}
+        @keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 20px 0 rgba(239,68,68,0.2)}}
+        .stat-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.9rem}
+        .stat.urgent .stat-icon{background:rgba(239,68,68,0.3)}
+        .stat.active .stat-icon{background:rgba(245,158,11,0.3)}
+        .stat.pending .stat-icon{background:rgba(139,92,246,0.3)}
+        .stat-value{font-size:1.25rem;font-weight:800}
+        .stat-label{font-size:0.65rem;color:rgba(255,255,255,0.5);text-transform:uppercase}
+        .clock{text-align:right}
+        .clock-time{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--primary) 0%,#06b6d4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .clock-date{font-size:0.7rem;color:rgba(255,255,255,0.4);text-transform:uppercase}
+        .main{padding:88px 24px 24px;position:relative;z-index:1}
+        .grid{max-width:1920px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:24px}
+        .section{margin-bottom:24px}
+        .section-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+        .section-title{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em}
+        .section-count{padding:4px 12px;background:rgba(255,255,255,0.1);border-radius:100px;font-size:0.75rem;font-weight:700}
+        .orders-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+        .card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.3s ease;animation:slide-up 0.4s ease-out}
+        .card.compact{padding:12px}
+        .card.expanded .card-body{display:block}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.15);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+        .card.urgent{border-color:rgba(239,68,68,0.4);animation:urgent-pulse 2s ease-in-out infinite}
+        @keyframes urgent-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.3)}50%{box-shadow:0 0 20px 0 rgba(239,68,68,0.2)}}
+        .card.vip{border-color:rgba(245,158,11,0.4);background:linear-gradient(135deg,rgba(245,158,11,0.08) 0%,var(--card) 100%)}
+        
+        /* Compact Card Header */
+        .compact-header{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
+        .compact-left{display:flex;align-items:center;gap:10px;flex:1}
+        .table-num{width:40px;height:40px;background:linear-gradient(135deg,var(--primary) 0%,#06b6d4 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;box-shadow:0 4px 12px rgba(139,92,246,0.3);flex-shrink:0}
+        .card.vip .table-num{background:linear-gradient(135deg,var(--warning) 0%,var(--danger) 100%)}
+        .compact-info{flex:1;min-width:0}
+        .compact-info h4{font-size:0.9rem;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .compact-info .waiter-name{font-size:0.75rem;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:4px}
+        .item-summary{font-size:0.7rem;color:rgba(255,255,255,0.5);margin-top:2px}
+        .compact-right{text-align:right;flex-shrink:0}
+        .timer-compact{font-size:1.1rem;font-weight:800;line-height:1}
+        .timer-compact.good{color:var(--success)}
+        .timer-compact.warning{color:var(--warning)}
+        .timer-compact.danger{color:var(--danger);animation:blink 1s ease-in-out infinite}
+        .expand-btn{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s ease;margin-left:8px}
+        .expand-btn:hover{background:rgba(255,255,255,0.1);color:white}
+        .card.expanded .expand-btn{transform:rotate(180deg)}
+        
+        /* Expanded Card Body */
+        .card-body{display:none;padding:0 12px 12px;border-top:1px solid var(--border);margin-top:12px;padding-top:12px;animation:fadeIn 0.3s ease}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .card-body .item{display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:all 0.2s ease}
+        .card-body .item:hover{background:rgba(255,255,255,0.06)}
+        .card-body .item-qty{width:28px;height:28px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#c4b5fd;flex-shrink:0}
+        .card-body .item-name{font-size:0.8rem;font-weight:600;flex:1}
+        .card-body .item-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+        .card-body .item-dot.pending{background:var(--primary)}
+        .card-body .item-dot.cooking{background:var(--warning)}
+        .card-body .item-dot.ready{background:var(--success)}
+        
+        .compact-actions{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+        .btn-compact{flex:1;padding:8px;border:none;border-radius:8px;font-size:0.7rem;font-weight:700;text-transform:uppercase;cursor:pointer;transition:all 0.2s ease}
+        .btn-compact.primary{background:linear-gradient(135deg,var(--primary) 0%,#7c3aed 100%);color:white}
+        .btn-compact.success{background:linear-gradient(135deg,var(--success) 0%,#059669 100%);color:white}
+        .btn-compact.secondary{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.1)}
+        .tab-btn{padding:10px 20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:rgba(255,255,255,0.6);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s ease}
+        .tab-btn:hover{background:rgba(255,255,255,0.1);color:white}
+        .tab-btn.active{background:linear-gradient(135deg,var(--primary) 0%,#7c3aed 100%);color:white;border-color:transparent;box-shadow:0 4px 15px rgba(139,92,246,0.3)}
+        .history-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;transition:all 0.2s ease}
+        .history-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-2px)}
+        .history-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+        .history-table{width:36px;height:36px;background:linear-gradient(135deg,var(--success) 0%,#059669 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:800}
+        .history-status{padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:700;text-transform:uppercase}
+        .history-status.ready{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
+        .history-status.served{background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.3)}
+        .history-status.completed{background:rgba(16,185,129,0.15);color:#6ee7b7;border:1px solid rgba(16,185,129,0.3)}
+        .history-items{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+        .history-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:0.8rem;color:rgba(255,255,255,0.8)}
+        .history-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:0.75rem;color:rgba(255,255,255,0.5)}
+        .ready-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+        .ready-box h2{font-size:0.8rem;font-weight:700;text-transform:uppercase;color:var(--success);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .ready-box h2::before{content:'';width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+        .ready-item{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:12px;cursor:pointer;transition:all 0.2s ease;margin-bottom:10px}
+        .ready-item:hover{background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3);transform:translateX(4px)}
+        .ready-table{width:36px;height:36px;background:linear-gradient(135deg,var(--success) 0%,#059669 100%);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:800}
+        .ready-info h4{font-size:0.85rem;font-weight:600}
+        .ready-info span{font-size:0.7rem;color:rgba(255,255,255,0.5)}
+        .ready-time{font-size:0.75rem;font-weight:700;color:var(--success);margin-left:auto}
+        .empty{grid-column:1 / -1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px;text-align:center}
+        .empty-icon{width:100px;height:100px;background:rgba(139,92,246,0.1);border:2px solid rgba(139,92,246,0.2);border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;color:rgba(139,92,246,0.5);font-size:3rem}
+        .empty h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+        .empty p{color:rgba(255,255,255,0.5)}
+        .connection{position:fixed;bottom:20px;right:20px;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border:1px solid var(--border);border-radius:100px;backdrop-filter:blur(10px);z-index:100}
+        .connection-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s ease-in-out infinite}
+        .connection.disconnected .connection-dot{background:var(--danger);animation:none}
+        .connection span{font-size:0.75rem;font-weight:600;color:rgba(255,255,255,0.7)}
+        .toast{position:fixed;top:80px;right:24px;padding:16px 20px;background:linear-gradient(135deg,rgba(139,92,246,0.95) 0%,rgba(6,182,212,0.95) 100%);border-radius:12px;display:flex;align-items:center;gap:12px;z-index:200;transform:translateX(400px);transition:transform 0.4s ease;box-shadow:0 10px 40px rgba(139,92,246,0.4)}
+        .toast.show{transform:translateX(0)}
+        @media(max-width:1200px){.grid{grid-template-columns:1fr}.sidebar{display:none}}
+        @media(max-width:768px){.stats{display:none}.orders-row{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
-    <div class="bg-animation"></div>
-
-    <!-- Header -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    
     <header class="header">
         <div class="header-content">
-            <div class="logo">
-                <div class="logo-icon" style="overflow: hidden;">
-                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
-                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                        <path d="M7 2v20"></path>
-                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                    </svg>
-                </div>
-                <div class="logo-text">
+            <div class="brand">
+                <div class="brand-icon">🍳</div>
+                <div>
                     <h1>Kitchen Display</h1>
                     <span>{{ $restaurant->name }}</span>
                 </div>
             </div>
-
-            <div class="header-stats">
-                <div class="stat-badge urgent" id="stat-overdue">
-                    <div>
-                        <div class="stat-value" id="overdue-count">0</div>
-                        <div class="stat-label">Overdue</div>
-                    </div>
+            
+            <div class="stats">
+                <div class="stat urgent" id="stat-overdue">
+                    <div class="stat-icon">⚠️</div>
+                    <div><div class="stat-value" id="overdue-count">0</div><div class="stat-label">Overdue</div></div>
                 </div>
-                <div class="stat-badge preparing" id="stat-preparing">
-                    <div>
-                        <div class="stat-value" id="preparing-count">0</div>
-                        <div class="stat-label">Preparing</div>
-                    </div>
+                <div class="stat active" id="stat-preparing">
+                    <div class="stat-icon">🔥</div>
+                    <div><div class="stat-value" id="preparing-count">0</div><div class="stat-label">Cooking</div></div>
                 </div>
-                <div class="stat-badge pending" id="stat-pending">
-                    <div>
-                        <div class="stat-value" id="pending-count">0</div>
-                        <div class="stat-label">Pending</div>
-                    </div>
+                <div class="stat pending" id="stat-pending">
+                    <div class="stat-icon">⏳</div>
+                    <div><div class="stat-value" id="pending-count">0</div><div class="stat-label">Pending</div></div>
                 </div>
             </div>
-
-            <div class="header-time">
-                <div class="current-time" id="current-time">00:00:00</div>
-                <div class="last-refresh">Last refresh: <span id="last-refresh">--:--:--</span></div>
+            
+            <div class="clock">
+                <div class="clock-time" id="clock">00:00</div>
+                <div class="clock-date" id="date">Loading...</div>
             </div>
         </div>
     </header>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="orders-grid" id="orders-container">
-            <!-- Orders will be dynamically loaded here -->
-            <div class="empty-state" id="empty-state">
-                <div class="empty-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
-                        <line x1="6" x2="18" y1="17" y2="17"/>
-                    </svg>
+    
+    <main class="main">
+        <!-- Tab Navigation -->
+        <div class="tabs" style="display:flex;gap:8px;margin-bottom:20px;max-width:1920px;margin:0 auto 20px;padding:0 24px">
+            <button class="tab-btn active" id="tab-active" onclick="switchTab('active')">
+                🔥 Active Orders
+            </button>
+            <button class="tab-btn" id="tab-history" onclick="switchTab('history')">
+                📜 Order History
+            </button>
+        </div>
+        
+        <!-- Active Orders View -->
+        <div id="view-active" class="view active">
+            <div class="grid">
+                <div id="orders-container">
+                    <div class="section" id="urgent-section" style="display:none">
+                        <div class="section-header">
+                            <span class="section-title" style="color:var(--danger)">⚠️ Urgent Orders</span>
+                            <span class="section-count" style="background:rgba(239,68,68,0.2);color:#fca5a5" id="urgent-count">0</span>
+                        </div>
+                        <div class="orders-row" id="urgent-orders"></div>
+                    </div>
+                    
+                    <div class="section" id="cooking-section">
+                        <div class="section-header">
+                            <span class="section-title" style="color:var(--warning)">🔥 Now Cooking</span>
+                            <span class="section-count" style="background:rgba(245,158,11,0.2);color:#fcd34d" id="cooking-count">0</span>
+                        </div>
+                        <div class="orders-row" id="cooking-orders"></div>
+                    </div>
+                    
+                    <div class="section" id="pending-section">
+                        <div class="section-header">
+                            <span class="section-title">📋 Pending Orders</span>
+                            <span class="section-count" id="pending-count-display">0</span>
+                        </div>
+                        <div class="orders-row" id="pending-orders"></div>
+                    </div>
+                    
+                    <div class="empty" id="empty-state">
+                        <div class="empty-icon">🍽️</div>
+                        <h2>No Active Orders</h2>
+                        <p>New orders appear automatically</p>
+                    </div>
                 </div>
-                <h2>No Active Orders</h2>
-                <p>New orders will appear here automatically</p>
+                
+                <div class="sidebar">
+                    <div class="ready-box">
+                        <h2>Ready to Serve</h2>
+                        <div id="ready-list">
+                            <div style="text-align:center;padding:40px;color:rgba(255,255,255,0.4)">
+                                <p style="font-size:0.85rem">No orders ready yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order History View -->
+        <div id="view-history" class="view" style="display:block">
+            <div style="max-width:1920px;margin:0 auto;padding:0 24px">
+                <!-- Filter Bar -->
+                <div class="filter-bar" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">📅 Date:</span>
+                        <select id="history-date" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:white;font-size:0.85rem;cursor:pointer" onchange="fetchHistory()">
+                            <option value="">📅 Last 7 Days</option>
+                            <option value="{{ date('Y-m-d') }}">📅 Today</option>
+                            <option value="{{ date('Y-m-d', strtotime('-1 day')) }}">📅 Yesterday</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">📊 Status:</span>
+                        <select id="history-status" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:white;font-size:0.85rem;cursor:pointer" onchange="fetchHistory()">
+                            <option value="all">All Status</option>
+                            <option value="ready">Ready</option>
+                            <option value="served">Served</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">🪑 Table:</span>
+                        <select id="history-table" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:white;font-size:0.85rem;cursor:pointer" onchange="fetchHistory()">
+                            <option value="all">All Tables</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+                        <div class="stat-pill" style="background:rgba(16,185,129,0.15);border-color:rgba(16,185,129,0.3)">
+                            <span style="font-size:0.75rem;color:rgba(255,255,255,0.6)">Total:</span>
+                            <span id="history-total" style="font-size:1rem;font-weight:700;color:var(--success)">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- History Stats -->
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+                    <div class="stat-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center">
+                        <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:4px">Total Orders</div>
+                        <div id="stat-total" style="font-size:1.5rem;font-weight:800">0</div>
+                    </div>
+                    <div class="stat-card" style="background:linear-gradient(135deg,rgba(245,158,11,0.15) 0%,rgba(245,158,11,0.05) 100%);border:1px solid rgba(245,158,11,0.3);border-radius:12px;padding:16px;text-align:center">
+                        <div style="font-size:0.75rem;color:#fcd34d;text-transform:uppercase;margin-bottom:4px">Ready</div>
+                        <div id="stat-ready" style="font-size:1.5rem;font-weight:800;color:#fbbf24">0</div>
+                    </div>
+                    <div class="stat-card" style="background:linear-gradient(135deg,rgba(6,182,212,0.15) 0%,rgba(6,182,212,0.05) 100%);border:1px solid rgba(6,182,212,0.3);border-radius:12px;padding:16px;text-align:center">
+                        <div style="font-size:0.75rem;color:#67e8f9;text-transform:uppercase;margin-bottom:4px">Served</div>
+                        <div id="stat-served" style="font-size:1.5rem;font-weight:800;color:#22d3ee">0</div>
+                    </div>
+                    <div class="stat-card" style="background:linear-gradient(135deg,rgba(16,185,129,0.15) 0%,rgba(16,185,129,0.05) 100%);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:16px;text-align:center">
+                        <div style="font-size:0.75rem;color:#6ee7b7;text-transform:uppercase;margin-bottom:4px">Completed</div>
+                        <div id="stat-completed" style="font-size:1.5rem;font-weight:800;color:#34d399">0</div>
+                    </div>
+                </div>
+                
+                <!-- History List -->
+                <div id="history-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:16px">
+                    <div class="empty" style="grid-column:1/-1">
+                        <div class="empty-icon">📜</div>
+                        <h2>Loading History...</h2>
+                        <p id="history-debug">Please wait...</p>
+                    </div>
+                </div>
+                
+                <!-- Debug Panel (hidden by default, press D to show) -->
+                <div id="debug-panel" style="display:none;position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.9);border:1px solid var(--primary);border-radius:12px;padding:16px;max-width:400px;max-height:300px;overflow:auto;z-index:9999">
+                    <div style="font-size:0.8rem;color:var(--primary);margin-bottom:8px">Debug Info</div>
+                    <pre id="debug-content" style="font-size:0.7rem;color:white;margin:0"></pre>
+                </div>
             </div>
         </div>
     </main>
-
-    <!-- Connection Status -->
-    <div class="connection-status" id="connection-status">
+    
+    <div class="connection" id="connection-status">
         <div class="connection-dot"></div>
-        <span class="connection-text">Live Updates Active</span>
+        <span>Live Updates</span>
     </div>
-
-    <!-- Notification Toast -->
-    <div class="notification-toast" id="notification-toast">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-        </svg>
-        <span id="toast-message">New order received!</span>
+    
+    <div class="toast" id="toast">
+        <span>🔔</span>
+        <span id="toast-message">New order!</span>
     </div>
-
-    <!-- Audio for new orders -->
-    <audio id="order-sound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YVoGAACBhYqFbF1iZmZkZHF3eXd1dnZ4eXl4d3d3d3d4eXl5eHd3d3d4eHh4d3d3d3h4eHh3d3d3eHh4eHd3d3d4eHh4d3d3d3h4eHh3d3d3eHh4eHd3d3d4eHh4d3d3d3h4eHh3d3d3eHh4eHd3d3d4eHh4" type="audio/wav">
-    </audio>
-
+    
     <script>
-        const token = "{{ $restaurant->kitchen_token }}";
-        const apiUrl = "{{ route('kitchen.api.orders', $restaurant->kitchen_token) }}";
-        const apiOrderStatusUrl = "{{ route('kitchen.api.order.status', $restaurant->kitchen_token) }}";
-        const apiItemStatusUrl = "{{ route('kitchen.api.item.status', $restaurant->kitchen_token) }}";
-        let previousOrderCount = 0;
+        const apiUrl="{{ route('kitchen.api.orders', $restaurant->kitchen_token) }}";
+        const apiHistoryUrl="{{ route('kitchen.api.history', $restaurant->kitchen_token) }}";
+        const apiOrderStatusUrl="{{ route('kitchen.api.order.status', $restaurant->kitchen_token) }}";
+        const apiItemStatusUrl="{{ route('kitchen.api.item.status', $restaurant->kitchen_token) }}";
+        let previousOrderIds=[];
+        let currentTab='active';
 
-        // Update current time
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('current-time').textContent = timeStr;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
-
-        // Fetch and render orders
-        async function fetchOrders() {
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (data.success) {
-                    renderOrders(data.orders);
-                    updateStats(data.stats);
-                    document.getElementById('last-refresh').textContent = data.timestamp;
-
-                    // New order notification
-                    if (data.orders.length > previousOrderCount && previousOrderCount !== 0) {
-                        showNotification('New order received!');
-                        playSound();
-                    }
-                    previousOrderCount = data.orders.length;
-
-                    // Update connection status
-                    document.getElementById('connection-status').classList.remove('disconnected');
-                    document.querySelector('.connection-text').textContent = 'Live Updates Active';
-                }
-            } catch (error) {
-                console.error('Failed to fetch orders:', error);
-                document.getElementById('connection-status').classList.add('disconnected');
-                document.querySelector('.connection-text').textContent = 'Connection Lost';
+        function switchTab(tab){
+            currentTab=tab;
+            document.querySelectorAll('.tab-btn').forEach(btn=>btn.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            // Toggle views using display style
+            const activeView = document.getElementById('view-active');
+            const historyView = document.getElementById('view-history');
+            
+            if(tab === 'active') {
+                activeView.style.display = 'block';
+                historyView.style.display = 'none';
+            } else {
+                activeView.style.display = 'none';
+                historyView.style.display = 'block';
+                fetchHistory();
             }
         }
 
-        // Render orders
-        function renderOrders(orders) {
-            const container = document.getElementById('orders-container');
-            const emptyState = document.getElementById('empty-state');
+        async function fetchHistory(){
+            const debugPanel=document.getElementById('debug-content');
+            const debugMsg=document.getElementById('history-debug');
+            
+            try{
+                const dateSelect=document.getElementById('history-date');
+                const date=dateSelect?dateSelect.value:'';
+                const status=document.getElementById('history-status').value;
+                const table=document.getElementById('history-table').value;
+                
+                let url=apiHistoryUrl;
+                const params=[];
+                if(date)params.push(`date=${date}`);
+                if(status!=='all')params.push(`status=${status}`);
+                if(table!=='all')params.push(`table=${table}`);
+                if(params.length>0)url+='?'+params.join('&');
+                
+                console.log('Fetching history from:', url);
+                if(debugPanel)debugPanel.textContent=`Fetching: ${url}\n`;
+                if(debugMsg)debugMsg.textContent='Fetching data...';
+                
+                const response=await fetch(url);
+                const data=await response.json();
+                
+                console.log('History response:', data);
+                if(debugPanel)debugPanel.textContent+=`Response: ${JSON.stringify(data, null, 2)}`;
+                
+                if(data.success){
+                    renderHistory(data.orders,data.stats);
+                    updateTableFilter(data.tables);
+                    console.log(`Loaded ${data.orders.length} orders from history`);
+                    if(debugMsg)debugMsg.textContent=`Loaded ${data.orders.length} orders`;
+                }else{
+                    console.error('History fetch failed:', data);
+                    if(debugMsg)debugMsg.textContent='Failed: ' + (data.message || 'Unknown error');
+                    showToast('Failed to load history');
+                }
+            }catch(error){
+                console.error('Failed to fetch history:',error);
+                if(debugPanel)debugPanel.textContent+=`Error: ${error.message}`;
+                if(debugMsg)debugMsg.textContent='Error: ' + error.message;
+                showToast('Error loading history');
+            }
+        }
 
-            if (orders.length === 0) {
-                container.innerHTML = '';
-                container.appendChild(emptyState);
-                emptyState.style.display = 'flex';
+        function renderHistory(orders,stats){
+            console.log('renderHistory called with', orders.length, 'orders');
+            console.log('First order:', orders[0]);
+            
+            document.getElementById('stat-total').textContent=stats.total;
+            document.getElementById('stat-ready').textContent=stats.ready;
+            document.getElementById('stat-served').textContent=stats.served;
+            document.getElementById('stat-completed').textContent=stats.completed;
+            document.getElementById('history-total').textContent=stats.total;
+            
+            const container=document.getElementById('history-list');
+            if(!container){
+                console.error('history-list container not found!');
                 return;
             }
-
-            emptyState.style.display = 'none';
-
-            const ordersHtml = orders.map(order => `
-                <div class="order-card ${order.is_vip ? 'vip' : ''} sla-${order.sla_status}" data-order-id="${order.id}">
-                    <div class="order-header">
-                        <div class="order-table">
-                            <div class="table-number">${order.table_number}</div>
-                            <div class="table-info">
-                                <h3>Table ${order.table_number}</h3>
-                                <span>Order #${String(order.id).padStart(6, '0')} • ${order.waiter_name}</span>
-                            </div>
-                        </div>
-                        <div class="order-timer">
-                            <div class="timer-value ${order.sla_status}">${order.elapsed_time}</div>
-                            <div class="timer-label">Elapsed</div>
-                        </div>
-                    </div>
-                    ${order.is_vip ? '<div style="padding: 0 1.25rem;"><div class="vip-badge"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> VIP Priority</div></div>' : ''}
-                    <div class="order-items">
-                        ${order.items.map(item => `
-                            <div class="order-item ${item.status}" data-item-id="${item.id}" onclick="toggleItemStatus('${item.id}', '${item.status}')">
-                                <div class="item-quantity">${item.quantity}x</div>
-                                <div class="item-details">
-                                    <div class="item-name">${item.name}</div>
-                                    ${item.notes ? `<div class="item-notes">${item.notes}</div>` : ''}
+            
+            if(orders.length===0){
+                container.innerHTML=`<div class="empty" style="grid-column:1/-1">
+                    <div class="empty-icon">📜</div>
+                    <h2>No Order History</h2>
+                    <p>No orders found for selected filters</p>
+                </div>`;
+                return;
+            }
+            
+            try {
+                const html = orders.map((order, index)=>{
+                    console.log(`Processing order ${index}:`, order.id, order.table_number);
+                    
+                    // Handle items - could be array or object
+                    let items = [];
+                    if (order.items) {
+                        if (Array.isArray(order.items)) {
+                            items = order.items;
+                        } else if (typeof order.items === 'object') {
+                            items = Object.values(order.items);
+                        }
+                    }
+                    const itemCount = items.length;
+                    
+                    const safeTable = order.table_number || 'N/A';
+                    const safeWaiter = order.waiter_name || 'Unknown';
+                    const safeStatus = order.status || 'unknown';
+                    const safeAmount = order.total_amount || 0;
+                    const safeTime = order.completed_at || 'N/A';
+                    const safeTimeAgo = order.completed_time || '';
+                    
+                    return `<div class="history-card">
+                        <div class="history-header">
+                            <div style="display:flex;align-items:center;gap:12px">
+                                <div class="history-table">${safeTable}</div>
+                                <div>
+                                    <div style="font-size:0.9rem;font-weight:700">Table ${safeTable}</div>
+                                    <div style="font-size:0.75rem;color:rgba(255,255,255,0.5)">👤 ${safeWaiter}</div>
                                 </div>
-                                <div class="item-status ${item.status}">${item.status}</div>
                             </div>
-                        `).join('')}
+                            <div class="history-status ${safeStatus}">${safeStatus}</div>
+                        </div>
+                        ${itemCount>0?`<div class="history-items">
+                            ${items.slice(0,3).map(item=>`
+                                <div class="history-item">
+                                    <span style="font-weight:600;color:var(--primary)">${item.quantity||1}x</span>
+                                    <span>${item.name||'Unknown Item'}</span>
+                                </div>
+                            `).join('')}
+                            ${itemCount>3?`<div style="font-size:0.75rem;color:rgba(255,255,255,0.4);font-style:italic">+ ${itemCount-3} more items</div>`:''}
+                        </div>`:`<div class="history-items" style="color:rgba(255,255,255,0.4);font-style:italic;font-size:0.8rem">No items</div>`}
+                        <div class="history-footer">
+                            <span>💰 TSh ${parseInt(safeAmount).toLocaleString()}</span>
+                            <span>✓ ${safeTime} ${safeTimeAgo?`(${safeTimeAgo})`:''}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                console.log('Generated HTML length:', html.length);
+                container.innerHTML = html;
+                console.log('HTML inserted into container');
+            } catch (error) {
+                console.error('Error rendering history:', error);
+                container.innerHTML = `<div style="color:red;padding:20px">Error: ${error.message}</div>`;
+            }
+        }
+
+        function updateTableFilter(tables){
+            const select=document.getElementById('history-table');
+            const currentValue=select.value;
+            select.innerHTML='<option value="all">All Tables</option>';
+            tables.forEach(table=>{
+                const option=document.createElement('option');
+                option.value=table;
+                option.textContent=`Table ${table}`;
+                select.appendChild(option);
+            });
+            select.value=currentValue;
+        }
+
+        function updateClock(){
+            const now=new Date();
+            document.getElementById('clock').textContent=now.toLocaleTimeString('en-US',{hour12:false,hour:'2-digit',minute:'2-digit'});
+            document.getElementById('date').textContent=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+        }
+        setInterval(updateClock,1000);
+        updateClock();
+
+        async function fetchOrders(){
+            if(currentTab!=='active')return;
+            try{
+                const response=await fetch(apiUrl);
+                const data=await response.json();
+                if(data.success){
+                    renderOrders(data.orders);
+                    updateStats(data.stats);
+                    document.getElementById('connection-status').classList.remove('disconnected');
+                }
+            }catch(error){
+                document.getElementById('connection-status').classList.add('disconnected');
+            }
+        }
+
+        function renderOrders(orders){
+            const urgent=orders.filter(o=>o.sla_status==='red');
+            const cooking=orders.filter(o=>o.status==='preparing');
+            const pending=orders.filter(o=>o.status==='pending'||o.status==='confirmed');
+            const ready=orders.filter(o=>o.status==='ready');
+
+            const currentIds=orders.map(o=>o.id);
+            const newOrders=currentIds.filter(id=>!previousOrderIds.includes(id));
+            if(newOrders.length>0&&previousOrderIds.length>0){
+                showToast(`${newOrders.length} new order${newOrders.length>1?'s':''}!`);
+            }
+            previousOrderIds=currentIds;
+
+            document.getElementById('urgent-section').style.display=urgent.length?'block':'none';
+            document.getElementById('cooking-section').style.display=cooking.length?'block':'none';
+            document.getElementById('pending-section').style.display=pending.length?'block':'none';
+            document.getElementById('empty-state').style.display=orders.length?'none':'flex';
+
+            document.getElementById('urgent-count').textContent=urgent.length;
+            document.getElementById('cooking-count').textContent=cooking.length;
+            document.getElementById('pending-count-display').textContent=pending.length;
+
+            document.getElementById('urgent-orders').innerHTML=urgent.map(o=>renderCard(o,true)).join('');
+            document.getElementById('cooking-orders').innerHTML=cooking.map(o=>renderCard(o)).join('');
+            document.getElementById('pending-orders').innerHTML=pending.map(o=>renderCard(o)).join('');
+
+            document.getElementById('ready-list').innerHTML=ready.length
+                ?ready.map(o=>renderReady(o)).join('')
+                :'<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.4)"><p style="font-size:0.85rem">No orders ready yet</p></div>';
+        }
+
+        function renderCard(order,isUrgent=false){
+            const timerClass=order.sla_status==='red'?'danger':order.sla_status==='yellow'?'warning':'good';
+            const cardClass=isUrgent?'urgent':order.is_vip?'vip':'';
+            const totalItems=order.items.length;
+            const pendingItems=order.items.filter(i=>i.status==='pending').length;
+            const cookingItems=order.items.filter(i=>i.status==='cooking').length;
+            const readyItems=order.items.filter(i=>i.status==='ready').length;
+            
+            // Summary text
+            let summary=[];
+            if(pendingItems>0)summary.push(`${pendingItems} pending`);
+            if(cookingItems>0)summary.push(`${cookingItems} cooking`);
+            if(readyItems>0)summary.push(`${readyItems} ready`);
+            
+            return `<div class="card compact ${cardClass}" id="card-${order.id}" data-order-id="${order.id}">
+                <div class="compact-header" onclick="toggleExpand(${order.id})">
+                    <div class="compact-left">
+                        <div class="table-num">${order.table_number}</div>
+                        <div class="compact-info">
+                            <h4>Table ${order.table_number}</h4>
+                            <div class="waiter-name">
+                                👤 ${order.waiter_name||'Unassigned'}
+                            </div>
+                            <div class="item-summary">
+                                ${totalItems} items • ${summary.join(' • ')||'All pending'}
+                            </div>
+                        </div>
                     </div>
-                    <div class="order-actions">
-                        ${order.status === 'pending' || order.status === 'confirmed' ? `
-                            <button class="action-btn start" onclick="updateOrderStatus(${order.id}, 'preparing')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/></svg>
-                                Start Cooking
-                            </button>
-                        ` : ''}
-                        ${order.status === 'preparing' ? `
-                            <button class="action-btn ready" onclick="updateOrderStatus(${order.id}, 'ready')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                                Mark Ready
-                            </button>
-                        ` : ''}
+                    <div class="compact-right" style="display:flex;align-items:center">
+                        <div class="timer-compact ${timerClass}">${order.elapsed_time}</div>
+                        <div class="expand-btn">▼</div>
                     </div>
                 </div>
-            `).join('');
-
-            container.innerHTML = ordersHtml;
-        }
-
-        // Update stats
-        function updateStats(stats) {
-            document.getElementById('overdue-count').textContent = stats.overdue;
-            document.getElementById('preparing-count').textContent = stats.preparing;
-            document.getElementById('pending-count').textContent = stats.pending;
-        }
-
-        // Update order status
-        async function updateOrderStatus(orderId, status) {
-            try {
-                const response = await fetch(apiOrderStatusUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ order_id: orderId, status: status })
-                });
                 
-                const data = await response.json();
-                if (data.success) {
-                    fetchOrders();
-                    showNotification(`Order marked as ${status}!`);
-                }
-            } catch (error) {
-                console.error('Failed to update order:', error);
-            }
+                <div class="card-body" id="body-${order.id}">
+                    ${order.is_vip?`<div class="vip-badge" style="margin-bottom:10px">⭐ VIP Priority</div>`:''}
+                    <div class="items-list">
+                        ${order.items.map(item=>`<div class="item ${item.status}" onclick="toggleItemStatus('${item.id}','${item.status}')">
+                            <div class="item-qty">${item.quantity}</div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-dot ${item.status}"></div>
+                        </div>`).join('')}
+                    </div>
+                    <div class="compact-actions">
+                        ${order.status==='pending'||order.status==='confirmed'?`<button class="btn-compact primary" onclick="event.stopPropagation();updateOrderStatus(${order.id},'preparing')">▶ Start</button>`:''}
+                        ${order.status==='preparing'?`<button class="btn-compact success" onclick="event.stopPropagation();updateOrderStatus(${order.id},'ready')">✓ Ready</button>`:''}
+                        <button class="btn-compact secondary" onclick="event.stopPropagation();updateOrderStatus(${order.id},'cancelled')">✕</button>
+                    </div>
+                </div>
+            </div>`;
         }
 
-        // Toggle item status
-        async function toggleItemStatus(itemId, currentStatus) {
-            const statusFlow = { 'pending': 'cooking', 'cooking': 'ready', 'ready': 'pending' };
-            const newStatus = statusFlow[currentStatus] || 'cooking';
+        function toggleExpand(orderId){
+            const card=document.getElementById(`card-${orderId}`);
+            card.classList.toggle('expanded');
+        }
 
-            try {
-                const response = await fetch(apiItemStatusUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ item_id: itemId, status: newStatus })
+        function renderReady(order){
+            return `<div class="ready-item" onclick="updateOrderStatus(${order.id},'served')">
+                <div class="ready-table">${order.table_number}</div>
+                <div class="ready-info">
+                    <h4>Table ${order.table_number}</h4>
+                    <span>${order.items.length} items</span>
+                </div>
+                <div class="ready-time">${order.elapsed_time}</div>
+            </div>`;
+        }
+
+        function updateStats(stats){
+            document.getElementById('overdue-count').textContent=stats.overdue||0;
+            document.getElementById('preparing-count').textContent=stats.preparing||0;
+            document.getElementById('pending-count').textContent=stats.pending||0;
+        }
+
+        async function updateOrderStatus(orderId,status){
+            try{
+                const response=await fetch(apiOrderStatusUrl,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"').content},
+                    body:JSON.stringify({order_id:orderId,status:status})
                 });
-                
-                const data = await response.json();
-                if (data.success) {
+                const data=await response.json();
+                if(data.success){
                     fetchOrders();
+                    showToast(`Order ${status}!`);
                 }
-            } catch (error) {
-                console.error('Failed to update item:', error);
-            }
+            }catch(error){}
         }
 
-        // Show notification
-        function showNotification(message) {
-            const toast = document.getElementById('notification-toast');
-            document.getElementById('toast-message').textContent = message;
+        async function toggleItemStatus(itemId,currentStatus){
+            const flow={'pending':'cooking','cooking':'ready','ready':'pending'};
+            const newStatus=flow[currentStatus]||'cooking';
+            try{
+                const response=await fetch(apiItemStatusUrl,{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"').content},
+                    body:JSON.stringify({item_id:itemId,status:newStatus})
+                });
+                const data=await response.json();
+                if(data.success)fetchOrders();
+            }catch(error){}
+        }
+
+        function showToast(message){
+            const toast=document.getElementById('toast');
+            document.getElementById('toast-message').textContent=message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 4000);
+            setTimeout(()=>toast.classList.remove('show'),3000);
         }
 
-        // Play sound
-        function playSound() {
-            const sound = document.getElementById('order-sound');
-            sound.currentTime = 0;
-            sound.play().catch(() => {});
-        }
-
-        // Initial fetch and interval
         fetchOrders();
-        setInterval(fetchOrders, 5000); // Refresh every 5 seconds
+        setInterval(fetchOrders,5000);
+        
+        // Set initial view states
+        document.getElementById('view-active').style.display = 'block';
+        document.getElementById('view-history').style.display = 'none';
+        
+        // Keyboard shortcut: Press 'D' to show debug panel
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'd' || e.key === 'D') {
+                const panel = document.getElementById('debug-panel');
+                if(panel) {
+                    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+        });
     </script>
 </body>
 </html>

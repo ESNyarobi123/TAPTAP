@@ -37,54 +37,120 @@
         <div id="searchError" class="mt-4 hidden p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm"></div>
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div>
-            <h2 class="text-2xl font-bold text-white tracking-tight">Waiters waliounganishwa</h2>
-            <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Unlink kuondoa waiter; history inabaki</p>
+    <!-- Search & Filter Bar -->
+    <div class="glass-card rounded-xl p-4 mb-6 border border-white/10" x-data="{ filterOpen: false }">
+        <div class="flex flex-wrap gap-3 items-center justify-between">
+            <div class="flex-1 min-w-[250px] max-w-md">
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input type="text" id="waiterSearch" placeholder="Search by name or code..." 
+                           class="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
+                           oninput="filterWaiters()">
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button @click="filterOpen = !filterOpen" class="px-4 py-2 glass rounded-lg border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm font-medium flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                    </svg>
+                    Filter
+                </button>
+                <select id="sortBy" onchange="filterWaiters()" class="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent">
+                    <option value="name">Sort: Name</option>
+                    <option value="orders">Sort: Orders</option>
+                    <option value="recent">Sort: Recently Added</option>
+                </select>
+                <a href="{{ route('manager.waiters.history') }}" class="inline-flex items-center gap-2 px-4 py-2 glass rounded-lg border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-all text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/></svg>
+                    History
+                </a>
+            </div>
         </div>
-        <a href="{{ route('manager.waiters.history') }}" class="inline-flex items-center gap-2 px-5 py-2.5 glass rounded-xl border border-white/10 text-white/80 hover:text-white hover:bg-white/10 transition-all text-sm font-semibold">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/></svg>
-            Historia ya Waiters (Link / Unlink)
-        </a>
+        
+        <!-- Filter Options -->
+        <div x-show="filterOpen" x-transition class="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-3">
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="statusFilter" value="all" checked onchange="filterWaiters()" class="text-violet-600 focus:ring-violet-500">
+                <span class="text-sm text-white/70">All Waiters</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="statusFilter" value="online" onchange="filterWaiters()" class="text-violet-600 focus:ring-violet-500">
+                <span class="text-sm text-white/70">Online Only</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="statusFilter" value="offline" onchange="filterWaiters()" class="text-sm text-violet-600 focus:ring-violet-500">
+                <span class="text-sm text-white/70">Offline</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="statusFilter" value="permanent" onchange="filterWaiters()" class="text-violet-600 focus:ring-violet-500">
+                <span class="text-sm text-white/70">Permanent</span>
+            </label>
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="statusFilter" value="temporary" onchange="filterWaiters()" class="text-violet-600 focus:ring-violet-500">
+                <span class="text-sm text-white/70">Temporary</span>
+            </label>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-white">Active Staff <span id="waiterCount" class="text-white/50 font-normal text-base"></span></h2>
+    </div>
+
+    <div id="waitersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         @forelse($waiters as $waiter)
-            <div class="glass-card p-6 rounded-2xl card-hover group">
-                <div class="flex items-center gap-5 mb-4">
-                    @php $waiterPhotoUrl = $waiter->profilePhotoUrl(); @endphp
+            <div class="waiter-card glass-card p-4 rounded-xl card-hover group transition-all" 
+                 data-name="{{ strtolower($waiter->name) }}" 
+                 data-code="{{ strtolower($waiter->global_waiter_number ?? '') }}" 
+                 data-status="{{ $waiter->is_online ? 'online' : 'offline' }}" 
+                 data-employment="{{ $waiter->employment_type }}" 
+                 data-orders="{{ $waiter->orders_count }}">
+                <!-- Avatar & Name -->
+                <div class="flex items-center gap-3 mb-3">
+                    @php 
+                        $waiterPhotoUrl = $waiter->profilePhotoUrl(); 
+                        $initials = substr($waiter->name, 0, 1);
+                        $colorHash = crc32($waiter->global_waiter_number ?? $waiter->name) % 6;
+                        $colors = [
+                            'from-violet-500/20 to-purple-500/20 text-violet-400',
+                            'from-blue-500/20 to-cyan-500/20 text-blue-400',
+                            'from-emerald-500/20 to-teal-500/20 text-emerald-400',
+                            'from-amber-500/20 to-orange-500/20 text-amber-400',
+                            'from-rose-500/20 to-pink-500/20 text-rose-400',
+                            'from-indigo-500/20 to-blue-500/20 text-indigo-400',
+                        ];
+                        $avatarColor = $colors[$colorHash];
+                    @endphp
                     @if($waiterPhotoUrl)
-                        <img src="{{ $waiterPhotoUrl }}" alt="{{ $waiter->name }}" loading="lazy" class="w-16 h-16 rounded-2xl object-cover border border-violet-500/20 group-hover:scale-110 transition-transform shrink-0 bg-violet-500/10" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="waiter-fallback-avatar w-16 h-16 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-2xl text-violet-400 border border-violet-500/20 shrink-0 hidden">
-                            {{ substr($waiter->name, 0, 1) }}
+                        <img src="{{ $waiterPhotoUrl }}" alt="{{ $waiter->name }}" loading="lazy" class="w-12 h-12 rounded-lg object-cover border border-white/10 group-hover:scale-105 transition-transform shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="waiter-fallback-avatar w-12 h-12 bg-gradient-to-br {{ $avatarColor }} rounded-lg flex items-center justify-center font-bold text-lg border border-white/10 shrink-0 hidden">
+                            {{ $initials }}
                         </div>
                     @else
-                        <div class="w-16 h-16 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center font-bold text-2xl text-violet-400 border border-violet-500/20 group-hover:scale-110 transition-transform shrink-0">
-                            {{ substr($waiter->name, 0, 1) }}
+                        <div class="w-12 h-12 bg-gradient-to-br {{ $avatarColor }} rounded-lg flex items-center justify-center font-bold text-lg border border-white/10 group-hover:scale-105 transition-transform shrink-0">
+                            {{ $initials }}
                         </div>
                     @endif
-                    <div class="min-w-0">
-                        <h4 class="text-xl font-bold text-white truncate">{{ $waiter->name }}</h4>
-                        <p class="text-[11px] font-mono text-cyan-400">{{ $waiter->global_waiter_number ?? '—' }}</p>
-                        @if($waiter->is_online)
-                            <p class="text-[11px] font-medium text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 mt-1">
-                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                                Online
-                            </p>
-                        @else
-                            <p class="text-[11px] font-medium text-white/50 uppercase tracking-wider flex items-center gap-1.5 mt-1">
-                                <span class="w-1.5 h-1.5 bg-white/40 rounded-full"></span>
-                                Offline
-                                @if($waiter->last_online_at)
-                                    <span class="text-white/40 normal-case font-normal">· mwisho {{ $waiter->last_online_at->diffForHumans() }}</span>
-                                @endif
-                            </p>
-                        @endif
-                        @if($waiter->employment_type === 'temporary' && $waiter->linked_until)
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30 mt-1">Show-time · mpaka {{ $waiter->linked_until->format('d/m/Y') }}</span>
-                        @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/10 text-white/60 border border-white/10 mt-1">Muda mrefu</span>
-                        @endif
+                    <div class="min-w-0 flex-1">
+                        <h4 class="text-sm font-bold text-white truncate">{{ $waiter->name }}</h4>
+                        <p class="text-[10px] font-mono text-cyan-400/80">{{ $waiter->global_waiter_number ?? '—' }}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            @if($waiter->is_online)
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                    <span class="w-1 h-1 bg-emerald-400 rounded-full animate-pulse"></span>
+                                    Online
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-white/5 text-white/40 border border-white/10">
+                                    <span class="w-1 h-1 bg-white/40 rounded-full"></span>
+                                    Offline
+                                </span>
+                            @endif
+                            @if($waiter->employment_type === 'temporary')
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">Temp</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -114,30 +180,68 @@
                 </div>
                 @endif
 
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div class="glass p-4 rounded-xl">
-                        <p class="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-1">Orders</p>
-                        <p class="text-xl font-bold text-white">{{ $waiter->orders_count }}</p>
+                <!-- Mini Stats -->
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <div class="bg-white/5 p-2 rounded-lg border border-white/10">
+                        <p class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-0.5">Orders</p>
+                        <p class="text-lg font-bold text-white">{{ $waiter->orders_count }}</p>
+                        <p class="text-[8px] text-white/30">All time</p>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-lg border border-white/10">
+                        <p class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-0.5">Tips</p>
+                        <p class="text-lg font-bold text-amber-400">{{ number_format($waiter->tips_sum_amount ?? 0) }}</p>
+                        <p class="text-[8px] text-white/30">TSh</p>
+                    </div>
+                    <div class="bg-white/5 p-2 rounded-lg border border-white/10">
+                        <p class="text-[9px] font-bold text-white/40 uppercase tracking-wider mb-0.5">Rating</p>
+                        <p class="text-lg font-bold text-white flex items-center gap-0.5">
+                            {{ number_format($waiter->feedback_avg_rating ?? 0, 1) }}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" class="text-amber-400">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                        </p>
+                        <p class="text-[8px] text-white/30">{{ $waiter->feedback_count ?? 0 }} reviews</p>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2">
+                @if(($waiter->feedback_avg_rating ?? 0) >= 4.5 && ($waiter->feedback_count ?? 0) >= 10)
+                    <div class="mb-3 px-2 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-lg flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-amber-400">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Top Performer 🏆</span>
+                    </div>
+                @endif
+
+                <!-- Quick Actions -->
+                <div class="flex gap-1.5">
                     @php
                         $waiterForModal = $waiter->only(['id','name','email','waiter_code','global_waiter_number','orders_count','created_at','employment_type','linked_until']);
                         $waiterForModal['profile_photo_url'] = $waiter->profilePhotoUrl();
+                        $waiterForModal['tips_sum'] = $waiter->tips_sum_amount ?? 0;
+                        $waiterForModal['rating'] = $waiter->feedback_avg_rating ?? 0;
+                        $waiterForModal['rating_count'] = $waiter->feedback_count ?? 0;
                         $hasOrderPortal = in_array($waiter->id, $waiterIdsWithOrderPortal ?? []);
                     @endphp
-                    <button onclick="openViewWaiterModal({{ json_encode($waiterForModal) }})" class="flex-1 min-w-0 glass py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-violet-600 transition-all text-sm">View Profile</button>
-                    <form action="{{ route('manager.waiters.generate-order-portal-password', $waiter) }}" method="POST" class="inline">
+                    <button onclick="openViewWaiterModal({{ json_encode($waiterForModal) }})" class="flex-1 px-3 py-2 glass rounded-lg font-medium text-white/70 hover:text-white hover:bg-violet-600 transition-all text-xs" title="View Profile">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                    <form action="{{ route('manager.waiters.generate-order-portal-password', $waiter) }}" method="POST" class="flex-1">
                         @csrf
-                        <button type="submit" class="px-3 py-2.5 rounded-xl font-semibold text-sm transition-all {{ $hasOrderPortal ? 'glass text-cyan-400 hover:bg-cyan-500/20' : 'bg-cyan-600 hover:bg-cyan-500 text-white' }}" title="{{ $hasOrderPortal ? 'Regenerate Order Portal password' : 'Generate Order Portal password' }}">
-                            {{ $hasOrderPortal ? 'Regenerate' : 'Order Portal' }}
+                        <button type="submit" class="w-full px-3 py-2 rounded-lg font-medium text-xs transition-all {{ $hasOrderPortal ? 'glass text-cyan-400 hover:bg-cyan-500/20' : 'bg-cyan-600 hover:bg-cyan-500 text-white' }}" title="{{ $hasOrderPortal ? 'Regenerate' : 'Generate Portal' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
                         </button>
                     </form>
-                    <form action="{{ route('manager.waiters.unlink', $waiter) }}" method="POST" onsubmit="return confirm('Unlink waiter huyu? History (orders, ratings) itabaki. Password ya Order Portal itaisha. Anaweza kuungwa na restaurant nyingine baadaye.');" class="inline">
+                    <form action="{{ route('manager.waiters.unlink', $waiter) }}" method="POST" onsubmit="return confirm('Unlink waiter huyu? History itabaki.');" class="flex-1">
                         @csrf
-                        <button type="submit" class="p-2.5 glass text-amber-400 rounded-xl hover:bg-amber-500 hover:text-white transition-all" title="Unlink waiter">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><line x1="4" x2="20" y1="12" y2="12"/></svg>
+                        <button type="submit" class="w-full px-3 py-2 glass text-rose-400 rounded-lg hover:bg-rose-500/20 transition-all text-xs" title="Unlink">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mx-auto">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+                            </svg>
                         </button>
                     </form>
                 </div>
@@ -198,10 +302,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-violet-500/10 p-4 rounded-xl border border-violet-500/20">
-                        <p class="text-[10px] font-bold text-violet-300 uppercase tracking-wider mb-1">Total Orders</p>
-                        <p class="text-2xl font-bold text-white" id="viewWaiterOrders">0</p>
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="bg-violet-500/10 p-3 rounded-xl border border-violet-500/20">
+                        <p class="text-[9px] font-bold text-violet-300 uppercase tracking-wider mb-1">Orders</p>
+                        <p class="text-xl font-bold text-white" id="viewWaiterOrders">0</p>
+                    </div>
+                    <div class="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+                        <p class="text-[9px] font-bold text-amber-300 uppercase tracking-wider mb-1">Tips</p>
+                        <p class="text-xl font-bold text-amber-400" id="viewWaiterTips">0</p>
+                        <p class="text-[8px] text-white/40">TSh</p>
+                    </div>
+                    <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
+                        <p class="text-[9px] font-bold text-emerald-300 uppercase tracking-wider mb-1">Rating</p>
+                        <p class="text-xl font-bold text-white flex items-center gap-1" id="viewWaiterRating">0.0 ⭐</p>
+                        <p class="text-[8px] text-white/40" id="viewWaiterRatingCount">0 reviews</p>
                     </div>
                 </div>
 
@@ -316,6 +430,9 @@
                 initialEl.textContent = (waiter.name && waiter.name.charAt(0)) || '—';
             }
             document.getElementById('viewWaiterOrders').textContent = waiter.orders_count ?? 0;
+            document.getElementById('viewWaiterTips').textContent = new Intl.NumberFormat().format(waiter.tips_sum ?? 0);
+            document.getElementById('viewWaiterRating').textContent = (waiter.rating ?? 0).toFixed(1) + ' ⭐';
+            document.getElementById('viewWaiterRatingCount').textContent = (waiter.rating_count ?? 0) + ' reviews';
             const date = waiter.created_at ? new Date(waiter.created_at) : null;
             document.getElementById('viewWaiterJoined').textContent = date ? date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
             var emp = (waiter.employment_type === 'temporary' && waiter.linked_until)
@@ -354,5 +471,51 @@
                 alert('Copy failed');
             }
         }
+
+        function filterWaiters() {
+            const searchTerm = document.getElementById('waiterSearch').value.toLowerCase();
+            const statusFilter = document.querySelector('input[name="statusFilter"]:checked')?.value || 'all';
+            const sortBy = document.getElementById('sortBy').value;
+            const cards = Array.from(document.querySelectorAll('.waiter-card'));
+            
+            let visibleCount = 0;
+            cards.forEach(card => {
+                const name = card.dataset.name || '';
+                const code = card.dataset.code || '';
+                const status = card.dataset.status || '';
+                const employment = card.dataset.employment || '';
+                
+                let matchesSearch = !searchTerm || name.includes(searchTerm) || code.includes(searchTerm);
+                let matchesStatus = statusFilter === 'all' || 
+                    (statusFilter === 'online' && status === 'online') ||
+                    (statusFilter === 'offline' && status === 'offline') ||
+                    (statusFilter === 'permanent' && employment === 'permanent') ||
+                    (statusFilter === 'temporary' && employment === 'temporary');
+                
+                if (matchesSearch && matchesStatus) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Sort cards
+            if (sortBy === 'orders') {
+                cards.sort((a, b) => parseInt(b.dataset.orders || 0) - parseInt(a.dataset.orders || 0));
+            } else if (sortBy === 'name') {
+                cards.sort((a, b) => (a.dataset.name || '').localeCompare(b.dataset.name || ''));
+            }
+            
+            const grid = document.getElementById('waitersGrid');
+            cards.forEach(card => grid.appendChild(card));
+            
+            document.getElementById('waiterCount').textContent = `(${visibleCount})`;
+        }
+
+        // Initialize count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            filterWaiters();
+        });
     </script>
 </x-manager-layout>

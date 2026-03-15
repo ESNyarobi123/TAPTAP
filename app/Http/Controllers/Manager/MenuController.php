@@ -13,8 +13,9 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        $menuItems = MenuItem::with('category')->latest()->get();
+        $restaurantId = Auth::user()->restaurant_id;
+        $categories = Category::where('restaurant_id', $restaurantId)->get();
+        $menuItems = MenuItem::with('category')->where('restaurant_id', $restaurantId)->latest()->get();
 
         return view('manager.menu.index', compact('categories', 'menuItems'));
     }

@@ -19,36 +19,93 @@ class PaymentController extends Controller
         $this->selcom = $selcom;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $restaurant = Auth::user()->restaurant;
-        $today = Carbon::today();
+        
+        $period = $request->get('period', 'month');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        [$start, $end] = $this->getDateRange($period, $startDate, $endDate);
 
         // Get payments for this restaurant only
         $payments = Payment::where('restaurant_id', $restaurant->id)
-            ->with('order')
+            ->with(['order', 'waiter'])
+            ->whereBetween('created_at', [$start, $end])
+            ->whereIn('status', ['paid', 'completed'])
             ->latest()
-            ->paginate(15);
+            ->paginate(20);
 
+        // Get tips for the period
+        $tips = \App\Models\Tip::where('restaurant_id', $restaurant->id)
+            ->whereBetween('created_at', [$start, $end])
+            ->with('waiter')
+            ->get();
+
+        // Calculate statistics
+        $totalRevenue = Payment::where('restaurant_id', $restaurant->id)
+            ->whereIn('status', ['paid', 'completed'])
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('amount');
+
+        $totalTips = $tips->sum('amount');
+
+        $totalOrders = Order::where('restaurant_id', $restaurant->id)
+            ->where('status', 'paid')
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
+
+        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+
+        // Revenue by payment method
         $cashRevenue = Payment::where('restaurant_id', $restaurant->id)
             ->where('method', 'cash')
-            ->where('status', 'paid')
-            ->whereDate('created_at', $today)
+            ->whereIn('status', ['paid', 'completed'])
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('amount');
+
+        $ussdRevenue = Payment::where('restaurant_id', $restaurant->id)
+            ->where('method', 'ussd')
+            ->whereIn('status', ['paid', 'completed'])
+            ->whereBetween('created_at', [$start, $end])
             ->sum('amount');
 
         $mobileRevenue = Payment::where('restaurant_id', $restaurant->id)
-            ->where('method', 'ussd')
-            ->where('status', 'paid')
-            ->whereDate('created_at', $today)
+            ->where('method', 'mobile')
+            ->whereIn('status', ['paid', 'completed'])
+            ->whereBetween('created_at', [$start, $end])
             ->sum('amount');
 
-        $cardRevenue = Payment::where('restaurant_id', $restaurant->id)
-            ->where('method', 'card')
-            ->where('status', 'paid')
-            ->whereDate('created_at', $today)
-            ->sum('amount');
+        // Daily revenue for chart (last 7 days)
+        $dailyRevenue = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $revenue = Payment::where('restaurant_id', $restaurant->id)
+                ->whereIn('status', ['paid', 'completed'])
+                ->whereDate('created_at', $date)
+                ->sum('amount');
+            $dailyRevenue[] = [
+                'date' => $date->format('M d'),
+                'revenue' => $revenue
+            ];
+        }
 
-        return view('manager.payments.index', compact('payments', 'cashRevenue', 'mobileRevenue', 'cardRevenue'));
+        return view('manager.payments.index', compact(
+            'payments',
+            'tips',
+            'totalRevenue',
+            'totalTips',
+            'totalOrders',
+            'avgOrderValue',
+            'cashRevenue',
+            'ussdRevenue',
+            'mobileRevenue',
+            'dailyRevenue',
+            'period',
+            'startDate',
+            'endDate'
+        ));
     }
 
     /**
@@ -170,5 +227,100 @@ class PaymentController extends Controller
             'status' => 'pending',
             'message' => 'Waiting for payment confirmation...',
         ]);
+    }
+
+    public function export(Request $request)
+    {
+        $restaurant = Auth::user()->restaurant;
+        
+        $period = $request->get('period', 'today');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        [$start, $end] = $this->getDateRange($period, $startDate, $endDate);
+
+        $payments = Payment::where('restaurant_id', $restaurant->id)
+            ->with(['order', 'waiter'])
+            ->whereBetween('created_at', [$start, $end])
+            ->whereIn('status', ['paid', 'completed'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $tips = \App\Models\Tip::where('restaurant_id', $restaurant->id)
+            ->whereBetween('created_at', [$start, $end])
+            ->with('waiter')
+            ->get();
+
+        $filename = 'revenue_report_' . date('Y-m-d_His') . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+        
+        $callback = function() use ($payments, $tips) {
+            $file = fopen('php://output', 'w');
+            
+            // Payments section
+            fputcsv($file, ['PAYMENTS']);
+            fputcsv($file, ['Date', 'Order ID', 'Waiter', 'Amount (Tsh)', 'Method', 'Status']);
+            
+            foreach ($payments as $payment) {
+                fputcsv($file, [
+                    $payment->created_at->format('Y-m-d H:i'),
+                    $payment->order_id ?? 'N/A',
+                    $payment->waiter?->name ?? 'Unassigned',
+                    number_format($payment->amount, 2),
+                    ucfirst($payment->method),
+                    ucfirst($payment->status),
+                ]);
+            }
+            
+            // Empty row
+            fputcsv($file, []);
+            
+            // Tips section
+            fputcsv($file, ['TIPS']);
+            fputcsv($file, ['Date', 'Order ID', 'Waiter', 'Amount (Tsh)']);
+            
+            foreach ($tips as $tip) {
+                fputcsv($file, [
+                    $tip->created_at->format('Y-m-d H:i'),
+                    $tip->order_id ?? 'N/A',
+                    $tip->waiter?->name ?? 'Unassigned',
+                    number_format($tip->amount, 2),
+                ]);
+            }
+            
+            // Summary
+            fputcsv($file, []);
+            fputcsv($file, ['SUMMARY']);
+            fputcsv($file, ['Total Revenue', number_format($payments->sum('amount'), 2)]);
+            fputcsv($file, ['Total Tips', number_format($tips->sum('amount'), 2)]);
+            fputcsv($file, ['Total Transactions', $payments->count()]);
+            
+            fclose($file);
+        };
+        
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function getDateRange($period, $startDate = null, $endDate = null)
+    {
+        switch ($period) {
+            case 'today':
+                return [Carbon::today(), Carbon::now()];
+            case 'week':
+                return [Carbon::now()->startOfWeek(), Carbon::now()];
+            case 'month':
+                return [Carbon::now()->startOfMonth(), Carbon::now()];
+            case 'custom':
+                return [
+                    Carbon::parse($startDate)->startOfDay(),
+                    Carbon::parse($endDate)->endOfDay()
+                ];
+            default:
+                return [Carbon::today(), Carbon::now()];
+        }
     }
 }

@@ -14,25 +14,25 @@ class LiveOrderController extends Controller
         $today = Carbon::today();
         $restaurantId = auth()->user()->restaurant_id;
 
-        $pendingOrders = Order::with('items.menuItem')
+        $pendingOrders = Order::with(['items.menuItem', 'waiter'])
             ->where('restaurant_id', $restaurantId)
             ->where('status', 'pending')
             ->latest()
             ->get();
 
-        $preparingOrders = Order::with('items.menuItem')
+        $preparingOrders = Order::with(['items.menuItem', 'waiter'])
             ->where('restaurant_id', $restaurantId)
             ->where('status', 'preparing')
             ->latest()
             ->get();
 
-        $servedOrders = Order::with('items.menuItem')
+        $servedOrders = Order::with(['items.menuItem', 'waiter'])
             ->where('restaurant_id', $restaurantId)
             ->where('status', 'served')
             ->latest()
             ->get();
 
-        $paidOrders = Order::with('items.menuItem')
+        $paidOrders = Order::with(['items.menuItem', 'waiter'])
             ->where('restaurant_id', $restaurantId)
             ->where('status', 'paid')
             ->whereDate('created_at', $today)

@@ -1,23 +1,23 @@
 <x-manager-layout>
-    <x-slot name="header">Historia ya Malipo</x-slot>
+    <x-slot name="header">Payment History</x-slot>
 
     <div class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-white tracking-tight">Historia ya Malipo</h1>
-                <p class="mt-1 text-white/50">Malipo yote uliyothibitisha na jumla ya mshahara kwa kila mwezi na mwaka.</p>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Payment History</h1>
+                <p class="mt-1 text-white/50">All confirmed payments and salary totals for each month and year.</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('manager.payroll.export') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white/90 hover:bg-white/10 hover:text-white transition-all text-sm font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    Export CSV (yote)
+                    Export CSV (all)
                 </a>
                 <a href="{{ route('manager.payroll.export', ['year' => now()->year]) }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-all text-sm font-semibold">
                     Export {{ now()->year }}
                 </a>
                 <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-violet-500/30 bg-violet-500/10 text-violet-300 hover:bg-violet-500/20 transition-all text-sm font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-                    Rudi kwa Payroll
+                    Back to Payroll
                 </a>
             </div>
         </div>
@@ -30,19 +30,19 @@
                     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0 11 18 0z"/>
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Hakuna malipo bado</h3>
-            <p class="text-white/50 max-w-sm mx-auto mb-6">Thibitisha malipo kwa waiters kwenye ukurasa wa Payroll, kisha historia itaonekana hapa.</p>
+            <h3 class="text-xl font-bold text-white mb-2">No payments yet</h3>
+            <p class="text-white/50 max-w-sm mx-auto mb-6">Confirm payments for waiters on the Payroll page, then history will appear here.</p>
             <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
-                Nenda kwa Payroll
+                Go to Payroll
             </a>
         </div>
     @else
         {{-- Summary cards --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="rounded-2xl p-6 border border-white/10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10">
-                <p class="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-1">Jumla (Net Pay)</p>
+                <p class="text-[10px] font-bold uppercase tracking-wider text-white/50 mb-1">Total (Net Pay)</p>
                 <p class="text-2xl font-bold text-white">{{ number_format($grandTotal) }}</p>
-                <p class="text-xs text-white/40 mt-1">Malipo yote</p>
+                <p class="text-xs text-white/40 mt-1">All payments</p>
             </div>
             @if(isset($byYear) && $byYear->isNotEmpty())
                 @foreach($byYear->take(3) as $year => $data)
@@ -80,7 +80,7 @@
                                     <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">PAYE</th>
                                     <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">NSSF</th>
                                     <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50 text-right">Net Pay</th>
-                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50">Alipolipwa</th>
+                                    <th class="px-5 py-3.5 text-[10px] font-bold uppercase tracking-wider text-white/50">Paid At</th>
                                 </tr>
                             </thead>
                             <tbody>

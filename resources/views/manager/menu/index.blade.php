@@ -3,39 +3,40 @@
         Menu Management
     </x-slot>
 
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h2 class="text-3xl font-bold text-white tracking-tight">Menu Management</h2>
-            <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Manage your categories and dishes</p>
+    <div x-data="{ selectedCategory: 'all' }">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-white tracking-tight">Menu Management</h2>
+                <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Manage your categories and dishes</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="openCategoriesModal()" class="glass px-5 py-3 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>
+                    </svg>
+                    Manage Categories
+                </button>
+                <button onclick="openAddMenuModal()" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14"/><path d="M12 5v14"/>
+                    </svg>
+                    Add New Item
+                </button>
+            </div>
         </div>
-        <div class="flex gap-3">
-            <button onclick="openCategoriesModal()" class="glass px-5 py-3 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>
-                </svg>
-                Manage Categories
-            </button>
-            <button onclick="openAddMenuModal()" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12h14"/><path d="M12 5v14"/>
-                </svg>
-                Add New Item
-            </button>
+
+        <!-- Categories Tabs -->
+        <div class="flex gap-3 mb-8 overflow-x-auto pb-2 hide-scrollbar">
+            <button @click="selectedCategory = 'all'" :class="selectedCategory === 'all' ? 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all">All Items</button>
+            @foreach($categories as $category)
+                <button @click="selectedCategory = {{ $category->id }}" :class="selectedCategory === {{ $category->id }} ? 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all whitespace-nowrap">{{ $category->name }}</button>
+            @endforeach
         </div>
-    </div>
 
-    <!-- Categories Tabs -->
-    <div class="flex gap-3 mb-8 overflow-x-auto pb-2 hide-scrollbar">
-        <button class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-violet-500/20">All Items</button>
-        @foreach($categories as $category)
-            <button class="px-5 py-2.5 glass text-white/60 rounded-xl font-semibold hover:text-white hover:bg-white/10 transition-all whitespace-nowrap">{{ $category->name }}</button>
-        @endforeach
-    </div>
-
-    <!-- Menu Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        @forelse($menuItems as $item)
-            <div class="glass-card rounded-2xl overflow-hidden card-hover group">
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @forelse($menuItems as $item)
+                <div x-show="selectedCategory === 'all' || selectedCategory === {{ $item->category_id }}" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="glass-card rounded-2xl overflow-hidden card-hover group">
                 <div class="relative h-44 bg-white/5 overflow-hidden">
                     @if($item->image)
                         <img src="{{ $item->imageUrl() }}" alt="{{ $item->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -389,4 +390,5 @@
             }
         }
     </script>
+    </div>
 </x-manager-layout>

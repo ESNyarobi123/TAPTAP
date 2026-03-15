@@ -75,7 +75,7 @@ class PayrollController extends Controller
 
         $waiter->notify(new \App\Notifications\SalaryPaymentConfirmed($payment));
 
-        return redirect()->route('manager.payroll.index', ['month' => $request->period_month])->with('success', 'Malipo yamethibitishwa kwa '.$waiter->name.'.');
+        return redirect()->route('manager.payroll.index', ['month' => $request->period_month])->with('success', 'Payment confirmed for '.$waiter->name.'.');
     }
 
     public function history(): View

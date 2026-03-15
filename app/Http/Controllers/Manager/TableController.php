@@ -12,8 +12,9 @@ class TableController extends Controller
 {
     public function index()
     {
-        $tables = Table::with('waiter')->latest()->get();
-        $waiters = User::role('waiter')->where('restaurant_id', Auth::user()->restaurant_id)->orderBy('name')->get(['id', 'name']);
+        $restaurantId = Auth::user()->restaurant_id;
+        $tables = Table::with('waiter')->where('restaurant_id', $restaurantId)->latest()->get();
+        $waiters = User::role('waiter')->where('restaurant_id', $restaurantId)->orderBy('name')->get(['id', 'name']);
 
         return view('manager.tables.index', compact('tables', 'waiters'));
     }

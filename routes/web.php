@@ -170,6 +170,9 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/dashboard', [ManagerDashboard::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [ManagerDashboard::class, 'getStats'])->name('dashboard.stats');
     Route::get('/live-orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'index'])->name('orders.live');
+    Route::get('/orders/history', [\App\Http\Controllers\Manager\OrderHistoryController::class, 'index'])->name('orders.history');
+    Route::get('/orders/history/export', [\App\Http\Controllers\Manager\OrderHistoryController::class, 'export'])->name('orders.history.export');
+    Route::get('/orders/{order}', [\App\Http\Controllers\Manager\OrderHistoryController::class, 'show'])->name('orders.show');
     Route::post('/orders', [\App\Http\Controllers\Manager\LiveOrderController::class, 'store'])->name('orders.store');
     Route::put('/orders/{order}', [\App\Http\Controllers\Manager\LiveOrderController::class, 'update'])->name('orders.update');
     Route::delete('/orders/{order}', [\App\Http\Controllers\Manager\LiveOrderController::class, 'destroy'])->name('orders.destroy');
@@ -193,6 +196,7 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
     Route::get('/payroll/history', [\App\Http\Controllers\Manager\PayrollController::class, 'history'])->name('payroll.history');
     Route::get('/payroll/export', [\App\Http\Controllers\Manager\PayrollController::class, 'export'])->name('payroll.export');
     Route::get('/payments', [\App\Http\Controllers\Manager\PaymentController::class, 'index'])->name('payments.index');
+    Route::get('/payments/export', [\App\Http\Controllers\Manager\PaymentController::class, 'export'])->name('payments.export');
     Route::post('/payments/selcom/initiate', [\App\Http\Controllers\Manager\PaymentController::class, 'initiateSelcom'])->name('payments.selcom.initiate');
     Route::get('/payments/selcom/status/{order}', [\App\Http\Controllers\Manager\PaymentController::class, 'checkSelcomStatus'])->name('payments.selcom.status');
     Route::get('/feedback', [\App\Http\Controllers\Manager\FeedbackController::class, 'index'])->name('feedback.index');
@@ -209,6 +213,9 @@ Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')
 
     Route::resource('tables', \App\Http\Controllers\Manager\TableController::class);
     Route::get('/help', [\App\Http\Controllers\Manager\HelpController::class, 'index'])->name('help.index');
+    
+    Route::get('/reports/performance', [\App\Http\Controllers\Manager\ReportController::class, 'performance'])->name('reports.performance');
+    Route::get('/reports/export-performance', [\App\Http\Controllers\Manager\ReportController::class, 'exportPerformance'])->name('reports.export-performance');
 });
 
 // Waiter Portal (dashboard allowed when not linked; other routes require linked restaurant)
@@ -241,6 +248,7 @@ Route::prefix('kitchen')->name('kitchen.')->group(function () {
 
     // API endpoints for real-time updates (no auth, uses token)
     Route::get('/api/{token}/orders', [\App\Http\Controllers\KitchenController::class, 'getOrders'])->name('api.orders');
+    Route::get('/api/{token}/history', [\App\Http\Controllers\KitchenController::class, 'getOrderHistory'])->name('api.history');
     Route::post('/api/{token}/order/status', [\App\Http\Controllers\KitchenController::class, 'updateStatus'])->name('api.order.status');
     Route::post('/api/{token}/item/status', [\App\Http\Controllers\KitchenController::class, 'updateItemStatus'])->name('api.item.status');
 });
