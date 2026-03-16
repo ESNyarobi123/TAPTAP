@@ -77,19 +77,8 @@ class PaymentController extends Controller
             ->whereBetween('created_at', [$start, $end])
             ->sum('amount');
 
-        // Daily revenue for chart (last 7 days)
-        $dailyRevenue = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i);
-            $revenue = Payment::where('restaurant_id', $restaurant->id)
-                ->whereIn('status', ['paid', 'completed'])
-                ->whereDate('created_at', $date)
-                ->sum('amount');
-            $dailyRevenue[] = [
-                'date' => $date->format('M d'),
-                'revenue' => $revenue
-            ];
-        }
+        // Daily revenue for chart - based on selected time period
+        $dailyRevenue = $this->getDailyRevenue($restaurant->id, $start, $end, $period);
 
         return view('manager.payments.index', compact(
             'payments',
@@ -106,6 +95,57 @@ class PaymentController extends Controller
             'startDate',
             'endDate'
         ));
+    }
+
+    /**
+     * Get daily revenue data for chart based on time period
+     */
+    private function getDailyRevenue($restaurantId, $start, $end, $period)
+    {
+        $dailyRevenue = [];
+        
+        // Calculate number of days in range
+        $daysDiff = $start->diffInDays($end);
+        
+        // For periods longer than 31 days, show weekly data instead
+        if ($daysDiff > 31) {
+            $weeks = ceil($daysDiff / 7);
+            for ($i = $weeks - 1; $i >= 0; $i--) {
+                $weekStart = $end->copy()->subWeeks($i + 1)->startOfWeek();
+                $weekEnd = $end->copy()->subWeeks($i)->startOfWeek();
+                
+                $revenue = Payment::where('restaurant_id', $restaurantId)
+                    ->whereIn('status', ['paid', 'completed'])
+                    ->whereBetween('created_at', [$weekStart, $weekEnd])
+                    ->sum('amount');
+                    
+                $dailyRevenue[] = [
+                    'date' => $weekStart->format('M d'),
+                    'revenue' => $revenue,
+                    'label' => 'Week of ' . $weekStart->format('M d')
+                ];
+            }
+            return $dailyRevenue;
+        }
+        
+        // For shorter periods, show daily breakdown
+        $current = $start->copy();
+        while ($current <= $end) {
+            $revenue = Payment::where('restaurant_id', $restaurantId)
+                ->whereIn('status', ['paid', 'completed'])
+                ->whereDate('created_at', $current)
+                ->sum('amount');
+                
+            $dailyRevenue[] = [
+                'date' => $current->format('M d'),
+                'revenue' => $revenue,
+                'label' => $current->format('D, M d')
+            ];
+            
+            $current->addDay();
+        }
+        
+        return $dailyRevenue;
     }
 
     /**

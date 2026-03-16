@@ -3,6 +3,65 @@
         Payments & Revenue
     </x-slot>
 
+    <style>
+        /* Revenue Chart Modern Styling */
+        .revenue-chart-container {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(30, 27, 75, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .chart-bar {
+            background: linear-gradient(to top, #3b82f6 0%, #06b6d4 50%, #8b5cf6 100%);
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0 -4px 20px rgba(139, 92, 246, 0.5);
+            width: 100%;
+            transform-origin: bottom;
+        }
+        .chart-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .chart-bar:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6), 0 0 50px rgba(139, 92, 246, 0.3);
+        }
+        .chart-bar.animate {
+            animation: barGrow 0.8s ease-out forwards;
+            transform-origin: bottom;
+        }
+        @keyframes barGrow {
+            from { 
+                opacity: 0;
+                transform: scaleY(0);
+            }
+            to { 
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+        .chart-tooltip {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.5);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+            position: relative;
+        }
+        .stat-comparison {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .stat-comparison.negative {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+
     <div class="flex items-center justify-between mb-8">
         <div>
             <h2 class="text-3xl font-bold text-white tracking-tight">Payments & Revenue</h2>
@@ -87,22 +146,106 @@
     </div>
 
     <!-- Revenue Chart -->
-    <div class="glass-card p-8 rounded-2xl mb-8">
-        <h3 class="text-xl font-bold text-white tracking-tight mb-6">Revenue Trend (Last 7 Days)</h3>
-        <div class="h-64 flex items-end justify-between gap-2">
-            @foreach($dailyRevenue as $day)
-                @php
-                    $maxRevenue = collect($dailyRevenue)->max('revenue');
-                    $height = $maxRevenue > 0 ? ($day['revenue'] / $maxRevenue) * 100 : 0;
-                @endphp
-                <div class="flex-1 flex flex-col items-center gap-3">
-                    <div class="w-full bg-gradient-to-t from-violet-600 to-cyan-600 rounded-t-lg transition-all hover:opacity-80" style="height: {{ $height }}%" title="Tsh {{ number_format($day['revenue']) }}"></div>
-                    <div class="text-center">
-                        <p class="text-xs font-bold text-white/60">{{ $day['date'] }}</p>
-                        <p class="text-[10px] font-semibold text-white/40">{{ number_format($day['revenue']) }}</p>
-                    </div>
+    <div class="revenue-chart-container glass-card p-8 rounded-2xl mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="text-xl font-bold text-white tracking-tight">
+                    Revenue Trend
+                    @if($period === 'today')
+                        <span class="text-violet-400">(Today)</span>
+                    @elseif($period === 'week')
+                        <span class="text-violet-400">(This Week)</span>
+                    @elseif($period === 'month')
+                        <span class="text-violet-400">(This Month)</span>
+                    @elseif($period === 'custom' && $startDate && $endDate)
+                        <span class="text-violet-400">({{ \Carbon\Carbon::parse($startDate)->format('M d') }} - {{ \Carbon\Carbon::parse($endDate)->format('M d') }})</span>
+                    @else
+                        <span class="text-violet-400">(Last 7 Days)</span>
+                    @endif
+                </h3>
+                <p class="text-xs text-white/40 mt-1">Daily revenue breakdown with trend analysis</p>
+            </div>
+            
+            <!-- Comparison Badge -->
+            @php
+                $totalCurrent = collect($dailyRevenue)->sum('revenue');
+                $avgDaily = count($dailyRevenue) > 0 ? $totalCurrent / count($dailyRevenue) : 0;
+            @endphp
+            @if($totalCurrent > 0)
+                <div class="stat-comparison px-4 py-2 rounded-xl flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400">
+                        <path d="M12 2v20M2 12h20M17 7l-5-5-5 5M7 17l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-sm font-bold text-emerald-400">Avg Tsh {{ number_format($avgDaily) }}/day</span>
                 </div>
-            @endforeach
+            @endif
+        </div>
+        
+        <div class="h-72 px-4 pb-4 border-b border-white/10">
+            <div class="h-full flex items-end justify-between gap-2">
+                @forelse($dailyRevenue as $day)
+                    @php
+                        $maxRevenue = collect($dailyRevenue)->max('revenue') ?: 1;
+                        $heightPercent = ($day['revenue'] / $maxRevenue) * 100;
+                        $heightPercent = max($heightPercent, 2);
+                    @endphp
+                    <div class="flex-1 h-full flex flex-col justify-end items-center group" style="min-width: 30px;">
+                        <!-- Bar -->
+                        <div class="w-full relative group-hover:brightness-110 transition-all"
+                             style="height: {{ $heightPercent }}%; 
+                                    background: linear-gradient(to top, #3b82f6, #06b6d4, #8b5cf6);
+                                    border-radius: 6px 6px 0 0;
+                                    box-shadow: 0 -4px 15px rgba(139, 92, 246, 0.4);
+                                    min-height: 2px;">
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-black/90 border border-violet-500/50 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                Tsh {{ number_format($day['revenue']) }}
+                            </div>
+                            <!-- Shine -->
+                            <div class="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/30 to-transparent rounded-t pointer-events-none"></div>
+                        </div>
+                        <!-- Label -->
+                        <div class="mt-2 text-center">
+                            <p class="text-[10px] font-bold text-white/70">{{ $day['date'] }}</p>
+                            <p class="text-[9px] {{ $day['revenue'] > 0 ? 'text-violet-400' : 'text-white/30' }}">
+                                {{ $day['revenue'] > 0 ? number_format($day['revenue']/1000,1).'k' : '0' }}
+                            </p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="w-full h-full flex items-center justify-center text-white/40">
+                        No revenue data
+                    </div>
+                @endforelse
+            </div>
+        </div>
+        
+        <!-- Chart Legend & Stats -->
+        <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-gradient-to-r from-violet-500 to-cyan-500"></div>
+                    <span class="text-xs text-white/60">Revenue</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                    <span class="text-xs text-white/60">Growth</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-6 text-right">
+                <div>
+                    <p class="text-[10px] text-white/40 uppercase tracking-wider">Total</p>
+                    <p class="text-lg font-bold text-white">Tsh {{ number_format($totalCurrent) }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-white/40 uppercase tracking-wider">Highest</p>
+                    <p class="text-lg font-bold text-violet-400">Tsh {{ number_format(collect($dailyRevenue)->max('revenue')) }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-white/40 uppercase tracking-wider">Days</p>
+                    <p class="text-lg font-bold text-cyan-400">{{ count($dailyRevenue) }}</p>
+                </div>
+            </div>
         </div>
     </div>
 
