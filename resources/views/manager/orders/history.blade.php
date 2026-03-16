@@ -132,7 +132,13 @@
                 <tbody class="divide-y divide-white/5">
                     @forelse($orders as $order)
                         <tr class="hover:bg-white/[0.02] transition-colors">
-                            <td class="px-6 py-5 font-bold text-violet-400">#{{ $order->id }}</td>
+                            <td class="px-6 py-5">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-1 bg-violet-500/10 border border-violet-500/20 rounded-lg text-xs font-bold text-violet-400 font-mono tracking-wider">
+                                        ORD-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                                    </span>
+                                </div>
+                            </td>
                             <td class="px-6 py-5 text-sm text-white/60">
                                 <div>{{ $order->created_at->format('M d, Y') }}</div>
                                 <div class="text-xs text-white/40">{{ $order->created_at->format('H:i') }}</div>
@@ -262,7 +268,7 @@
                                             <div class="space-y-2 text-sm">
                                                 <div class="flex justify-between">
                                                     <span class="text-white/40">Order ID:</span>
-                                                    <span class="text-white font-mono">#{{ $order->id }}</span>
+                                                    <span class="text-violet-400 font-mono font-bold">ORD-{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</span>
                                                 </div>
                                                 <div class="flex justify-between">
                                                     <span class="text-white/40">Table:</span>
