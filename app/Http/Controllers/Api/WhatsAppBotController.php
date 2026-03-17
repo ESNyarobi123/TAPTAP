@@ -344,7 +344,11 @@ class WhatsAppBotController extends Controller
     {
         $items = MenuItem::withoutGlobalScopes()->where('category_id', $categoryId)
             ->where('is_available', true)
-            ->get(['id', 'name', 'price', 'description', 'image']);
+            ->get(['id', 'name', 'price', 'description', 'image'])
+            ->map(function ($item) {
+                $item->imageUrl = $item->imageUrl();
+                return $item;
+            });
 
         return response()->json([
             'success' => true,
@@ -365,6 +369,8 @@ class WhatsAppBotController extends Controller
             return response()->json(['success' => false, 'message' => 'Item not found'], 404);
         }
 
+        $item->imageUrl = $item->imageUrl();
+
         return response()->json([
             'success' => true,
             'data' => $item,
@@ -378,7 +384,14 @@ class WhatsAppBotController extends Controller
     {
         $categories = Category::withoutGlobalScopes()->with(['menuItems' => function ($query) {
             $query->withoutGlobalScopes()->where('is_available', true);
-        }])->where('restaurant_id', $restaurantId)->get();
+        }])->where('restaurant_id', $restaurantId)->get()->map(function ($category) {
+            $category->imageUrl = $category->imageUrl();
+            $category->menuItems->map(function ($item) {
+                $item->imageUrl = $item->imageUrl();
+                return $item;
+            });
+            return $category;
+        });
 
         return response()->json([
             'success' => true,

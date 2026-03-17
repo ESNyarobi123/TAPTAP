@@ -15,7 +15,10 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $menuItems = MenuItem::with('category')->latest()->get();
+        $menuItems = MenuItem::with('category')->latest()->get()->map(function ($item) {
+            $item->imageUrl = $item->imageUrl();
+            return $item;
+        });
 
         return response()->json([
             'success' => true,
@@ -48,6 +51,7 @@ class MenuController extends Controller
         }
 
         $menuItem = MenuItem::create($data);
+        $menuItem->imageUrl = $menuItem->imageUrl();
 
         return response()->json([
             'success' => true,
@@ -61,9 +65,12 @@ class MenuController extends Controller
      */
     public function show(MenuItem $menuItem)
     {
+        $menuItem->load('category');
+        $menuItem->imageUrl = $menuItem->imageUrl();
+        
         return response()->json([
             'success' => true,
-            'data' => $menuItem->load('category'),
+            'data' => $menuItem,
         ]);
     }
 
@@ -96,6 +103,7 @@ class MenuController extends Controller
         }
 
         $menuItem->update($data);
+        $menuItem->imageUrl = $menuItem->imageUrl();
 
         return response()->json([
             'success' => true,

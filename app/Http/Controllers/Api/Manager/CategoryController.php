@@ -15,7 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('sort_order')->get();
+        $categories = Category::orderBy('sort_order')->get()->map(function ($category) {
+            $category->imageUrl = $category->imageUrl();
+            return $category;
+        });
         return response()->json([
             'success' => true,
             'data' => $categories
@@ -41,6 +44,7 @@ class CategoryController extends Controller
         }
 
         $category = Category::create($data);
+        $category->imageUrl = $category->imageUrl();
 
         return response()->json([
             'success' => true,
@@ -54,6 +58,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $category->imageUrl = $category->imageUrl();
+        
         return response()->json([
             'success' => true,
             'data' => $category
@@ -81,6 +87,7 @@ class CategoryController extends Controller
         }
 
         $category->update($data);
+        $category->imageUrl = $category->imageUrl();
 
         return response()->json([
             'success' => true,

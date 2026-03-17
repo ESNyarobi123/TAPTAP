@@ -22,5 +22,16 @@ class Category extends Model
     {
         return $this->hasMany(MenuItem::class);
     }
-    //
+
+    /**
+     * Image URL for display (works with or without storage:link via storage.serve).
+     */
+    public function imageUrl(): ?string
+    {
+        if (! $this->image) {
+            return null;
+        }
+
+        return route('storage.serve', ['path' => $this->image]);
+    }
 }

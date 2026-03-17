@@ -239,7 +239,7 @@
                         <div class="flex items-center justify-between p-4 glass rounded-xl hover:bg-white/5 transition-all group">
                             <div class="flex items-center gap-4">
                                 @if($category->image)
-                                    <img src="{{ asset('storage/' . $category->image) }}" class="w-12 h-12 rounded-xl object-cover">
+                                    <img src="{{ $category->imageUrl() }}" class="w-12 h-12 rounded-xl object-cover">
                                 @else
                                     <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white/40">
@@ -338,7 +338,7 @@
             document.getElementById('availabilityToggle').classList.remove('hidden');
 
             if (item.image) {
-                document.getElementById('imagePreview').src = `{{ asset('storage') }}/${item.image}`;
+                document.getElementById('imagePreview').src = `/serve-storage/${item.image}`;
                 document.getElementById('imagePreview').classList.remove('hidden');
                 document.getElementById('uploadPlaceholder').classList.add('hidden');
             } else {
