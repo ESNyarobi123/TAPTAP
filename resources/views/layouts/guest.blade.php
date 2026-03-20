@@ -87,7 +87,7 @@
                 </div>
                 <div>
                     <span class="text-2xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
-                    <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Smart Dining</span>
+                    <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]"> </span>
                 </div>
             </a>
 
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Footer -->
-            <p class="mt-8 text-white/30 text-xs font-medium">© {{ date('Y') }} TIPTAP Smart Dining. All rights reserved.</p>
+            <p class="mt-8 text-white/30 text-xs font-medium">© {{ date('Y') }} TIPTAP  . All rights reserved.</p>
         </div>
     </body>
 </html>

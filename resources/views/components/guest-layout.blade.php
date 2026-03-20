@@ -1,4 +1,4 @@
-@props(['title' => 'TIPTAP | Smart Dining'])
+@props(['title' => 'TIPTAP |  '])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -8,6 +8,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title }}</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2'><path d='M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2'/><path d='M7 2v20'/><path d='M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'/></svg>">
 
         <!-- Premium Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +60,24 @@
             .animate-float { animation: float 6s ease-in-out infinite; }
             .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 
-            /* Custom Scrollbar */
+            /* Mobile Optimizations */
+            @media (max-width: 640px) {
+                .glass-card {
+                    background: rgba(28, 22, 51, 0.8);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+                .animate-float {
+                    animation: none;
+                }
+            }
+
+            /* Touch-friendly tap targets */
+            @media (hover: none) {
+                button, a {
+                    min-height: 44px;
+                }
+            }
             ::-webkit-scrollbar { width: 6px; }
             ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
             ::-webkit-scrollbar-thumb {
@@ -73,10 +93,10 @@
             <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[150px] -ml-48 -mb-48"></div>
         </div>
 
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-8 sm:pt-0 px-4 relative z-10">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-4 sm:pt-0 px-3 sm:px-4 relative z-10">
             <!-- Logo -->
-            <a href="/" class="flex items-center gap-3 group mb-8">
-                <div class="w-14 h-14 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/30 transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 group mb-6 sm:mb-8">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-xl shadow-violet-500/30 transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
                         <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
                         <path d="M7 2v20"></path>
@@ -84,16 +104,15 @@
                     </svg>
                 </div>
                 <div>
-                    <span class="text-2xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
-                    <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]">Smart Dining</span>
+                    <span class="text-xl sm:text-2xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
                 </div>
             </a>
 
             <!-- Content Card -->
-            <div class="w-full sm:max-w-md glass-card rounded-3xl p-8 shadow-2xl shadow-black/50 animate-float relative overflow-hidden">
+            <div class="w-full sm:max-w-md glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl shadow-black/50 relative overflow-hidden">
                 <!-- Decorative elements inside card -->
-                <div class="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute -top-10 -right-10 w-32 h-32 sm:w-40 sm:h-40 bg-violet-500/10 rounded-full blur-2xl sm:blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 sm:w-40 sm:h-40 bg-cyan-500/10 rounded-full blur-2xl sm:blur-3xl"></div>
                 
                 <div class="relative z-10">
                     {{ $slot }}
@@ -101,7 +120,7 @@
             </div>
 
             <!-- Footer -->
-            <p class="mt-8 text-white/30 text-xs font-medium">© {{ date('Y') }} TIPTAP Smart Dining. All rights reserved.</p>
+            <p class="mt-6 sm:mt-8 text-white/30 text-xs font-medium text-center">&copy; {{ date('Y') }} TIPTAP. All rights reserved.</p>
         </div>
     </body>
 </html>

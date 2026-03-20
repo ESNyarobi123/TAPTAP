@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TIPTAP | The Future of Smart Dining</title>
+    <title>TIPTAP | The Future of  </title>
     <meta name="description" content="The smartest QR & WhatsApp ordering system for modern restaurants.">
     
     <!-- Fonts -->
