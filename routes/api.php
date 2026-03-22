@@ -6,6 +6,7 @@
  * All API routes with their controller and method:
  *
  * AUTH (public)
+ *   POST /auth/register-waiter          -> Api\WaiterRegistrationController@register
  *   POST /auth/login                    -> AuthController@login
  *   POST /auth/logout                    -> AuthController@logout (auth:sanctum)
  *
@@ -85,6 +86,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Auth API (no middleware - public)
+Route::post('/auth/register-waiter', [App\Http\Controllers\Api\WaiterRegistrationController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
