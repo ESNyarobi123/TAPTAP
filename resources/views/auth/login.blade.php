@@ -68,7 +68,7 @@
             </div>
 
             <!-- Register Links -->
-            <!-- <div class="text-center pt-3 sm:pt-4 space-y-2">
+            <div class="text-center pt-3 sm:pt-4 space-y-2">
                 <p class="text-white/40 font-medium text-xs sm:text-sm">Don't have an account yet?</p>
                 <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
                     <a href="{{ route('restaurant.register') }}" class="text-violet-400 font-bold hover:text-cyan-400 transition-colors text-xs sm:text-sm flex items-center justify-center gap-1">
@@ -87,5 +87,5 @@
                 </div>
             </div>
         </form>
-    </div> -->
+    </div>
 </x-guest-layout>
