@@ -13,8 +13,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
         
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/jpeg" href="{{ asset('logo.jpeg') }}">
+        <link rel="shortcut icon" href="{{ asset('logo.jpeg') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -78,15 +78,11 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-8 sm:pt-0 px-4 relative z-10">
             <!-- Logo -->
             <a href="/" class="flex items-center gap-3 group mb-8">
-                <div class="w-14 h-14 flex items-center justify-center overflow-hidden transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
-                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                        <path d="M7 2v20"></path>
-                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                    </svg>
+                <div class="w-14 h-14 flex items-center justify-center overflow-hidden rounded-full transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow">
+                    <img src="{{ asset('logo.jpeg') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                 </div>
                 <div>
-                    <span class="text-2xl font-black text-white tracking-tight block leading-none">TIP<span class="gradient-text">TAP</span></span>
+                    <span class="text-2xl font-black text-white tracking-tight block leading-none hidden">TIP<span class="gradient-text">TAP</span></span>
                     <span class="text-[10px] font-semibold text-white/40 uppercase tracking-[0.2em]"> </span>
                 </div>
             </a>

@@ -12,8 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/jpeg" href="{{ asset('logo.jpeg') }}">
+    <link rel="shortcut icon" href="{{ asset('logo.jpeg') }}">
 
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -171,12 +171,8 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 flex items-center justify-center overflow-hidden group-hover:rotate-12 transition-transform duration-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
-                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                            <path d="M7 2v20"></path>
-                            <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                        </svg>
+                    <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full group-hover:rotate-12 transition-transform duration-500">
+                        <img src="{{ asset('logo.jpeg') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                     </div>
                     <span class="text-2xl font-display font-bold text-white tracking-tight">TIP<span class="text-primary">TAP</span></span>
                 </a>
@@ -228,12 +224,8 @@
     <div class="fixed inset-0 z-[60] bg-[#030712] hidden flex-col p-8 lg:hidden" id="mobile-menu">
         <div class="flex justify-between items-center mb-12">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 flex items-center justify-center overflow-hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
-                        <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                        <path d="M7 2v20"></path>
-                        <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                    </svg>
+                <div class="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full">
+                    <img src="{{ asset('logo.jpeg') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                 </div>
                 <span class="text-2xl font-display font-bold text-white">TIPTAP</span>
             </div>
@@ -524,12 +516,8 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
                 <div class="col-span-2">
                     <a href="/" class="flex items-center gap-2 mb-6">
-                        <div class="w-8 h-8 flex items-center justify-center overflow-hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="utensils">
-                                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path>
-                                <path d="M7 2v20"></path>
-                                <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
-                            </svg>
+                        <div class="w-8 h-8 flex items-center justify-center overflow-hidden rounded-full">
+                            <img src="{{ asset('logo.jpeg') }}" alt="TIPTAP Logo" class="w-full h-full object-cover">
                         </div>
                         <span class="text-xl font-display font-bold text-white">TIPTAP</span>
                     </a>

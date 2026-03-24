@@ -12,8 +12,8 @@
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700&display=swap" rel="stylesheet" />
         
         <!-- Favicon -->
-        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-        <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
+        <link rel="icon" type="image/jpeg" href="{{ asset('logo.jpeg') }}">
+        <link rel="shortcut icon" href="{{ asset('logo.jpeg') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
