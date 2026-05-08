@@ -214,30 +214,38 @@
                             @endforeach
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            @if(filled($order->whatsapp_jid))
+                            @php
+                                $isWhatsAppOrder = filled($order->whatsapp_jid);
+                                $billAlreadySent = ! is_null($order->bill_image_pushed_at);
+                            @endphp
+
+                            @if($isWhatsAppOrder && ! $billAlreadySent)
                                 <form action="{{ route('manager.orders.whatsapp-bill', $order) }}" method="POST"
                                       class="inline"
-                                      onsubmit="return confirm('Send bill image to this customer\'s WhatsApp number?');">
+                                      onsubmit="return confirm('Confirm order and send bill image to this customer\'s WhatsApp?');">
                                     @csrf
                                     <button type="submit"
-                                            class="flex-1 min-w-[120px] py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/20 transition-all"
-                                            title="Generates signed bill PNG and notifies the WhatsApp bot">
-                                        Finish order · WhatsApp bill
+                                            class="flex-1 min-w-[160px] py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/20 transition-all"
+                                            title="Generate signed bill image URL and send via WhatsApp bot">
+                                        Confirm order
                                     </button>
                                 </form>
                             @endif
-                            <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})"
-                                    class="flex-1 min-w-[120px] bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
-                                Process Payment
-                            </button>
-                            <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Confirm customer has paid (e.g. via WhatsApp/cash)?');">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status" value="paid">
-                                <button type="submit" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm border border-emerald-500/30 transition-all" title="Customer paid outside (WhatsApp/cash)">
-                                    Confirm paid
+
+                            @if(! $isWhatsAppOrder || $billAlreadySent)
+                                <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})"
+                                        class="flex-1 min-w-[120px] bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                                    Process Payment
                                 </button>
-                            </form>
+                                <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Confirm customer has paid (e.g. via WhatsApp/cash)?');">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="paid">
+                                    <button type="submit" class="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm border border-emerald-500/30 transition-all" title="Customer paid outside (WhatsApp/cash)">
+                                        Confirm paid
+                                    </button>
+                                </form>
+                            @endif
                                 <form action="{{ route('manager.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Delete this order?')" class="inline">
                                     @csrf
                                     @method('DELETE')
