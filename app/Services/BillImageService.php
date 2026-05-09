@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
+use Throwable;
 
 class BillImageService
 {
@@ -27,6 +29,48 @@ class BillImageService
     }
 
     public function renderPng(Order $order): string
+    {
+        if ($this->supportsDesignedBill()) {
+            try {
+                return $this->renderPngDesigned($order);
+            } catch (Throwable $e) {
+                report($e);
+                Log::warning('Designed bill PNG failed; falling back to simple GD bill.', [
+                    'order_id' => $order->id,
+                    'message' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return $this->renderPngSimple($order);
+    }
+
+    /**
+     * True when PHP GD can render TrueType text and DejaVu fonts from dompdf are present.
+     * Shared hosts often lack FreeType — then the designed bill would 500 and the bot cannot fetch the PNG.
+     */
+    private function supportsDesignedBill(): bool
+    {
+        if (! function_exists('imagettftext') || ! function_exists('imagettfbbox')) {
+            return false;
+        }
+
+        $gd = function_exists('gd_info') ? gd_info() : [];
+        $freeType = $gd['FreeType Support'] ?? false;
+        if ($freeType !== true && $freeType !== 1 && $freeType !== '1' && $freeType !== 'Yes') {
+            return false;
+        }
+
+        try {
+            $this->fontPaths();
+
+            return true;
+        } catch (InvalidArgumentException) {
+            return false;
+        }
+    }
+
+    private function renderPngDesigned(Order $order): string
     {
         $order->loadMissing(['restaurant', 'items']);
 
@@ -58,6 +102,88 @@ class BillImageService
         imagedestroy($im);
 
         return $binary;
+    }
+
+    /**
+     * Lightweight bill (built-in GD fonts only). Used when TrueType / fonts are unavailable or designed render throws.
+     */
+    private function renderPngSimple(Order $order): string
+    {
+        $order->loadMissing(['restaurant', 'items']);
+
+        $width = 900;
+        $height = 1200;
+
+        $image = imagecreatetruecolor($width, $height);
+        if ($image === false) {
+            throw new InvalidArgumentException('Could not create image canvas.');
+        }
+
+        $white = imagecolorallocate($image, 255, 255, 255);
+        $dark = imagecolorallocate($image, 17, 24, 39);
+        $muted = imagecolorallocate($image, 107, 114, 128);
+        $accent = imagecolorallocate($image, 79, 70, 229);
+        $line = imagecolorallocate($image, 229, 231, 235);
+
+        imagefilledrectangle($image, 0, 0, $width, $height, $white);
+        imagefilledrectangle($image, 0, 0, $width, 130, $accent);
+
+        imagestring($image, 5, 40, 30, 'TIPTAP BILL', $white);
+        imagestring($image, 4, 40, 70, $this->sanitizeAscii($order->restaurant?->name ?? 'Restaurant'), $white);
+        imagestring($image, 3, 40, 95, 'Order #'.$order->id.' | Table '.$this->sanitizeAscii((string) ($order->table_number ?? '-')), $white);
+
+        $y = 170;
+        imagestring($image, 4, 40, $y, 'Customer: '.$this->sanitizeAscii($order->customer_name ?: 'Guest'), $dark);
+        $y += 30;
+        imagestring($image, 3, 40, $y, 'Phone: '.$this->sanitizeAscii($order->customer_phone ?: '-'), $muted);
+        $y += 35;
+
+        imageline($image, 40, $y, 860, $y, $line);
+        $y += 20;
+
+        imagestring($image, 3, 40, $y, 'ITEM', $muted);
+        imagestring($image, 3, 500, $y, 'QTY', $muted);
+        imagestring($image, 3, 620, $y, 'PRICE', $muted);
+        imagestring($image, 3, 760, $y, 'TOTAL', $muted);
+        $y += 18;
+        imageline($image, 40, $y, 860, $y, $line);
+        $y += 15;
+
+        foreach ($order->items as $item) {
+            $name = $this->sanitizeAscii((string) ($item->name ?: 'Item'));
+            if (strlen($name) > 48) {
+                $name = substr($name, 0, 45).'...';
+            }
+            imagestring($image, 4, 40, $y, $name, $dark);
+            imagestring($image, 4, 500, $y, (string) $item->quantity, $dark);
+            imagestring($image, 4, 620, $y, $this->money((float) $item->price), $dark);
+            imagestring($image, 4, 760, $y, $this->money((float) $item->total), $dark);
+            $y += 30;
+        }
+
+        $y += 10;
+        imageline($image, 40, $y, 860, $y, $line);
+        $y += 24;
+
+        imagestring($image, 5, 560, $y, 'TOTAL:', $dark);
+        imagestring($image, 5, 690, $y, 'TZS '.$this->money((float) $order->total_amount), $accent);
+        $y += 40;
+
+        imagestring($image, 3, 40, $y, 'Status: '.strtoupper($this->sanitizeAscii((string) $order->status)), $muted);
+        $y += 25;
+        imagestring($image, 2, 40, $y, 'Generated: '.now()->format('Y-m-d H:i:s'), $muted);
+
+        ob_start();
+        imagepng($image);
+        $binary = (string) ob_get_clean();
+        imagedestroy($image);
+
+        return $binary;
+    }
+
+    private function sanitizeAscii(string $value): string
+    {
+        return preg_replace('/[^\x20-\x7E]/', '', $value) ?: '-';
     }
 
     /**
