@@ -452,7 +452,7 @@ class WhatsAppBotController extends Controller
                     'table_number' => $tableNumber,
                     'customer_phone' => $request->customer_phone,
                     'customer_name' => $request->customer_name,
-                    'whatsapp_jid' => $this->resolveWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
+                    'whatsapp_jid' => Order::normalizeWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
                     'total_amount' => $totalAmount,
                     'status' => 'pending',
                 ]);
@@ -1279,7 +1279,7 @@ class WhatsAppBotController extends Controller
                         'table_number' => $tableNumber,
                         'customer_phone' => $request->customer_phone,
                         'customer_name' => $request->customer_name,
-                        'whatsapp_jid' => $this->resolveWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
+                        'whatsapp_jid' => Order::normalizeWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
                         'total_amount' => 0,
                         'status' => 'pending',
                         'notes' => 'Order from text: '.$request->order_text,
@@ -1328,7 +1328,7 @@ class WhatsAppBotController extends Controller
                     'table_number' => $tableNumber,
                     'customer_phone' => $request->customer_phone,
                     'customer_name' => $request->customer_name,
-                    'whatsapp_jid' => $this->resolveWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
+                    'whatsapp_jid' => Order::normalizeWhatsAppJid($request->whatsapp_jid, $request->customer_phone),
                     'total_amount' => $totalAmount,
                     'status' => 'pending',
                 ]);
@@ -1374,7 +1374,7 @@ class WhatsAppBotController extends Controller
     /**
      * Build the nested `order` payload the WhatsApp bot expects.
      *
-     * @return array{id:int, total:float, status:string, items:array<int,array{name:string,quantity:int,price:float,total:float}>}
+     * @return array{id:int, total:float, status:string, table_number:?string, whatsapp_jid:?string, items:array<int,array{name:string,quantity:int,price:float,total:float}>}
      */
     protected function formatOrderForBot(Order $order): array
     {
@@ -1383,6 +1383,7 @@ class WhatsAppBotController extends Controller
             'total' => (float) $order->total_amount,
             'status' => $order->status,
             'table_number' => $order->table_number,
+            'whatsapp_jid' => $order->whatsapp_jid,
             'items' => $order->items->map(fn ($item) => [
                 'name' => $item->name,
                 'quantity' => (int) $item->quantity,
@@ -1390,19 +1391,5 @@ class WhatsAppBotController extends Controller
                 'total' => (float) $item->total,
             ])->values()->all(),
         ];
-    }
-
-    protected function resolveWhatsAppJid(?string $providedJid, ?string $customerPhone): ?string
-    {
-        if (filled($providedJid)) {
-            return $providedJid;
-        }
-
-        $digitsOnlyPhone = preg_replace('/\D+/', '', (string) $customerPhone);
-        if (empty($digitsOnlyPhone)) {
-            return null;
-        }
-
-        return $digitsOnlyPhone.'@s.whatsapp.net';
     }
 }

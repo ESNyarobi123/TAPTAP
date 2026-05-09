@@ -160,3 +160,48 @@ it('manager send bill derives whatsapp jid from customer phone when missing', fu
 
     expect($order->fresh()->whatsapp_jid)->toBe('255711222333@s.whatsapp.net');
 });
+
+it('forced bill push throws when there is no jid and no customer phone', function () {
+    Http::fake();
+
+    $restaurant = Restaurant::create([
+        'name' => 'No Phone Cafe',
+        'is_active' => true,
+    ]);
+
+    $order = Order::withoutGlobalScopes()->create([
+        'restaurant_id' => $restaurant->id,
+        'table_number' => '1',
+        'customer_phone' => null,
+        'whatsapp_jid' => null,
+        'status' => 'served',
+        'total_amount' => 1000,
+    ]);
+
+    expect(fn () => (new SendBillImageToCustomer($order->id, true))->handle())
+        ->toThrow(RuntimeException::class);
+
+    Http::assertNothingSent();
+});
+
+it('does not throw when not forced and whatsapp jid is missing', function () {
+    Http::fake();
+
+    $restaurant = Restaurant::create([
+        'name' => 'Quiet Skip Cafe',
+        'is_active' => true,
+    ]);
+
+    $order = Order::withoutGlobalScopes()->create([
+        'restaurant_id' => $restaurant->id,
+        'table_number' => '2',
+        'customer_phone' => null,
+        'whatsapp_jid' => null,
+        'status' => 'served',
+        'total_amount' => 500,
+    ]);
+
+    (new SendBillImageToCustomer($order->id, false))->handle();
+
+    Http::assertNothingSent();
+});

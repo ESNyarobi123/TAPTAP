@@ -127,9 +127,9 @@ class LiveOrderController extends Controller
         }
 
         if (empty($order->whatsapp_jid)) {
-            $digitsOnlyPhone = preg_replace('/\D+/', '', (string) $order->customer_phone);
-            if (! empty($digitsOnlyPhone)) {
-                $order->forceFill(['whatsapp_jid' => $digitsOnlyPhone.'@s.whatsapp.net'])->saveQuietly();
+            $derived = Order::normalizeWhatsAppJid(null, $order->customer_phone);
+            if (filled($derived)) {
+                $order->forceFill(['whatsapp_jid' => $derived])->saveQuietly();
                 $order->refresh();
             }
         }

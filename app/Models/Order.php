@@ -86,4 +86,29 @@ class Order extends Model
     {
         $this->forceFill(['bill_image_pushed_at' => now()])->saveQuietly();
     }
+
+    /**
+     * Normalize JID for storage / bill push. Preserves full addresses from the bot
+     * (e.g. LID suffix) when provided; otherwise builds digits plus @s.whatsapp.net from customer_phone.
+     */
+    public static function normalizeWhatsAppJid(?string $providedJid, ?string $customerPhone): ?string
+    {
+        $provided = $providedJid !== null ? trim($providedJid) : '';
+        if ($provided !== '') {
+            if (str_contains($provided, '@')) {
+                return $provided;
+            }
+
+            if (ctype_digit($provided)) {
+                return $provided.'@s.whatsapp.net';
+            }
+        }
+
+        $digitsOnlyPhone = preg_replace('/\D+/', '', (string) $customerPhone);
+        if ($digitsOnlyPhone === '') {
+            return null;
+        }
+
+        return $digitsOnlyPhone.'@s.whatsapp.net';
+    }
 }
