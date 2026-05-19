@@ -369,14 +369,9 @@
             <!-- Desktop Header & Content -->
             <div class="p-4 lg:p-8 flex-1">
                 <div class="hidden md:flex justify-between items-center mb-8">
-                    <div class="flex items-center gap-5">
-                        <button type="button" id="sidebar-toggle-top" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 glass rounded-xl hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Toggle sidebar" title="Toggle sidebar">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
-                        </button>
-                        <div>
-                            <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">Waiter Portal</p>
-                            <h1 class="text-3xl font-bold text-white tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
-                        </div>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">Waiter Portal</p>
+                        <h1 class="text-3xl font-bold text-white tracking-tight break-words">{{ $header ?? 'Dashboard' }}</h1>
                     </div>
                     
                     <div class="flex items-center gap-5">
@@ -581,7 +576,6 @@
         }
         function toggleWaiterSidebar() { setWaiterSidebarCollapsed(!isWaiterSidebarCollapsed()); }
         document.getElementById('sidebar-toggle') && document.getElementById('sidebar-toggle').addEventListener('click', toggleWaiterSidebar);
-        document.getElementById('sidebar-toggle-top') && document.getElementById('sidebar-toggle-top').addEventListener('click', toggleWaiterSidebar);
         try { if (localStorage.getItem(WAITER_SIDEBAR_KEY) === '1') setWaiterSidebarCollapsed(true); } catch (e) {}
 
         window.addEventListener('load', function() {

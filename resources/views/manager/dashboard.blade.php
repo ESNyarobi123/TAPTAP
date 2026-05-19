@@ -4,8 +4,8 @@
     </x-slot>
 
     @if(session('info'))
-        <div class="mb-6 p-4 bg-white/10 border border-white/20 rounded-xl">
-            <p class="text-sm font-medium text-white/80">{{ session('info') }}</p>
+        <div class="mb-6 p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-xl" role="status">
+            <p class="text-sm font-medium text-cyan-100/90">{{ session('info') }}</p>
         </div>
     @endif
 
@@ -85,12 +85,12 @@
 
     <!-- Smart Live Order Tracking -->
     <div class="mb-10">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="text-2xl font-bold text-white tracking-tight">Live Order Tracking</h3>
-                <p class="text-sm font-medium text-white/40 uppercase tracking-wider">Real-time kitchen & service status</p>
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 min-w-0">
+            <div class="min-w-0">
+                <h3 class="text-xl sm:text-2xl font-bold text-white tracking-tight break-words">Live Order Tracking</h3>
+                <p class="text-xs sm:text-sm font-medium text-white/40 uppercase tracking-wide break-words">Real-time kitchen & service status</p>
             </div>
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-2 sm:gap-3 shrink-0">
                 <button onclick="window.location.reload()" class="glass px-4 py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 text-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>
@@ -283,7 +283,7 @@
         <!-- Customer Feedback -->
         <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-white tracking-tight">Recent Feedback</h3>
+                <h3 class="text-lg sm:text-xl font-bold text-white tracking-tight break-words">Recent Feedback</h3>
                 <a href="{{ route('manager.feedback.index') }}" class="text-[11px] font-bold text-violet-400 hover:text-violet-300 uppercase tracking-wider">View All</a>
             </div>
             <div class="space-y-4">
@@ -303,7 +303,7 @@
                                     @endfor
                                 </div>
                             </div>
-                            <p class="text-sm text-white/60 italic">"{{ $feedback->comment }}"</p>
+                            <p class="text-sm text-white/60 italic">"{{ $feedback->comment ?: 'No comment provided.' }}"</p>
                         </div>
                     </div>
                 @empty
@@ -312,20 +312,66 @@
             </div>
         </div>
 
-        {{-- Tips are not shown to manager --}}
+        <!-- Quick Actions -->
+        <div class="glass-card p-6 rounded-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white tracking-tight">Quick Actions</h3>
+                <span class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Shortcuts</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{{ route('manager.orders.live') }}" class="glass p-4 rounded-xl hover:bg-white/10 transition-all group border border-white/5">
+                    <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-400"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    </div>
+                    <p class="text-sm font-semibold text-white">Live Orders</p>
+                    <p class="text-[11px] text-white/40 mt-0.5">Kitchen board</p>
+                </a>
+                <a href="{{ route('manager.menu.index') }}" class="glass p-4 rounded-xl hover:bg-white/10 transition-all group border border-white/5">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-emerald-400"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <p class="text-sm font-semibold text-white">Menu</p>
+                    <p class="text-[11px] text-white/40 mt-0.5">Items & prices</p>
+                </a>
+                <a href="{{ route('manager.waiters.index') }}" class="glass p-4 rounded-xl hover:bg-white/10 transition-all group border border-white/5">
+                    <div class="w-9 h-9 rounded-lg bg-blue-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <p class="text-sm font-semibold text-white">Staff</p>
+                    <p class="text-[11px] text-white/40 mt-0.5">Link waiters</p>
+                </a>
+                <a href="{{ route('manager.payments.index') }}" class="glass p-4 rounded-xl hover:bg-white/10 transition-all group border border-white/5">
+                    <div class="w-9 h-9 rounded-lg bg-pink-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-pink-400"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    </div>
+                    <p class="text-sm font-semibold text-white">Payments</p>
+                    <p class="text-[11px] text-white/40 mt-0.5">Transactions</p>
+                </a>
+            </div>
+        </div>
     </div>
     <script>
-        // Auto-refresh stats every 30 seconds
-        setInterval(function() {
-            fetch('{{ route("manager.dashboard.stats") }}')
-                .then(response => response.json())
+        const refreshManagerStats = () => {
+            fetch('{{ route("manager.dashboard.stats") }}', {
+                headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin',
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Stats request failed');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    document.getElementById('stat-total-orders').textContent = new Intl.NumberFormat().format(data.total_orders_today);
-                    document.getElementById('stat-revenue-today').textContent = 'Tsh ' + new Intl.NumberFormat().format(data.revenue_today);
-                    document.getElementById('stat-avg-rating').textContent = data.avg_rating + '/5.0';
-                    document.getElementById('stat-waiters-online').textContent = data.waiters_online + ' Active';
+                    document.getElementById('stat-total-orders').textContent = new Intl.NumberFormat().format(data.total_orders_today ?? 0);
+                    document.getElementById('stat-revenue-today').textContent = 'Tsh ' + new Intl.NumberFormat().format(data.revenue_today ?? 0);
+                    document.getElementById('stat-avg-rating').textContent = (data.avg_rating ?? '0.0') + '/5.0';
+                    document.getElementById('stat-waiters-online').textContent = (data.waiters_online ?? 0) + ' Active';
                 })
                 .catch(error => console.error('Error fetching stats:', error));
-        }, 30000); // 30 seconds
+        };
+
+        refreshManagerStats();
+        setInterval(refreshManagerStats, 30000);
     </script>
 </x-manager-layout>

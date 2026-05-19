@@ -1,12 +1,27 @@
 <x-admin-layout>
     <x-slot name="header">Payments & Transactions</x-slot>
 
-    <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+    @include('admin.partials.page-styles')
+    @include('admin.partials.flash')
+
+    @include('admin.partials.page-hero', [
+        'eyebrow' => 'Finance',
+        'title' => 'Payments & Transactions',
+        'subtitle' => 'Monitor all financial activity across the platform.',
+        'accent' => 'emerald',
+    ])
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+        @include('admin.partials.stat-chip', ['label' => 'Transactions', 'value' => number_format($payments->total()), 'tone' => 'emerald'])
+        @include('admin.partials.stat-chip', ['label' => 'This page', 'value' => $payments->count(), 'tone' => 'cyan'])
+        @include('admin.partials.stat-chip', ['label' => 'Status', 'value' => request('status') ? ucfirst(request('status')) : 'All', 'tone' => 'amber'])
+    </div>
+
+    <div class="glass-card admin-data-panel rounded-3xl overflow-hidden">
         <div class="p-6 border-b border-white/5">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div>
-                    <h2 class="text-xl font-black text-white tracking-tight">Transaction History</h2>
-                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Monitor all financial activities across the platform</p>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Filters & export</p>
                 </div>
                 <a href="{{ route('admin.payments.export', request()->query()) }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/10 transition-all shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>

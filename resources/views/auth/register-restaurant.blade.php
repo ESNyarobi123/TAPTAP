@@ -23,6 +23,14 @@
             <form id="registration-form" method="POST" action="{{ route('restaurant.register.store') }}" class="flex flex-col flex-1">
                 @csrf
 
+                @if ($errors->any())
+                    <div class="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm font-medium space-y-1" role="alert">
+                        @foreach ($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+
                 <!-- Step 1: Restaurant Name -->
                 <div class="step step-active" data-step="1">
                     <div class="chat-bubble-left bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-4 text-white/80 font-medium mb-4">

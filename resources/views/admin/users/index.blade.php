@@ -1,16 +1,26 @@
 <x-admin-layout>
     <x-slot name="header">User Management</x-slot>
 
-    <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
-        <div class="p-6 border-b border-white/5">
-            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                <div>
-                    <h2 class="text-xl font-black text-white tracking-tight">System Users</h2>
-                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Manage administrators, managers, and waiters</p>
-                </div>
-            </div>
+    @include('admin.partials.page-styles')
+    @include('admin.partials.flash')
 
-            <form method="GET" action="{{ route('admin.users.index') }}" class="mt-6 flex flex-wrap items-end gap-4">
+    @include('admin.partials.page-hero', [
+        'eyebrow' => 'People',
+        'title' => 'Users & Roles',
+        'subtitle' => 'Manage administrators, managers, and waiters across the platform.',
+        'accent' => 'indigo',
+    ])
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        @include('admin.partials.stat-chip', ['label' => 'Total users', 'value' => number_format($users->total()), 'tone' => 'violet'])
+        @include('admin.partials.stat-chip', ['label' => 'This page', 'value' => $users->count(), 'tone' => 'cyan'])
+        @include('admin.partials.stat-chip', ['label' => 'Filter role', 'value' => request('role') ? str_replace('_', ' ', ucfirst(request('role'))) : 'All', 'tone' => 'white'])
+        @include('admin.partials.stat-chip', ['label' => 'Search', 'value' => request('q') ?: '—', 'tone' => 'amber'])
+    </div>
+
+    <div class="glass-card admin-data-panel rounded-3xl overflow-hidden">
+        <div class="p-6 border-b border-white/5">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-wrap items-end gap-4">
                 <div class="relative flex-1 min-w-[200px] max-w-xs">
                     <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1 block">Search</label>
                     <input type="text" name="q" value="{{ request('q') }}" placeholder="Name or email..."
@@ -27,7 +37,7 @@
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <button type="submit" class="px-5 py-2.5 bg-violet-600 hover:bg-violet-500 text-white rounded-xl font-semibold text-sm transition-all flex items-center gap-2">Filter</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-violet-500/20 transition-all">Filter</button>
                     <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl font-semibold text-sm border border-white/10 transition-all">Clear</a>
                 </div>
             </form>
@@ -36,17 +46,17 @@
         <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full min-w-[640px]">
                 <thead>
-                    <tr class="bg-white/5">
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">User</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Role</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Restaurant</th>
-                        <th class="px-6 py-4 text-left text-[10px] font-black text-white/40 uppercase tracking-widest">Joined</th>
-                        <th class="px-6 py-4 text-right text-[10px] font-black text-white/40 uppercase tracking-widest">Actions</th>
+                    <tr class="bg-white/5 admin-table-head">
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Restaurant</th>
+                        <th>Joined</th>
+                        <th class="text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/5">
                     @forelse($users as $user)
-                    <tr class="hover:bg-white/5 transition-all group">
+                    <tr class="admin-table-row group">
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center text-violet-400 font-black text-sm border border-violet-500/20 group-hover:scale-105 transition-transform shrink-0">
@@ -71,7 +81,11 @@
                             <span class="px-3 py-1 {{ $roleColor }} text-[10px] font-black rounded-full uppercase tracking-widest border">{{ str_replace('_', ' ', $role ?? '—') }}</span>
                         </td>
                         <td class="px-6 py-5">
-                            <span class="text-xs font-bold text-white/60">{{ $user->restaurant?->name ?? 'System' }}</span>
+                            @if($user->restaurant)
+                                <a href="{{ route('admin.restaurants.show', $user->restaurant) }}" class="text-xs font-bold text-white/70 hover:text-violet-400 transition-colors">{{ $user->restaurant->name }}</a>
+                            @else
+                                <span class="text-xs font-bold text-white/40">System</span>
+                            @endif
                         </td>
                         <td class="px-6 py-5">
                             <span class="text-xs font-medium text-white/40">{{ $user->created_at->format('M d, Y') }}</span>

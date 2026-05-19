@@ -6,7 +6,6 @@ use App\Models\Payment;
 use App\Models\Restaurant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Route;
 
 uses(RefreshDatabase::class);
 
@@ -59,8 +58,42 @@ test('restaurants index can be filtered by search and status', function () {
         ->assertDontSee('Cape Kitchen');
 });
 
-test('restaurant create route is not registered', function () {
-    expect(Route::has('admin.restaurants.create'))->toBeFalse();
+test('super admin can create restaurant with manager', function () {
+    $this->actingAs($this->admin)
+        ->post(route('admin.restaurants.store'), [
+            'restaurant_name' => 'New Bistro',
+            'location' => 'Pretoria',
+            'phone' => '0120000000',
+            'manager_name' => 'Bistro Manager',
+            'manager_email' => 'manager@bistro.test',
+            'manager_password' => 'password123',
+            'manager_password_confirmation' => 'password123',
+            'is_active' => '1',
+        ])
+        ->assertRedirect();
+
+    $restaurant = Restaurant::query()->where('name', 'New Bistro')->first();
+    expect($restaurant)->not->toBeNull();
+    expect((bool) $restaurant->is_active)->toBeTrue();
+
+    $manager = User::query()->where('email', 'manager@bistro.test')->first();
+    expect($manager)->not->toBeNull();
+    expect($manager->restaurant_id)->toBe($restaurant->id);
+    expect($manager->hasRole('manager'))->toBeTrue();
+});
+
+test('restaurant create validates duplicate manager email', function () {
+    $this->actingAs($this->admin)
+        ->post(route('admin.restaurants.store'), [
+            'restaurant_name' => 'Another Place',
+            'location' => 'Durban',
+            'phone' => '0310000001',
+            'manager_name' => 'Dup Manager',
+            'manager_email' => $this->manager->email,
+            'manager_password' => 'password123',
+            'manager_password_confirmation' => 'password123',
+        ])
+        ->assertSessionHasErrors('manager_email');
 });
 
 test('restaurant show displays real overview stats', function () {
@@ -97,11 +130,35 @@ test('restaurant show displays real overview stats', function () {
     $response->assertViewHas('overview', fn (array $overview) => $overview['total_earnings'] === 12000.0
         && $overview['total_orders'] === 1
         && $overview['avg_rating'] === 5.0);
-    $response->assertSee('Tsh 12.0K');
-    $response->assertSee('1');
+    $response->assertSee('12,000');
     $response->assertSee('5');
-    $response->assertSee($this->manager->email);
-    $response->assertSee(route('admin.orders.index', ['restaurant_id' => $this->restaurant->id], false));
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.restaurants.show', ['restaurant' => $this->restaurant, 'tab' => 'staff']))
+        ->assertOk()
+        ->assertSee($this->manager->email);
+});
+
+test('restaurant show supports tab navigation', function () {
+    $order = Order::create([
+        'restaurant_id' => $this->restaurant->id,
+        'table_number' => 'T5',
+        'status' => 'pending',
+        'total_amount' => 5000,
+    ]);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.restaurants.show', ['restaurant' => $this->restaurant, 'tab' => 'orders']))
+        ->assertOk()
+        ->assertSee('Full history')
+        ->assertSee('Table T5')
+        ->assertSee((string) $order->id);
+
+    $this->actingAs($this->admin)
+        ->get(route('admin.restaurants.show', ['restaurant' => $this->restaurant, 'tab' => 'staff']))
+        ->assertOk()
+        ->assertSee('Impersonate')
+        ->assertSee($this->manager->email);
 });
 
 test('super admin can update a restaurant', function () {

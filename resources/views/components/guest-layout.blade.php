@@ -28,45 +28,84 @@
             }
             
             body {
-                background: #0f0a1e;
+                background: #FAFBFC;
                 min-height: 100vh;
                 min-height: 100dvh;
             }
 
-            .login-hero-bg {
-                background-image: url("{{ public_asset('images/login-bg.jpg') }}");
-                background-size: cover;
-                background-position: center 42%;
-                background-repeat: no-repeat;
-                transform: scale(1.02);
+            body:not(.has-hero-background) {
+                background: #0f0a1e;
             }
 
-            .login-hero-overlay {
-                background:
-                    linear-gradient(105deg, rgba(12, 8, 24, 0.94) 0%, rgba(12, 8, 24, 0.78) 38%, rgba(12, 8, 24, 0.45) 62%, rgba(12, 8, 24, 0.35) 100%),
-                    linear-gradient(180deg, rgba(12, 8, 24, 0.25) 0%, rgba(12, 8, 24, 0.55) 100%);
+            .login-hero-bg {
+                background: linear-gradient(165deg, #DDD7FE 0%, #F5F3FF 35%, #FFFFFF 72%);
+            }
+
+            .login-hero-blob {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(80px);
+                pointer-events: none;
+            }
+
+            .login-hero-blob-1 {
+                width: 420px;
+                height: 420px;
+                background: rgba(140, 113, 246, 0.35);
+                top: -120px;
+                right: -80px;
+            }
+
+            .login-hero-blob-2 {
+                width: 320px;
+                height: 320px;
+                background: rgba(198, 189, 250, 0.5);
+                bottom: 0;
+                left: -100px;
+            }
+
+            .login-hero-blob-3 {
+                width: 200px;
+                height: 200px;
+                background: rgba(37, 211, 102, 0.12);
+                top: 40%;
+                left: 30%;
+            }
+
+            body.has-hero-background {
+                color: #12141C;
             }
 
             body.has-hero-background .glass-card {
-                background: rgba(18, 12, 36, 0.72);
-                backdrop-filter: blur(24px);
-                -webkit-backdrop-filter: blur(24px);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: rgba(255, 255, 255, 0.92);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid rgba(140, 113, 246, 0.15);
                 box-shadow:
-                    0 25px 50px -12px rgba(0, 0, 0, 0.55),
-                    0 0 0 1px rgba(139, 92, 246, 0.08) inset;
+                    0 8px 32px rgba(18, 20, 28, 0.06),
+                    0 0 0 1px rgba(140, 113, 246, 0.06);
             }
 
             body.has-hero-background .login-footer {
-                text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
+                color: #64708B;
+                text-shadow: none;
             }
 
             /* Gradient Text */
             .gradient-text {
-                background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+                background: linear-gradient(135deg, #6D52E8 0%, #8C71F6 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
+            }
+
+            body.has-hero-background .btn-fin {
+                background: linear-gradient(135deg, #8C71F6 0%, #6D52E8 100%);
+                box-shadow: 0 4px 20px rgba(109, 82, 232, 0.35);
+            }
+
+            body.has-hero-background .btn-fin:hover {
+                box-shadow: 0 8px 28px rgba(109, 82, 232, 0.45);
             }
 
             /* Glassmorphism */
@@ -100,28 +139,11 @@
                 }
 
                 body.has-hero-background .glass-card {
-                    background: rgba(18, 12, 36, 0.88);
-                    backdrop-filter: blur(16px);
-                    -webkit-backdrop-filter: blur(16px);
-                }
-
-                body.has-hero-background .login-hero-overlay {
-                    background:
-                        linear-gradient(180deg, rgba(12, 8, 24, 0.88) 0%, rgba(12, 8, 24, 0.82) 55%, rgba(12, 8, 24, 0.75) 100%);
-                }
-
-                body.has-hero-background .login-hero-bg {
-                    background-position: center 35%;
+                    background: rgba(255, 255, 255, 0.95);
                 }
 
                 .animate-float {
                     animation: none;
-                }
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                .login-hero-bg {
-                    transform: none;
                 }
             }
 
@@ -139,11 +161,13 @@
             }
         </style>
     </head>
-    <body class="font-sans antialiased text-white {{ $heroBackground ? 'has-hero-background' : '' }}">
+    <body class="font-sans antialiased {{ $heroBackground ? 'has-hero-background' : 'text-white' }}">
         @if ($heroBackground)
             <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
                 <div class="absolute inset-0 login-hero-bg"></div>
-                <div class="absolute inset-0 login-hero-overlay"></div>
+                <div class="login-hero-blob login-hero-blob-1"></div>
+                <div class="login-hero-blob login-hero-blob-2"></div>
+                <div class="login-hero-blob login-hero-blob-3"></div>
             </div>
         @else
             <!-- Background Effects -->
@@ -156,7 +180,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-4 sm:pt-0 px-3 sm:px-4 relative z-10">
             <!-- Logo -->
             <a href="/" class="flex items-center gap-2 sm:gap-3 group mb-6 sm:mb-8">
-                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-xl shadow-violet-500/30 transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow overflow-hidden">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center {{ $heroBackground ? 'shadow-xl shadow-[#8C71F6]/25' : 'shadow-xl shadow-violet-500/30' }} transform group-hover:rotate-12 transition-all duration-500 animate-pulse-glow overflow-hidden">
                     <img src="{{ public_asset('images/logo.png') }}" alt="TIPTAP Logo" class="w-full h-full object-contain bg-white">
                 </div>
                 <div>
@@ -165,10 +189,10 @@
             </a>
 
             <!-- Content Card -->
-            <div class="w-full sm:max-w-md glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl shadow-black/50 relative overflow-hidden">
+            <div class="w-full sm:max-w-md glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-8 {{ $heroBackground ? 'shadow-xl shadow-[#6D52E8]/10' : 'shadow-2xl shadow-black/50' }} relative overflow-hidden">
                 <!-- Decorative elements inside card -->
-                <div class="absolute -top-10 -right-10 w-32 h-32 sm:w-40 sm:h-40 bg-violet-500/10 rounded-full blur-2xl sm:blur-3xl"></div>
-                <div class="absolute -bottom-10 -left-10 w-32 h-32 sm:w-40 sm:h-40 bg-cyan-500/10 rounded-full blur-2xl sm:blur-3xl"></div>
+                <div class="absolute -top-10 -right-10 w-32 h-32 sm:w-40 sm:h-40 {{ $heroBackground ? 'bg-[#8C71F6]/10' : 'bg-violet-500/10' }} rounded-full blur-2xl sm:blur-3xl"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 sm:w-40 sm:h-40 {{ $heroBackground ? 'bg-[#DDD7FE]/60' : 'bg-cyan-500/10' }} rounded-full blur-2xl sm:blur-3xl"></div>
                 
                 <div class="relative z-10">
                     {{ $slot }}
@@ -176,7 +200,7 @@
             </div>
 
             <!-- Footer -->
-            <p class="login-footer mt-6 sm:mt-8 text-white/50 text-xs font-medium text-center flex items-center justify-center gap-2">
+            <p class="login-footer mt-6 sm:mt-8 {{ $heroBackground ? 'text-[#64708B]' : 'text-white/50' }} text-xs font-medium text-center flex items-center justify-center gap-2">
                 <img
                     src="{{ public_asset('images/flags/za.svg') }}"
                     alt="South Africa flag"

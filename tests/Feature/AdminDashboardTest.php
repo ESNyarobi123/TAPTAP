@@ -37,7 +37,10 @@ test('super admin can view admin dashboard', function () {
     $response->assertViewHas('stats');
     $response->assertViewHas('recent_restaurants');
     $response->assertViewHas('recent_activities');
-    $response->assertSee('Dashboard Overview');
+    $response->assertSee('Platform Overview');
+    $response->assertViewHas('analytics');
+    $response->assertSee('Revenue histogram');
+    $response->assertSee('Order pipeline');
 });
 
 test('admin dashboard stats api returns accurate counts', function () {

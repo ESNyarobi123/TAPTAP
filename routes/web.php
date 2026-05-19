@@ -8,9 +8,7 @@ use App\Http\Controllers\RestaurantRegistrationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect('/login');
-});
+Route::view('/', 'welcome')->name('home');
 
 Route::get('/fix-storage', function () {
     \Illuminate\Support\Facades\Artisan::call('storage:link');
@@ -105,6 +103,10 @@ Route::post('/register-restaurant', [RestaurantRegistrationController::class, 's
 Route::get('/register-waiter', [\App\Http\Controllers\WaiterRegistrationController::class, 'create'])->name('waiter.register');
 Route::post('/register-waiter', [\App\Http\Controllers\WaiterRegistrationController::class, 'store'])->name('waiter.register.store');
 
+Route::middleware('auth')->group(function () {
+    Route::post('/impersonate/stop', [\App\Http\Controllers\Admin\ImpersonationController::class, 'stop'])->name('impersonate.stop');
+});
+
 Route::get('/dashboard', function () {
     $user = Auth::user();
     if ($user->hasRole('super_admin')) {
@@ -132,10 +134,23 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('admin')->name('admin.')
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
     Route::get('/dashboard/stats', [AdminDashboard::class, 'getStats'])->name('dashboard.stats');
 
+    Route::get('search', [\App\Http\Controllers\Admin\SearchController::class, 'index'])->name('search.index');
+    Route::get('live-orders', [\App\Http\Controllers\Admin\LiveOrderController::class, 'index'])->name('live-orders.index');
+    Route::get('customer-requests', [\App\Http\Controllers\Admin\CustomerRequestController::class, 'index'])->name('customer-requests.index');
+    Route::post('customer-requests/{id}/complete', [\App\Http\Controllers\Admin\CustomerRequestController::class, 'complete'])->name('customer-requests.complete');
+    Route::get('tips', [\App\Http\Controllers\Admin\TipController::class, 'index'])->name('tips.index');
+    Route::get('payroll', [\App\Http\Controllers\Admin\PayrollController::class, 'index'])->name('payroll.index');
+    Route::get('reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::get('feedback', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('menus', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('menus.index');
+    Route::get('menus/{restaurant}', [\App\Http\Controllers\Admin\MenuController::class, 'show'])->name('menus.show');
+    Route::get('activity-log', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-log.index');
+
     // Restaurants
-    Route::resource('restaurants', \App\Http\Controllers\Admin\RestaurantController::class)
-        ->except(['create', 'store']);
+    Route::resource('restaurants', \App\Http\Controllers\Admin\RestaurantController::class);
     Route::post('restaurants/{restaurant}/toggle-status', [\App\Http\Controllers\Admin\RestaurantController::class, 'toggleStatus'])->name('restaurants.toggle-status');
+
+    Route::post('impersonate/{user}', [\App\Http\Controllers\Admin\ImpersonationController::class, 'start'])->name('impersonate.start');
 
     // Users
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)

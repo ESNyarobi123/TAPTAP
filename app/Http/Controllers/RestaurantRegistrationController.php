@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Restaurant;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+use Throwable;
 
 class RestaurantRegistrationController extends Controller
 {
-    public function create()
+    public function create(): View
     {
         return view('auth.register-restaurant');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'restaurant_name' => 'required|string|max:255',
@@ -26,27 +33,56 @@ class RestaurantRegistrationController extends Controller
             'manager_password' => 'required|confirmed|min:8',
         ]);
 
-        // 1. Create Restaurant
-        $restaurant = Restaurant::create([
-            'name' => $validated['restaurant_name'],
-            'location' => $validated['location'],
-            'phone' => $validated['phone'],
-            'is_active' => true,
-        ]);
+        if (! Role::where('name', 'manager')->where('guard_name', 'web')->exists()) {
+            $this->seedRolesIfMissing();
+        }
 
-        // 2. Create Manager
-        $manager = User::create([
-            'name' => $validated['manager_name'],
-            'email' => $validated['manager_email'],
-            'password' => Hash::make($validated['manager_password']),
-            'restaurant_id' => $restaurant->id,
-        ]);
+        if (! Role::where('name', 'manager')->where('guard_name', 'web')->exists()) {
+            return back()
+                ->withInput()
+                ->withErrors(['restaurant_name' => 'System roles are not configured. Please run: php artisan db:seed --class=RolesAndPermissionsSeeder']);
+        }
 
-        $manager->assignRole('manager');
+        try {
+            $manager = DB::transaction(function () use ($validated) {
+                $restaurant = Restaurant::create([
+                    'name' => $validated['restaurant_name'],
+                    'location' => $validated['location'],
+                    'phone' => $validated['phone'],
+                    'is_active' => true,
+                ]);
 
-        // 3. Auto-login manager
+                $manager = User::create([
+                    'name' => $validated['manager_name'],
+                    'email' => $validated['manager_email'],
+                    'password' => Hash::make($validated['manager_password']),
+                    'restaurant_id' => $restaurant->id,
+                ]);
+
+                $manager->assignRole('manager');
+
+                return $manager;
+            });
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'restaurant_name' => 'Registration failed. Please try again or contact support if the problem continues.',
+                ]);
+        }
+
         Auth::login($manager);
 
-        return redirect()->route('manager.dashboard')->with('status', 'Restaurant created successfully! Please set up your menu.');
+        return redirect()
+            ->route('manager.dashboard')
+            ->with('status', 'Restaurant created successfully! Please set up your menu.');
+    }
+
+    private function seedRolesIfMissing(): void
+    {
+        (new RolesAndPermissionsSeeder)->run();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

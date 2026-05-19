@@ -42,6 +42,21 @@
             background: linear-gradient(180deg, rgba(139, 92, 246, 0.8) 0%, rgba(6, 182, 212, 0.8) 100%);
         }
 
+        /* Sidebar nav: scroll when expanded or collapsed; scrollbar never visible */
+        #mobile-sidebar nav.sidebar-nav-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            overscroll-behavior: contain;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #mobile-sidebar nav.sidebar-nav-scroll::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
         /* Glassmorphism Effects */
         .glass {
             background: rgba(255, 255, 255, 0.03);
@@ -196,108 +211,8 @@
                 </div>
             </div>
 
-            <nav class="flex-1 py-4 custom-scrollbar overflow-y-auto overflow-x-hidden">
-                <div class="mb-3 px-4 sidebar-label">
-                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">Main</p>
-                </div>
-                
-                <a href="{{ route('admin.dashboard') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg min-h-[44px] {{ request()->routeIs('admin.dashboard') ? 'sidebar-link-active' : 'text-white/55' }} focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.dashboard') ? 'text-violet-400' : 'text-white/50' }}">
-                            <rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Dashboard</span>
-                </a>
-
-                <a href="{{ route('admin.restaurants.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.restaurants.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.restaurants.*') ? 'text-emerald-400' : 'text-white/50' }}">
-                            <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Restaurants</span>
-                </a>
-
-                <a href="{{ route('admin.users.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.users.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.users.*') ? 'text-blue-400' : 'text-white/50' }}">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Users</span>
-                </a>
-
-                <a href="{{ route('admin.waiters.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.waiters.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.waiters.*') ? 'text-amber-400' : 'text-white/50' }}">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Waiters</span>
-                </a>
-
-                <div class="mt-5 mb-3 px-4 sidebar-label">
-                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">Finance</p>
-                </div>
-
-                <a href="{{ route('admin.orders.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.orders.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.orders.*') ? 'text-amber-400' : 'text-white/50' }}">
-                            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Orders</span>
-                </a>
-
-                <a href="{{ route('admin.payments.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.payments.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.payments.*') ? 'text-pink-400' : 'text-white/50' }}">
-                            <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Payments</span>
-                </a>
-
-                <a href="{{ route('admin.withdrawals.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.withdrawals.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.withdrawals.*') ? 'text-teal-400' : 'text-white/50' }}">
-                            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Withdrawals</span>
-                </a>
-
-                <div class="mt-5 mb-3 px-4 sidebar-label">
-                    <p class="text-[9px] font-bold text-white/25 uppercase tracking-[0.25em]">System</p>
-                </div>
-
-                <a href="{{ route('admin.bots.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.bots.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.bots.*') ? 'text-cyan-400' : 'text-white/50' }}">
-                            <path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Bots</span>
-                </a>
-
-                <a href="{{ route('admin.notifications.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.notifications.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.notifications.*') ? 'text-violet-400' : 'text-white/50' }}">
-                            <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Notifications</span>
-                </a>
-
-                <a href="{{ route('admin.settings.index') }}" onclick="closeSidebar()" class="sidebar-link flex items-center gap-2 px-3 py-1.5 mx-2 rounded-lg {{ request()->routeIs('admin.settings.*') ? 'sidebar-link-active' : 'text-white/55' }}">
-                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-slate-500/20 to-zinc-500/20 flex items-center justify-center shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="{{ request()->routeIs('admin.settings.*') ? 'text-slate-400' : 'text-white/50' }}">
-                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
-                        </svg>
-                    </div>
-                    <span class="font-medium text-xs">Settings</span>
-                </a>
+            <nav class="flex-1 py-4 sidebar-nav-scroll overflow-y-auto overflow-x-hidden">
+                @include('admin.partials.sidebar-nav')
             </nav>
 
             <div class="p-3 border-t border-white/5 shrink-0 sidebar-logout-area">
@@ -333,14 +248,9 @@
             <!-- Desktop Header & Content -->
             <div class="p-4 md:p-8 flex-1">
                 <div class="hidden md:flex justify-between items-center mb-8">
-                    <div class="flex items-center gap-5">
-                        <button type="button" id="sidebar-toggle-top" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 glass rounded-xl hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Toggle sidebar" title="Toggle sidebar">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
-                        </button>
-                        <div>
-                            <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">System Overview</p>
-                            <h1 class="text-3xl font-bold text-white tracking-tight">{{ $header ?? 'Dashboard' }}</h1>
-                        </div>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-semibold text-violet-400 uppercase tracking-[0.15em] mb-1">System Overview</p>
+                        <h1 class="text-3xl font-bold text-white tracking-tight break-words">{{ $header ?? 'Dashboard' }}</h1>
                     </div>
                     
                     <div class="flex items-center gap-5">
@@ -439,23 +349,10 @@
             setTimeout(function() { overlay.classList.add('hidden'); }, 300);
             document.body.style.overflow = '';
         }
-        function isSidebarVisible() {
-            var el = document.getElementById('mobile-sidebar');
-            if (!el) return false;
-            var r = el.getBoundingClientRect();
-            return r.left >= -10 && r.width > 0;
-        }
-
         function toggleSidebar() {
             if (document.getElementById('mobile-sidebar').classList.contains('sidebar-open')) closeSidebar();
             else openSidebar();
         }
-        function onMenuButtonClick() {
-            if (!isSidebarVisible()) openSidebar();
-            else if (window.matchMedia('(min-width: 768px)').matches) toggleAdminSidebar();
-            else closeSidebar();
-        }
-
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeSidebar();
@@ -484,7 +381,6 @@
         }
         function toggleAdminSidebar() { setAdminSidebarCollapsed(!isAdminSidebarCollapsed()); }
         document.getElementById('sidebar-toggle') && document.getElementById('sidebar-toggle').addEventListener('click', toggleAdminSidebar);
-        document.getElementById('sidebar-toggle-top') && document.getElementById('sidebar-toggle-top').addEventListener('click', onMenuButtonClick);
         try { if (localStorage.getItem(ADMIN_SIDEBAR_KEY) === '1') setAdminSidebarCollapsed(true); } catch (e) {}
 
         window.addEventListener('load', function() {

@@ -1,12 +1,27 @@
 <x-admin-layout>
     <x-slot name="header">Withdrawal Requests</x-slot>
 
-    <div class="glass-card rounded-2xl overflow-hidden border border-white/10">
+    @include('admin.partials.page-styles')
+    @include('admin.partials.flash')
+
+    @include('admin.partials.page-hero', [
+        'eyebrow' => 'Finance',
+        'title' => 'Withdrawal Requests',
+        'subtitle' => 'Review and process restaurant payout requests.',
+        'accent' => 'rose',
+    ])
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+        @include('admin.partials.stat-chip', ['label' => 'Requests', 'value' => number_format($withdrawals->total()), 'tone' => 'rose'])
+        @include('admin.partials.stat-chip', ['label' => 'This page', 'value' => $withdrawals->count(), 'tone' => 'cyan'])
+        @include('admin.partials.stat-chip', ['label' => 'Status', 'value' => request('status') ? ucfirst(request('status')) : 'All', 'tone' => 'amber'])
+    </div>
+
+    <div class="glass-card admin-data-panel rounded-3xl overflow-hidden">
         <div class="p-6 border-b border-white/5">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div>
-                    <h2 class="text-xl font-black text-white tracking-tight">Restaurant Withdrawals</h2>
-                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Review and process payout requests</p>
+                    <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Filter requests</p>
                 </div>
             </div>
 

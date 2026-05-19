@@ -8,6 +8,10 @@
                     <h2 class="text-xl font-black text-white tracking-tight">All Restaurants</h2>
                     <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Manage and monitor your restaurant network</p>
                 </div>
+                <a href="{{ route('admin.restaurants.create') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold text-sm shrink-0 hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    Add Restaurant
+                </a>
             </div>
 
             <form method="GET" action="{{ route('admin.restaurants.index') }}" class="mt-6 flex flex-wrap items-end gap-4">
