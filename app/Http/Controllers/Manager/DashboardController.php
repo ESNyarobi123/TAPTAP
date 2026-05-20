@@ -7,6 +7,7 @@ use App\Models\Feedback;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\User;
+use App\Services\ManagerDashboardAnalytics;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,8 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $analytics = app(ManagerDashboardAnalytics::class)->forRestaurant($restaurantId);
+
         return view('manager.dashboard', [
             'totalOrdersToday' => $stats['total_orders_today'],
             'revenueToday' => $stats['revenue_today'],
@@ -63,6 +66,7 @@ class DashboardController extends Controller
             'servedOrders' => $servedOrders,
             'paidOrders' => $paidOrders,
             'recentFeedback' => $recentFeedback,
+            'analytics' => $analytics,
         ]);
     }
 
