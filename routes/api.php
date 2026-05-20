@@ -193,6 +193,11 @@ Route::prefix('bot')->middleware('auth:sanctum')->group(function () {
     // Quick Payment Routes (payment without order)
     Route::post('/payment/quick', [App\Http\Controllers\Api\WhatsAppBotController::class, 'initiateQuickPayment']);
     Route::get('/payment/quick/{paymentId}/status', [App\Http\Controllers\Api\WhatsAppBotController::class, 'getQuickPaymentStatus']);
+
+    // Session storage (replaces in-memory state in the Node bot)
+    Route::get('/session', [App\Http\Controllers\Api\BotSessionController::class, 'show']);
+    Route::put('/session', [App\Http\Controllers\Api\BotSessionController::class, 'upsert']);
+    Route::delete('/session', [App\Http\Controllers\Api\BotSessionController::class, 'destroy']);
 });
 
 // WhatsApp Webhook (Meta/WhatsApp Cloud API)

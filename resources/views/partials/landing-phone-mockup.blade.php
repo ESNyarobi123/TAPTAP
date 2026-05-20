@@ -1,4 +1,4 @@
-{{-- TipTap WhatsApp bot — premium phone mockup --}}
+{{-- TipTap Rafiki — premium phone mockup (real bot conversation) --}}
 <div class="phone-mockup relative mx-auto w-[290px] sm:w-[310px] lg:w-[340px] phone-float">
     <div class="absolute -inset-8 rounded-[4rem] bg-gradient-to-br from-[#8C71F6]/30 via-[#C6BDFA]/20 to-transparent blur-3xl pointer-events-none"></div>
     <div class="absolute -right-6 top-1/4 w-20 h-20 rounded-2xl bg-white/80 backdrop-blur border border-white shadow-lg flex items-center justify-center hidden sm:flex">
@@ -13,77 +13,87 @@
         </div>
         <div class="bg-[#E5DDD5] h-[540px] sm:h-[580px] flex flex-col overflow-hidden">
             <div class="bg-gradient-to-r from-[#075E54] to-[#128C7E] px-3.5 py-3 flex items-center gap-3 shrink-0 shadow-md">
-                <div class="w-10 h-10 rounded-full bg-white p-0.5 ring-2 ring-white/30 shrink-0">
-                    <img src="{{ public_asset('images/Botright.jpg') }}" alt="TipTap Bot" class="w-full h-full object-contain rounded-full">
+                <div class="w-10 h-10 rounded-full bg-white p-0.5 ring-2 ring-white/30 shrink-0 overflow-hidden">
+                    <img src="{{ public_asset('images/logo.png') }}" alt="TipTap Rafiki" class="w-full h-full object-contain rounded-full">
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-white text-[15px] font-semibold leading-tight tracking-tight">TipTap Bot</p>
+                    <p class="text-white text-[15px] font-semibold leading-tight tracking-tight">TipTap Rafiki</p>
                     <p class="text-emerald-100/90 text-[10px] flex items-center gap-1.5 mt-0.5">
                         <span class="relative flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-60"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-[#25D366]"></span>
                         </span>
-                        online · restaurant assistant
+                        online
                     </p>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto px-2.5 py-3 space-y-2.5 chat-scroll bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23d4cdc4%22 fill-opacity=%220.15%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]">
+            <div class="flex-1 overflow-y-auto px-2 py-2.5 space-y-1.5 chat-scroll bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23d4cdc4%22 fill-opacity=%220.15%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]">
                 <div class="flex justify-center">
-                    <span class="text-[9px] font-medium bg-white/90 text-gray-500 px-2.5 py-1 rounded-lg shadow-sm">Today · 7:42 PM</span>
+                    <span class="text-[8px] font-medium bg-[#E1F2FB] text-[#54656F] px-2 py-0.5 rounded-md shadow-sm">Today</span>
                 </div>
 
-                <div class="chat-bubble" style="--delay: 0.15s">
-                    <div class="max-w-[90%] bg-white rounded-2xl rounded-tl-md px-3 py-2.5 shadow-md text-[11.5px] text-[#12141C] leading-relaxed border border-white/80">
-                        <p class="font-bold text-[#8C71F6] text-[10px] uppercase tracking-wider mb-1">TipTap</p>
-                        Welcome! 👋 Choose an option:
-                        <div class="mt-2 flex flex-wrap gap-1">
-                            <span class="px-2 py-0.5 rounded-md bg-[#F3F0FF] text-[#6D52E8] text-[10px] font-semibold">1 Menu</span>
-                            <span class="px-2 py-0.5 rounded-md bg-[#F3F0FF] text-[#6D52E8] text-[10px] font-semibold">2 Language</span>
-                            <span class="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[10px] font-semibold">0 Help</span>
-                        </div>
+                {{-- Bot: feedback prompt --}}
+                <div class="chat-bubble" style="--delay: 0.1s">
+                    <div class="max-w-[88%] bg-white rounded-lg rounded-tl-none px-2.5 py-1.5 shadow-sm text-[10px] text-[#111B21] leading-snug">
+                        📝 Enter comment or type <b>END</b> to finish
+                        <p class="text-[8px] text-[#667781] text-right mt-0.5">10:15</p>
                     </div>
                 </div>
 
-                <div class="chat-bubble flex justify-end" style="--delay: 0.7s">
-                    <div class="max-w-[70%] bg-[#D9FDD3] rounded-2xl rounded-tr-md px-3 py-2 shadow-md text-[12px] font-medium text-[#12141C]">1</div>
-                </div>
-
-                <div class="chat-bubble" style="--delay: 1.2s">
-                    <div class="max-w-[94%] bg-white rounded-2xl rounded-tl-md px-3 py-2.5 shadow-md text-[11.5px] text-[#12141C] leading-relaxed">
-                        <p class="font-bold text-[#12141C] mb-2 flex items-center gap-1">🍽️ <span>Menu — Table 12</span></p>
-                        <div class="space-y-1">
-                            <p class="flex justify-between gap-2"><span><b>1.</b> Grilled Fish</span><span class="text-[#8C71F6] font-semibold shrink-0">18k</span></p>
-                            <p class="flex justify-between gap-2"><span><b>2.</b> Nyama Choma</span><span class="text-[#8C71F6] font-semibold shrink-0">22k</span></p>
-                            <p class="flex justify-between gap-2"><span><b>3.</b> Rice & Beans</span><span class="text-[#8C71F6] font-semibold shrink-0">8k</span></p>
-                        </div>
-                        <p class="text-[10px] text-gray-500 mt-2 pt-2 border-t border-gray-100">Reply: <b>1 x2</b> (item × qty)</p>
+                {{-- User: comment --}}
+                <div class="chat-bubble flex justify-end" style="--delay: 0.25s">
+                    <div class="max-w-[72%] bg-[#D9FDD3] rounded-lg rounded-tr-none px-2.5 py-1.5 shadow-sm text-[10px] text-[#111B21]">
+                        She is quick
+                        <p class="text-[8px] text-[#667781] text-right mt-0.5">10:15 ✓✓</p>
                     </div>
                 </div>
 
-                <div class="chat-bubble flex justify-end" style="--delay: 1.8s">
-                    <div class="max-w-[75%] bg-[#D9FDD3] rounded-2xl rounded-tr-md px-3 py-2 shadow-md text-[12px] font-medium">1 x2</div>
-                </div>
-
-                <div class="chat-bubble" style="--delay: 2.4s">
-                    <div class="max-w-[94%] bg-white rounded-2xl rounded-tl-md px-3 py-2.5 shadow-md text-[11.5px]">
-                        <div class="flex items-center gap-1.5 text-emerald-700 font-bold mb-1.5">
-                            <span class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-[10px]">✓</span>
-                            Order #1042 · Received
-                        </div>
-                        <p class="text-[#12141C]">2× Grilled Fish</p>
-                        <p class="text-lg font-bold text-[#12141C] mt-1">Tsh 36,000</p>
-                        <p class="text-[10px] text-gray-500 mt-1">Waiter James · Table 12</p>
-                        <div class="mt-2.5 grid grid-cols-2 gap-1.5">
-                            <span class="text-center py-1.5 rounded-lg bg-gradient-to-r from-[#8C71F6] to-[#6D52E8] text-white text-[10px] font-bold shadow-sm">Pay now</span>
-                            <span class="text-center py-1.5 rounded-lg bg-gray-100 text-gray-700 text-[10px] font-semibold">View bill</span>
-                        </div>
+                {{-- Bot: thanks --}}
+                <div class="chat-bubble" style="--delay: 0.4s">
+                    <div class="max-w-[88%] bg-white rounded-lg rounded-tl-none px-2.5 py-1.5 shadow-sm text-[10px] text-[#111B21]">
+                        🙏 Thanks for your feedback!
+                        <p class="text-[8px] text-[#667781] text-right mt-0.5">10:15</p>
                     </div>
                 </div>
 
-                <div class="chat-bubble" style="--delay: 3s">
-                    <div class="bg-white rounded-2xl rounded-tl-md px-3.5 py-3 shadow-md inline-flex gap-1.5 items-center">
-                        <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+                {{-- Bot: main menu --}}
+                <div class="chat-bubble" style="--delay: 0.55s">
+                    <div class="max-w-[95%] bg-white rounded-lg rounded-tl-none px-2.5 py-2 shadow-sm text-[9px] text-[#111B21] leading-[1.35]">
+                        <p class="text-center text-[#667781] tracking-wider mb-1">━━━━━━ 🏠 ✨ ━━━━━━</p>
+                        <p class="font-semibold mb-1">👋 Welcome <span class="font-bold">TipTap Grill</span> (Anna Doe)</p>
+                        <p class="mb-0.5">Choose service:</p>
+                        <p class="italic text-[#667781] mb-1.5">Type <b>0</b> anytime to go back here.</p>
+                        <p class="font-bold mb-1">🍽️ MAIN SERVICES</p>
+                        <div class="space-y-0.5 text-[8.5px]">
+                            <p>1️⃣ 🍽️ View Our Menu</p>
+                            <p>2️⃣ ⭐ Rate Service ANNA DOE</p>
+                            <p>3️⃣ 💵 Pay Bill</p>
+                            <p>4️⃣ 💵 Tip ANNA DOE</p>
+                            <p>5️⃣ 🔔 Call Waiter</p>
+                            <p>6️⃣ 📞 Customer Support</p>
+                            <p>7️⃣ 🌐 Change language</p>
+                            <p>8️⃣ ❌ Exit</p>
+                        </div>
+                        <p class="text-center text-[#667781] tracking-wider my-1">━━━━━━━━━━━━━━━</p>
+                        <p class="font-semibold text-[#075E54]">✅ ReplyNumberToChoose</p>
+                        <p class="text-[8px] text-[#667781] text-right mt-1">10:15</p>
+                    </div>
+                </div>
+
+                {{-- User: selects 4 --}}
+                <div class="chat-bubble flex justify-end" style="--delay: 0.75s">
+                    <div class="max-w-[40%] bg-[#D9FDD3] rounded-lg rounded-tr-none px-3 py-1.5 shadow-sm text-[11px] font-medium text-[#111B21]">
+                        4
+                        <p class="text-[8px] text-[#667781] text-right mt-0.5">10:17 ✓✓</p>
+                    </div>
+                </div>
+
+                {{-- Bot: tip prompt --}}
+                <div class="chat-bubble" style="--delay: 0.9s">
+                    <div class="max-w-[88%] bg-white rounded-lg rounded-tl-none px-2.5 py-1.5 shadow-sm text-[10px] text-[#111B21]">
+                        💰 Tip ANNA DOE (Tsh):
+                        <p class="text-[8px] text-[#667781] text-right mt-0.5">10:17</p>
                     </div>
                 </div>
             </div>

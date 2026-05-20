@@ -300,12 +300,12 @@
                         <span class="rounded-full bg-gradient-to-r from-fin-primary to-fin-primary-dark px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">Live</span>
                         <span class="text-xs font-medium text-fin-muted">TipTap Bot · WhatsApp · QR · M-Pesa</span>
                     </div>
-                    <h1 class="text-[2.35rem] sm:text-5xl lg:text-[3.35rem] font-light leading-[1.06] tracking-tight text-fin-ink mb-6">
-                        <span class="text-hero-gradient font-normal">Order food</span><br>
-                        <span class="text-hero-accent font-medium">directly on WhatsApp</span>
+                    <h1 class="text-[2rem] sm:text-[2.75rem] lg:text-[3rem] font-light leading-[1.08] tracking-tight text-fin-ink mb-6">
+                        <span class="text-hero-gradient font-normal">Review, pay and tip</span><br>
+                        <span class="text-hero-accent font-medium">in one platform</span>
                     </h1>
                     <p class="text-base sm:text-lg text-fin-muted leading-relaxed font-normal max-w-lg mx-auto lg:mx-0 mb-8">
-                        Guests scan a QR code, chat with <strong class="text-fin-ink font-semibold">TipTap Bot</strong>, place orders, and pay with M-Pesa or TigoPesa — no app, no queues, no hassle.
+                        Guests scan a QR code, chat with <strong class="text-fin-ink font-semibold">TipTap Rafiki</strong>, place orders, leave reviews, and pay with <strong class="text-fin-ink font-semibold">mobile payment or bank</strong> — no app, no queues, no hassle.
                     </p>
                     <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-8">
                         <a href="{{ route('restaurant.register') }}" class="btn-glow w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 text-sm font-bold text-white">
@@ -320,7 +320,7 @@
                     <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2">
                         <span class="trust-pill"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-whatsapp"></i> WhatsApp</span>
                         <span class="trust-pill"><i data-lucide="qr-code" class="w-3.5 h-3.5 text-fin-primary"></i> QR Tables</span>
-                        <span class="trust-pill"><i data-lucide="wallet" class="w-3.5 h-3.5 text-emerald-600"></i> M-Pesa · Tigo</span>
+                        <span class="trust-pill"><i data-lucide="wallet" class="w-3.5 h-3.5 text-emerald-600"></i> Mobile payment · Bank</span>
                         <span class="trust-pill"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-fin-primary"></i> Selcom</span>
                     </div>
                 </div>

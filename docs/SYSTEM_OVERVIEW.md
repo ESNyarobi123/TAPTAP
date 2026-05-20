@@ -337,22 +337,64 @@ Payment records live in the `payments` table with `transaction_reference`, `meth
 
 ## 8. WhatsApp integration
 
-Two integration paths:
+The bot was migrated from **Baileys (WhatsApp Web)** to the **Meta Cloud API** in `tiptopbot v2.0`. The Laravel application is unchanged on the business-logic side; only the transport layer in the Node bot changed.
+
+```mermaid
+flowchart LR
+    META[Meta Cloud API] <-->|webhook + graph| BOT[Node bot v2.0]
+    BOT <-->|/api/bot/* + /api/bot/session| LARAVEL[Laravel]
+    LARAVEL --> DB[(orders, payments, bot_sessions)]
+    LARAVEL -->|bill image notify| BOT
+```
+
+### Integration paths
 
 | Path | Purpose |
 |------|---------|
-| **Bot API** (`/api/bot/*`) | Primary: external bot drives menu, orders, payments, feedback, tips, tables, call waiter |
-| **Meta webhook** (`/api/whatsapp/webhook`) | Optional Cloud API inbound messages |
+| **Bot business API** (`/api/bot/*`) | Bot drives menu, orders, payments, feedback, tips, tables, call waiter |
+| **Bot session API** (`/api/bot/session`) | Persists conversation state in `bot_sessions` (replaces in-memory map) |
+| **Meta webhook** (`/api/whatsapp/webhook`) | Optional: Meta posts here, Laravel verifies + forwards to bot's `/inbound`. Can also be skipped by pointing Meta directly at `https://<bot>/webhook`. |
+| **Bill image push** (`/notify` on the bot) | Laravel calls the bot when an order reaches `served`; the bot delivers via Cloud API |
 
-**Configuration** (`config/whatsapp.php`):
+### Configuration
 
-- `WHATSAPP_BOT_NOTIFY_URL` — Laravel tells the bot to send messages (e.g. bill image)
-- Bill image public URL (or `bill.image` signed route)
-- Timeouts and related options
+`config/services.php → 'whatsapp'`:
 
-**Bill images:** `BillImageController` + `BillImageService` render order bills as images; `SendBillImageToCustomer` job can queue delivery when order is `served`.
+| Key | Env var | Purpose |
+|-----|---------|---------|
+| `phone_number_id` | `WHATSAPP_PHONE_NUMBER_ID` | Meta phone number id |
+| `access_token` | `WHATSAPP_ACCESS_TOKEN` | Long-lived Graph API token |
+| `verify_token` | `WHATSAPP_VERIFY_TOKEN` | Used in webhook handshake |
+| `app_secret` | `WHATSAPP_APP_SECRET` | HMAC signature verification |
+| `graph_version` | `WHATSAPP_GRAPH_VERSION` | Default `v20.0` |
 
-**Admin:** `/admin/bots` — set bot endpoint, generate Sanctum `BOT_TOKEN`.
+`config/whatsapp.php` retains bill push settings:
+
+- `bot_notify_url` — Where Laravel sends `bill_image` events
+- `bot_notify_secret` — Shared `X-Bot-Secret` header
+- `bill_image_base_url` — Public base URL for the rendered PNG
+
+### Bill image flow
+
+`BillImageController` + `BillImageService` render an order bill as PNG. When status moves to `served`, the **`SendBillImageToCustomer`** job POSTs to `bot_notify_url`. The bot's `/notify` endpoint then sends an `image` message via Cloud API (no Baileys).
+
+### Persistent sessions
+
+`bot_sessions` table stores per-customer state so cart, language, and current screen survive bot restarts:
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `wa_id` | string (unique) | Phone digits only |
+| `state` | string | e.g. `HOME`, `PAYMENT_SUMMARY` |
+| `lang` | string(2) | `en` (default) or `sw` |
+| `data` | json | Cart, restaurant_id, table_id, … |
+| `last_message_at` | timestamp | For idle cleanup |
+
+CRUD via `App\Http\Controllers\Api\BotSessionController` (auth: same `bot_service` Sanctum token).
+
+### Admin
+
+`/admin/bots` — set the bot's notify URL and rotate `BOT_TOKEN`.
 
 ---
 
