@@ -514,4 +514,40 @@ class BillImageService
     {
         return number_format($amount, 0, '.', ',');
     }
+
+    /**
+     * JPEG bill for WhatsApp Cloud API (Meta rejects some PNG link fetches with 131053).
+     */
+    public function renderJpeg(Order $order, int $quality = 88): string
+    {
+        $png = $this->renderPng($order);
+        $source = imagecreatefromstring($png);
+        if ($source === false) {
+            throw new RuntimeException('Could not decode rendered bill PNG.');
+        }
+
+        $width = imagesx($source);
+        $height = imagesy($source);
+        $canvas = imagecreatetruecolor($width, $height);
+        if ($canvas === false) {
+            imagedestroy($source);
+            throw new RuntimeException('Could not create JPEG canvas.');
+        }
+
+        $white = imagecolorallocate($canvas, 255, 255, 255);
+        imagefill($canvas, 0, 0, $white);
+        imagecopy($canvas, $source, 0, 0, 0, 0, $width, $height);
+        imagedestroy($source);
+
+        ob_start();
+        imagejpeg($canvas, null, max(60, min(95, $quality)));
+        $jpeg = ob_get_clean();
+        imagedestroy($canvas);
+
+        if ($jpeg === false || $jpeg === '') {
+            throw new RuntimeException('Could not encode bill JPEG.');
+        }
+
+        return $jpeg;
+    }
 }

@@ -53,8 +53,8 @@ it('returns bill image for a valid signed order url', function () {
     $response = $this->get($url);
 
     $response->assertOk();
-    $response->assertHeader('content-type', 'image/png');
-    expect(substr($response->getContent(), 0, 8))->toBe(chr(0x89).'PNG'.chr(0x0D).chr(0x0A).chr(0x1A).chr(0x0A));
+    $response->assertHeader('content-type', 'image/jpeg');
+    expect(substr($response->getContent(), 0, 2))->toBe("\xFF\xD8");
     expect(strlen($response->getContent()))->toBeGreaterThan(5000);
 });
 
@@ -76,7 +76,7 @@ it('accepts legacy bill image URL with signature query parameter', function () {
     $response = $this->get('/bill-image/'.$order->id.'?signature='.$sig);
 
     $response->assertOk();
-    $response->assertHeader('content-type', 'image/png');
+    $response->assertHeader('content-type', 'image/jpeg');
 });
 
 it('includes bill image url in bot order status when order is served', function () {

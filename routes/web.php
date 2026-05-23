@@ -5,8 +5,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BillImageController;
 use App\Http\Controllers\Manager\DashboardController as ManagerDashboard;
 use App\Http\Controllers\RestaurantRegistrationController;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 Route::view('/', 'welcome')->name('home');
 
@@ -21,8 +25,24 @@ Route::get('/serve-storage/{path}', \App\Http\Controllers\ServeStorageController
 // Path signature avoids some WAFs that block ?signature=... on shared hosting.
 Route::get('/bill-image/{orderId}/{signature}', BillImageController::class)
     ->where(['orderId' => '[0-9]+', 'signature' => '[a-f0-9]{64}'])
+    ->withoutMiddleware([
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        VerifyCsrfToken::class,
+    ])
     ->name('bill.image');
-Route::get('/bill-image/{orderId}', BillImageController::class)->where('orderId', '[0-9]+')->name('bill.image.legacy');
+Route::get('/bill-image/{orderId}', BillImageController::class)
+    ->where('orderId', '[0-9]+')
+    ->withoutMiddleware([
+        EncryptCookies::class,
+        AddQueuedCookiesToResponse::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        VerifyCsrfToken::class,
+    ])
+    ->name('bill.image.legacy');
 
 // DEBUG: Test Selcom Authentication - DELETE AFTER TESTING!
 Route::get('/test-selcom', function () {
