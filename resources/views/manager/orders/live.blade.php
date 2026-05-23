@@ -203,6 +203,12 @@
                                 @else
                                     <span class="text-[10px] font-medium text-white/30">Unassigned</span>
                                 @endif
+                                @php
+                                    $waDigits = preg_replace('/\D+/', '', (string) ($order->whatsapp_jid ?: $order->customer_phone));
+                                @endphp
+                                @if(filled($waDigits))
+                                    <span class="text-[10px] font-medium text-white/45">WhatsApp: {{ $waDigits }}</span>
+                                @endif
                             </div>
                             <span class="text-[10px] font-medium text-white/40">{{ $order->created_at->diffForHumans() }}</span>
                         </div>
@@ -230,6 +236,17 @@
                                             class="flex-1 min-w-[160px] py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-white/20 transition-all"
                                             title="Generate signed bill image URL and send via WhatsApp bot">
                                         Confirm order
+                                    </button>
+                                </form>
+                            @elseif($isWhatsAppOrder && $billAlreadySent)
+                                <form action="{{ route('manager.orders.whatsapp-bill', $order) }}" method="POST"
+                                      class="inline"
+                                      onsubmit="return confirm('Resend the bill image to this customer\'s WhatsApp?');">
+                                    @csrf
+                                    <button type="submit"
+                                            class="flex-1 min-w-[140px] py-2.5 px-3 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-200 font-semibold text-sm border border-amber-500/30 transition-all"
+                                            title="Resend bill image (force)">
+                                        Resend bill
                                     </button>
                                 </form>
                             @endif

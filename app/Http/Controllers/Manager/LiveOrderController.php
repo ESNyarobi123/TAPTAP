@@ -199,7 +199,12 @@ class LiveOrderController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Bill image push was sent to the customer\'s WhatsApp.');
+        $recipient = Order::whatsAppRecipientId($order->whatsapp_jid, $order->customer_phone);
+
+        return redirect()->back()->with(
+            'success',
+            'Bill image was sent to WhatsApp '.($recipient ?? 'customer').'. Ask them to open the chat with TipTap business number (+255 791 070 771) and scroll to the latest message.'
+        );
     }
 
     public function destroy($id)

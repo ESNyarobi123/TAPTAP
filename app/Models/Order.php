@@ -102,6 +102,22 @@ class Order extends Model
      * Normalize JID for storage / bill push. Preserves full addresses from the bot
      * (e.g. LID suffix) when provided; otherwise builds digits plus @s.whatsapp.net from customer_phone.
      */
+    /**
+     * Digits-only WhatsApp id for Cloud API outbound (from stored jid or phone).
+     */
+    public static function whatsAppRecipientId(?string $providedJid, ?string $customerPhone): ?string
+    {
+        $normalized = self::normalizeWhatsAppJid($providedJid, $customerPhone);
+        if ($normalized === null || $normalized === '') {
+            return null;
+        }
+
+        $local = explode('@', $normalized)[0];
+        $digits = preg_replace('/\D+/', '', $local);
+
+        return $digits !== '' ? $digits : null;
+    }
+
     public static function normalizeWhatsAppJid(?string $providedJid, ?string $customerPhone): ?string
     {
         $provided = $providedJid !== null ? trim($providedJid) : '';
