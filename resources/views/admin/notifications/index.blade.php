@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="pt-2">
-                        <button type="submit" id="sendBtn" class="notification-send-btn px-10 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-3">
+                        <button type="submit" id="sendBtn" class="notification-send-btn px-10 py-4 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="send-icon"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
                             <span class="send-label">Send notification</span>
                         </button>
@@ -126,7 +126,7 @@
                 <h3 class="text-lg font-black text-white tracking-tight mb-4">Onyo la Simu</h3>
                 <div class="bg-white/5 rounded-xl p-4 border border-white/10">
                     <div class="flex items-center gap-3 mb-2">
-                        <div class="w-8 h-8 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-xl flex items-center justify-center text-white">
+                        <div class="w-8 h-8 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-xl flex items-center justify-center text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
                         </div>
                         <div>

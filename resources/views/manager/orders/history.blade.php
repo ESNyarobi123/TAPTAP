@@ -13,7 +13,7 @@
             <input type="hidden" name="waiter" value="{{ $waiter }}">
             <input type="hidden" name="date_from" value="{{ $dateFrom }}">
             <input type="hidden" name="date_to" value="{{ $dateTo }}">
-            <button type="submit" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+            <button type="submit" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
                 </svg>
@@ -102,7 +102,7 @@
 
             <!-- Buttons -->
             <div class="md:col-span-2 lg:col-span-5 flex gap-3">
-                <button type="submit" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                <button type="submit" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                     Apply Filters
                 </button>
                 <a href="{{ route('manager.orders.history') }}" class="glass px-6 py-2.5 rounded-xl font-semibold text-white/70 hover:text-white hover:bg-white/10 transition-all">

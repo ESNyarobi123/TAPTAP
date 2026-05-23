@@ -16,7 +16,7 @@
                     </svg>
                     Manage Categories
                 </button>
-                <button onclick="openAddMenuModal()" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+                <button onclick="openAddMenuModal()" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14"/><path d="M12 5v14"/>
                     </svg>
@@ -27,9 +27,9 @@
 
         <!-- Categories Tabs -->
         <div class="flex gap-3 mb-8 overflow-x-auto pb-2 hide-scrollbar">
-            <button @click="selectedCategory = 'all'" :class="selectedCategory === 'all' ? 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all">All Items</button>
+            <button @click="selectedCategory = 'all'" :class="selectedCategory === 'all' ? 'bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all">All Items</button>
             @foreach($categories as $category)
-                <button @click="selectedCategory = {{ $category->id }}" :class="selectedCategory === {{ $category->id }} ? 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all whitespace-nowrap">{{ $category->name }}</button>
+                <button @click="selectedCategory = {{ $category->id }}" :class="selectedCategory === {{ $category->id }} ? 'bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white shadow-lg shadow-violet-500/20' : 'glass text-white/60 hover:text-white hover:bg-white/10'" class="px-5 py-2.5 rounded-xl font-semibold transition-all whitespace-nowrap">{{ $category->name }}</button>
             @endforeach
         </div>
 
@@ -190,7 +190,7 @@
                     </div>
 
                     <div class="col-span-full mt-4">
-                        <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                        <button type="submit" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                             Save Menu Item
                         </button>
                     </div>
@@ -225,7 +225,7 @@
                                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                             <input type="file" name="image" class="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-500 transition-all">
                         </div>
-                        <button type="submit" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white p-3 rounded-xl shadow-lg hover:shadow-violet-500/25 transition-all">
+                        <button type="submit" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white p-3 rounded-xl shadow-lg hover:shadow-violet-500/25 transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"/><path d="M12 5v14"/>
                             </svg>
@@ -300,7 +300,7 @@
                         <input type="file" name="image" class="w-full text-sm text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-500 transition-all">
                     </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                    <button type="submit" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                         Update Category
                     </button>
                 </form>

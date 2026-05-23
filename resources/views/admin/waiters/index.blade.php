@@ -26,7 +26,7 @@
                 <input type="text" id="searchCode" placeholder="TIPTAP-W-00001"
                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-mono text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent">
             </div>
-            <button type="button" id="adminSearchBtn" onclick="adminSearchWaiter()" class="px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+            <button type="button" id="adminSearchBtn" onclick="adminSearchWaiter()" class="px-6 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 <span class="search-label">Search</span>
             </button>

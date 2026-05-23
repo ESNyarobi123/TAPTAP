@@ -18,7 +18,7 @@
         <button type="button" onclick="window.location.reload()" class="p-2.5 rounded-xl glass hover:bg-white/10 text-white/70 hover:text-white transition-colors touch-action-manipulation" title="Refresh" aria-label="Refresh">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
         </button>
-        <button type="button" onclick="openCreateOrderModal()" class="flex items-center gap-2 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-violet-500/25 transition-all touch-action-manipulation">
+        <button type="button" onclick="openCreateOrderModal()" class="flex items-center gap-2 bg-gradient-to-r from-fin-primary to-fin-primary-dark hover:from-fin-primary-dark hover:to-fin-primary-deep text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-violet-500/25 transition-all touch-action-manipulation">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
             Create Order
         </button>

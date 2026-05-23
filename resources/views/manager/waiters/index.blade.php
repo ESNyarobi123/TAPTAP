@@ -28,7 +28,7 @@
                 <input type="text" id="searchCode" placeholder="TIPTAP-W-00001"
                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-mono text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent">
             </div>
-            <button type="button" onclick="searchWaiter()" class="px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
+            <button type="button" onclick="searchWaiter()" class="px-6 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 Search
             </button>
@@ -419,7 +419,7 @@
                         html += '<div id="linkUntilWrap" class="hidden"><label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-1 block">End date</label>';
                         html += '<input type="date" name="linked_until" id="linkUntilInput" class="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm" min="' + new Date().toISOString().slice(0,10) + '"></div>';
                         html += '</div>';
-                        html += '<button type="submit" class="px-4 py-2 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all">Link Waiter</button>';
+                        html += '<button type="submit" class="px-4 py-2 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg transition-all">Link Waiter</button>';
                         html += '</form>';
                     }
                     html += '</div>';

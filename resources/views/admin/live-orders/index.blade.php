@@ -39,7 +39,7 @@
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold text-sm">Filter</button>
+            <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold text-sm">Filter</button>
             <a href="{{ route('admin.live-orders.index') }}" class="px-5 py-2.5 bg-white/10 text-white rounded-xl text-sm border border-white/10">Clear</a>
         </form>
     </div>

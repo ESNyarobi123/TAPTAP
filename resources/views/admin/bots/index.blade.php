@@ -26,7 +26,7 @@
         @forelse($bots as $bot)
         <div class="glass-card rounded-2xl p-8 hover:border-violet-500/30 transition-all group">
             <div class="flex justify-between items-start mb-8">
-                <div class="w-14 h-14 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-violet-500/20 group-hover:scale-110 transition-all">
+                <div class="w-14 h-14 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-2xl flex items-center justify-center text-white shadow-xl shadow-violet-500/20 group-hover:scale-110 transition-all">
                     <i data-lucide="bot" class="w-8 h-8"></i>
                 </div>
                 <div class="flex flex-col items-end">
@@ -52,7 +52,7 @@
                         <label class="text-[9px] font-bold uppercase tracking-wider text-white/40 block">Endpoint URL</label>
                         <div class="flex gap-2">
                             <input type="url" name="endpoint" value="{{ $bot->endpoint }}" class="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-mono text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all" placeholder="https://api.bot.com/webhook">
-                            <button type="submit" class="p-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all">
+                            <button type="submit" class="p-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl hover:shadow-lg transition-all">
                                 <i data-lucide="save" class="w-4 h-4"></i>
                             </button>
                         </div>

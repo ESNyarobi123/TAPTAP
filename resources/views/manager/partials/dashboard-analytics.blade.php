@@ -33,11 +33,6 @@
 @endphp
 
 <style>
-    .analytics-shell {
-        background: linear-gradient(135deg, rgba(17, 24, 39, 0.85) 0%, rgba(30, 27, 75, 0.55) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    }
     .analytics-bar-v {
         border-radius: 8px 8px 0 0;
         animation: analyticsBarFadeV 0.7s ease forwards;
@@ -57,18 +52,18 @@
     }
     .cycle-ring {
         background: conic-gradient({{ $conicGradient }});
-        box-shadow: 0 0 40px rgba(139, 92, 246, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 0 40px rgba(140, 113, 246, 0.25), inset 0 0 30px rgba(0, 0, 0, 0.35);
     }
     .cycle-ring::after {
         content: '';
         position: absolute;
         inset: 18%;
         border-radius: 9999px;
-        background: #0f0a1e;
+        background: #12101c;
         box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
     }
-    .insight-pill[data-tone="violet"] { border-color: rgba(139, 92, 246, 0.35); background: rgba(139, 92, 246, 0.12); }
-    .insight-pill[data-tone="cyan"] { border-color: rgba(6, 182, 212, 0.35); background: rgba(6, 182, 212, 0.12); }
+    .insight-pill[data-tone="violet"] { border-color: rgba(140, 113, 246, 0.35); background: rgba(140, 113, 246, 0.12); }
+    .insight-pill[data-tone="cyan"] { border-color: rgba(109, 82, 232, 0.35); background: rgba(109, 82, 232, 0.12); }
     .insight-pill[data-tone="emerald"] { border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.12); }
     .insight-pill[data-tone="amber"] { border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.12); }
     .insight-pill[data-tone="rose"] { border-color: rgba(244, 63, 94, 0.35); background: rgba(244, 63, 94, 0.12); }
@@ -77,7 +72,7 @@
 <section class="mb-10" aria-label="Restaurant analytics">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
         <div>
-            <p class="text-[10px] font-bold text-violet-400 uppercase tracking-[0.2em] mb-1">Smart Analytics</p>
+            <p class="text-[10px] font-bold text-fin-primary uppercase tracking-[0.2em] mb-1">Smart Analytics</p>
             <h3 class="text-2xl font-bold text-white tracking-tight">{{ $analytics['restaurant_name'] ?? 'Restaurant' }} Insights</h3>
             <p class="text-sm text-white/60 mt-1">7-day cycles, live pipeline, and performance histograms</p>
         </div>
@@ -115,7 +110,7 @@
                     @endphp
                     <div class="weekly-day flex-1 h-full flex flex-col justify-end items-center gap-1 min-w-[28px] group" data-index="{{ $index }}">
                         <div class="w-full flex items-end justify-center gap-0.5 h-[85%]">
-                            <div class="weekly-rev-bar analytics-bar-v w-[42%] relative bg-gradient-to-t from-violet-600 via-violet-500 to-cyan-400 opacity-90 group-hover:opacity-100"
+                            <div class="weekly-rev-bar analytics-bar-v w-[42%] relative bg-gradient-to-t from-fin-primary-dark via-fin-primary to-fin-lavender opacity-90 group-hover:opacity-100"
                                  style="height: {{ $revH }}%; min-height: {{ $day['revenue'] > 0 ? '10px' : '3px' }}; animation-delay: {{ $index * 0.06 }}s;"
                                  title="Tsh {{ number_format($day['revenue']) }}"
                                  data-revenue="{{ $day['revenue'] }}"></div>
@@ -130,7 +125,7 @@
                 @endforeach
             </div>
             <div class="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5 text-xs text-white/65">
-                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-gradient-to-t from-violet-600 to-cyan-400"></span> Revenue</span>
+                <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-gradient-to-t from-fin-primary-dark to-fin-primary"></span> Revenue</span>
                 <span class="inline-flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-gradient-to-t from-amber-600 to-amber-400"></span> Orders</span>
             </div>
         </div>
@@ -171,11 +166,11 @@
                     @php $h = max(($slot['orders'] / $maxHourlyOrders) * 100, $slot['orders'] > 0 ? 12 : 4); @endphp
                     <div class="hourly-slot flex-1 min-w-[22px] flex flex-col justify-end items-center group" data-hour="{{ $slot['hour'] }}" data-orders="{{ $slot['orders'] }}">
                         @if($slot['orders'] > 0)
-                            <span class="hourly-count text-[10px] font-bold text-cyan-300 mb-1 tabular-nums">{{ $slot['orders'] }}</span>
+                            <span class="hourly-count text-[10px] font-bold text-fin-primary mb-1 tabular-nums">{{ $slot['orders'] }}</span>
                         @else
                             <span class="text-[10px] mb-1 opacity-0 select-none" aria-hidden="true">0</span>
                         @endif
-                        <div class="hourly-bar analytics-bar-v w-full max-w-[28px] bg-gradient-to-t from-cyan-600 to-violet-500 rounded-t-md opacity-90 group-hover:opacity-100 min-h-[4px]"
+                        <div class="hourly-bar analytics-bar-v w-full max-w-[28px] bg-gradient-to-t from-fin-primary-dark to-fin-primary rounded-t-md opacity-90 group-hover:opacity-100 min-h-[4px]"
                              style="height: {{ $h }}%; animation-delay: {{ $index * 0.03 }}s;"
                              title="{{ $slot['label'] }} · {{ $slot['orders'] }} orders"></div>
                         <span class="text-[10px] sm:text-[11px] font-medium text-white/70 mt-2 tabular-nums">{{ sprintf('%02d', (int) $slot['hour']) }}</span>
@@ -194,10 +189,10 @@
                     <div>
                         <div class="flex justify-between text-xs mb-1 gap-2">
                             <span class="text-white/80 font-medium truncate">{{ $item['name'] }}</span>
-                            <span class="text-violet-300 font-semibold shrink-0">{{ $item['quantity'] }}×</span>
+                            <span class="text-fin-lavender font-semibold shrink-0">{{ $item['quantity'] }}×</span>
                         </div>
                         <div class="h-2.5 rounded-full bg-white/5 overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 analytics-bar-h"
+                            <div class="h-full rounded-full bg-gradient-to-r from-fin-primary to-fin-primary-dark analytics-bar-h"
                                  style="width: {{ $barW }}%; animation-delay: {{ $index * 0.08 }}s;"></div>
                         </div>
                     </div>
@@ -227,7 +222,7 @@
                 <p class="text-[11px] text-white/55 uppercase tracking-wider mb-2">This week vs last</p>
                 <div class="flex items-center gap-3">
                     <div class="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
-                        <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400" style="width: {{ min($weekProgress, 100) }}%"></div>
+                        <div class="h-full rounded-full bg-gradient-to-r from-fin-primary-dark to-fin-primary" style="width: {{ min($weekProgress, 100) }}%"></div>
                     </div>
                     <span class="text-xs font-bold text-white">{{ $weekProgress }}%</span>
                 </div>

@@ -7,7 +7,7 @@
         <!-- Header Section -->
         <div class="glass-card rounded-2xl p-8 mb-8">
             <div class="flex items-start gap-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-violet-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30">
+                <div class="w-16 h-16 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
                         <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
                         <circle cx="9" cy="9" r="2"/>
@@ -159,7 +159,7 @@
                     <button 
                         type="submit" 
                         id="submitBtn"
-                        class="px-8 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="px-8 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

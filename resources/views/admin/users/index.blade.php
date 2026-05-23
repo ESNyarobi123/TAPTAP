@@ -37,7 +37,7 @@
                     </select>
                 </div>
                 <div class="flex gap-2">
-                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-500 hover:to-cyan-500 text-white rounded-xl font-semibold text-sm shadow-lg shadow-violet-500/20 transition-all">Filter</button>
+                    <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark hover:from-fin-primary-dark hover:to-fin-primary-deep text-white rounded-xl font-semibold text-sm shadow-lg shadow-violet-500/20 transition-all">Filter</button>
                     <a href="{{ route('admin.users.index') }}" class="px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl font-semibold text-sm border border-white/10 transition-all">Clear</a>
                 </div>
             </form>

@@ -22,7 +22,7 @@
                     <label class="text-[10px] font-bold uppercase tracking-wider text-white/40 mb-2 block">Customer Name</label>
                     <input type="text" id="customerName" required placeholder="e.g. John Doe" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500">
                 </div>
-                <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2">Send USSD Push</button>
+                <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2">Send USSD Push</button>
             </form>
             <div id="pollingStatus" class="hidden mt-6 p-5 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-center">
                 <div class="flex flex-col items-center gap-3">

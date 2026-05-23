@@ -11,9 +11,9 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
         .chart-bar {
-            background: linear-gradient(to top, #3b82f6 0%, #06b6d4 50%, #8b5cf6 100%);
+            background: linear-gradient(to top, #3b82f6 0%, #6D52E8 50%, #8C71F6 100%);
             border-radius: 6px 6px 0 0;
-            box-shadow: 0 -4px 20px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 -4px 20px rgba(140, 113, 246, 0.5);
             width: 100%;
             transform-origin: bottom;
         }
@@ -29,7 +29,7 @@
         }
         .chart-bar:hover {
             filter: brightness(1.2);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.6), 0 0 50px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 8px 30px rgba(140, 113, 246, 0.6), 0 0 50px rgba(140, 113, 246, 0.3);
         }
         .chart-bar.animate {
             animation: barGrow 0.8s ease-out forwards;
@@ -47,13 +47,13 @@
         }
         .chart-tooltip {
             background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(139, 92, 246, 0.5);
+            border: 1px solid rgba(140, 113, 246, 0.5);
             backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 10px 40px rgba(140, 113, 246, 0.3);
             position: relative;
         }
         .stat-comparison {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(109, 82, 232, 0.1) 100%);
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
         .stat-comparison.negative {
@@ -115,7 +115,7 @@
                 <label class="block text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2">End Date</label>
                 <input type="date" name="end_date" value="{{ $endDate }}" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 font-semibold text-sm text-white focus:ring-2 focus:ring-violet-500 focus:border-transparent">
             </div>
-            <button type="submit" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+            <button type="submit" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                 Apply Filter
             </button>
         </form>
@@ -193,9 +193,9 @@
                         <!-- Bar -->
                         <div class="w-full relative group-hover:brightness-110 transition-all"
                              style="height: {{ $heightPercent }}%; 
-                                    background: linear-gradient(to top, #3b82f6, #06b6d4, #8b5cf6);
+                                    background: linear-gradient(to top, #3b82f6, #6D52E8, #8C71F6);
                                     border-radius: 6px 6px 0 0;
-                                    box-shadow: 0 -4px 15px rgba(139, 92, 246, 0.4);
+                                    box-shadow: 0 -4px 15px rgba(140, 113, 246, 0.4);
                                     min-height: 2px;">
                             <!-- Tooltip -->
                             <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 rounded bg-black/90 border border-violet-500/50 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
@@ -224,7 +224,7 @@
         <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-gradient-to-r from-violet-500 to-cyan-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-gradient-to-r from-fin-primary to-fin-primary-dark"></div>
                     <span class="text-xs text-white/60">Revenue</span>
                 </div>
                 <div class="flex items-center gap-2">

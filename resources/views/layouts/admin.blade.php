@@ -14,6 +14,7 @@
     @include('partials.brand-icons')
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.portal-theme')
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -22,7 +23,7 @@
         }
         
         body { 
-            background: #0f0a1e;
+            background: #12101c;
             min-height: 100vh;
         }
 
@@ -35,11 +36,11 @@
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.5) 0%, rgba(6, 182, 212, 0.5) 100%);
+            background: linear-gradient(180deg, rgba(140, 113, 246, 0.5) 0%, rgba(109, 82, 232, 0.5) 100%);
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.8) 0%, rgba(6, 182, 212, 0.8) 100%);
+            background: linear-gradient(180deg, rgba(140, 113, 246, 0.8) 0%, rgba(109, 82, 232, 0.8) 100%);
         }
 
         /* Sidebar nav: scroll when expanded or collapsed; scrollbar never visible */
@@ -74,7 +75,7 @@
 
         /* Sidebar Styling */
         .sidebar-gradient {
-            background: #0f0a1e;
+            background: #12101c;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -86,17 +87,17 @@
         }
         .sidebar-link:focus {
             outline: none;
-            box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6);
+            box-shadow: 0 0 0 2px #12101c, 0 0 0 4px rgba(140, 113, 246, 0.6);
         }
         .sidebar-link:hover {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(140, 113, 246, 0.1) 0%, transparent 100%);
             color: #fff;
         }
         
         .sidebar-link-active {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(140, 113, 246, 0.2) 0%, transparent 100%);
             color: #fff !important;
-            border-left: 3px solid #8b5cf6;
+            border-left: 3px solid #8C71F6;
         }
         
         .sidebar-link-active::before {
@@ -107,19 +108,19 @@
             transform: translateY(-50%);
             width: 3px;
             height: 60%;
-            background: linear-gradient(180deg, #8b5cf6 0%, #06b6d4 100%);
+            background: linear-gradient(180deg, #8C71F6 0%, #6D52E8 100%);
             border-radius: 0 4px 4px 0;
         }
 
         /* Stat Card Glow Effects */
-        .stat-glow-purple { box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.4); }
-        .stat-glow-cyan { box-shadow: 0 0 40px -10px rgba(6, 182, 212, 0.4); }
+        .stat-glow-purple { box-shadow: 0 0 40px -10px rgba(140, 113, 246, 0.4); }
+        .stat-glow-cyan { box-shadow: 0 0 40px -10px rgba(109, 82, 232, 0.4); }
         .stat-glow-emerald { box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.4); }
         .stat-glow-amber { box-shadow: 0 0 40px -10px rgba(245, 158, 11, 0.4); }
 
         /* Gradient Text */
         .gradient-text {
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            background: linear-gradient(135deg, #8C71F6 0%, #6D52E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -132,8 +133,8 @@
         }
         
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.5); }
+            0%, 100% { box-shadow: 0 0 20px rgba(140, 113, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(140, 113, 246, 0.5); }
         }
 
         .animate-float { animation: float 6s ease-in-out infinite; }
@@ -153,7 +154,7 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .bg-surface-900 { background: #0f0a1e; }
+        .bg-surface-900 { background: #12101c; }
         #mobile-sidebar { transition: transform 0.3s ease-out, width 0.3s ease-out; }
         #mobile-sidebar.sidebar-closed-mobile { transform: translateX(-100%) !important; }
         #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
@@ -180,7 +181,7 @@
     </style>
 </head>
 <body class="font-sans antialiased text-white min-h-screen pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#0f0a1e] focus:outline-none">Skip to main content</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#12101c] focus:outline-none">Skip to main content</a>
     
     <!-- Overlay (mobile only) -->
     <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden md:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
@@ -199,11 +200,11 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
-                    <button type="button" id="sidebar-toggle" class="hidden md:flex min-h-[44px] min-w-[44px] items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Collapse sidebar" title="Collapse sidebar">
+                    <button type="button" id="sidebar-toggle" class="hidden md:flex min-h-[44px] min-w-[44px] items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Collapse sidebar" title="Collapse sidebar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-collapse" title="Collapse"><path d="m15 18-6-6 6-6"/></svg>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-expand" class="hidden" title="Expand"><path d="m9 18 6-6-6-6"/></svg>
                     </button>
-                    <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
+                    <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Close menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                         </svg>
@@ -233,7 +234,7 @@
             <!-- Mobile Header -->
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Open menu">
+                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Open menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
@@ -264,7 +265,7 @@
                                 <p class="text-sm font-semibold text-white leading-none mb-1">{{ Auth::user()->name }}</p>
                                 <p class="text-[10px] font-medium text-violet-400 uppercase tracking-wider">SUPER ADMIN</p>
                             </div>
-                            <div class="w-11 h-11 bg-gradient-to-br from-violet-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/30 text-white font-bold">
+                            <div class="w-11 h-11 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-xl flex items-center justify-center shadow-lg shadow-violet-500/30 text-white font-bold">
                                 {{ substr(Auth::user()->name, 0, 1) }}
                             </div>
                         </div>

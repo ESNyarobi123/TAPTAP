@@ -29,7 +29,7 @@
                 <option value="">All restaurants</option>
                 @foreach($restaurants as $r)<option value="{{ $r->id }}" @selected($restaurantId == $r->id)>{{ $r->name }}</option>@endforeach
             </select>
-            <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl text-sm font-semibold">Apply</button>
+            <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl text-sm font-semibold">Apply</button>
         </form>
         <p class="text-xs text-cyan-400/80 mt-3 font-medium">{{ $start->format('d M Y') }} — {{ $end->format('d M Y') }}</p>
     </div>

@@ -47,7 +47,7 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="preparing">
-                    <button type="submit" class="min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 text-white hover:opacity-90 transition-opacity touch-action-manipulation" title="Start Preparing" aria-label="Move to Preparing">
+                    <button type="submit" class="min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white hover:opacity-90 transition-opacity touch-action-manipulation" title="Start Preparing" aria-label="Move to Preparing">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </button>
                 </form>
@@ -63,7 +63,7 @@
                 </form>
             @endif
             @if($status === 'served')
-                <button type="button" onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})" class="min-h-[40px] sm:min-h-[36px] px-3 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-cyan-600 text-white text-xs font-semibold hover:opacity-90 transition-opacity touch-action-manipulation shadow-lg shadow-violet-500/20">Pay</button>
+                <button type="button" onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})" class="min-h-[40px] sm:min-h-[36px] px-3 py-2 rounded-lg bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white text-xs font-semibold hover:opacity-90 transition-opacity touch-action-manipulation shadow-lg shadow-violet-500/20">Pay</button>
                 <form action="{{ route('order-portal.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Confirm the customer has paid (e.g. via WhatsApp or cash)?');">
                     @csrf
                     @method('PUT')

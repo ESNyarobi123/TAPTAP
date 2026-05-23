@@ -74,7 +74,7 @@
 
                 <div class="flex items-center justify-end gap-4 pt-6">
                     <a href="{{ route('admin.restaurants.show', $restaurant) }}" class="px-8 py-4 glass text-white/60 rounded-xl font-bold text-sm hover:bg-white/10 transition-all">Cancel</a>
-                    <button type="submit" class="px-8 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">Save Changes</button>
+                    <button type="submit" class="px-8 py-4 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">Save Changes</button>
                 </div>
             </form>
         </div>

@@ -126,7 +126,7 @@
                 </div>
                 <div class="flex gap-4">
                     <button type="button" onclick="closeModal()" class="flex-1 py-4 glass text-white/60 rounded-xl font-bold text-sm hover:bg-white/10 transition-all">Cancel</button>
-                    <button type="submit" id="modalSubmit" class="flex-1 py-4 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">Confirm</button>
+                    <button type="submit" id="modalSubmit" class="flex-1 py-4 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all">Confirm</button>
                 </div>
             </form>
         </div>

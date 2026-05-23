@@ -61,7 +61,7 @@
             </div>
 
             <div class="flex flex-wrap gap-4">
-                <button type="submit" class="px-6 py-3.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                <button type="submit" class="px-6 py-3.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                     Hand Over Selected Tables
                 </button>
                 <a href="{{ route('waiter.dashboard') }}" class="px-6 py-3.5 glass border border-white/10 text-white rounded-xl font-semibold hover:bg-white/10 transition-all">

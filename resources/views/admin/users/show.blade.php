@@ -7,7 +7,7 @@
     @php
         $role = $user->getRoleNames()->first();
         $roleBadge = match($role) {
-            'super_admin' => 'bg-gradient-to-r from-violet-600 to-cyan-600 text-white border-0',
+            'super_admin' => 'bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white border-0',
             'manager' => 'bg-blue-500/20 text-blue-400 border-blue-500/30',
             'waiter' => 'bg-orange-500/20 text-orange-400 border-orange-500/30',
             default => 'bg-white/10 text-white/60 border-white/20',

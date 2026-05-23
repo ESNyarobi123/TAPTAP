@@ -66,7 +66,7 @@
                     <div class="glass-card rounded-2xl p-6">
                         <p class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4">Restaurant</p>
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-2xl flex items-center justify-center text-white font-black">
+                            <div class="w-12 h-12 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-2xl flex items-center justify-center text-white font-black">
                                 {{ substr($order->restaurant->name, 0, 1) }}
                             </div>
                             <div>

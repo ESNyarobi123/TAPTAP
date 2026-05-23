@@ -64,7 +64,7 @@
 
                 <div class="flex justify-end gap-3 pt-4">
                     <a href="{{ route('admin.restaurants.index') }}" class="px-6 py-3 glass text-white/60 rounded-xl font-semibold text-sm">Cancel</a>
-                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-bold text-sm">Create restaurant</button>
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-bold text-sm">Create restaurant</button>
                 </div>
             </form>
         </div>

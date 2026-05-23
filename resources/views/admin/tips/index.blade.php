@@ -26,7 +26,7 @@
                 </select>
                 <input type="date" name="date_from" value="{{ request('date_from') }}" class="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white">
                 <input type="date" name="date_to" value="{{ request('date_to') }}" class="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white">
-                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl text-sm font-semibold">Filter</button>
+                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl text-sm font-semibold">Filter</button>
             </form>
         </div>
         <div class="overflow-x-auto custom-scrollbar">

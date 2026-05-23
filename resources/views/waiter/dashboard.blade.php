@@ -189,7 +189,7 @@
                             </div>
                             <form action="{{ route('waiter.requests.complete', $request->id) }}" method="POST" class="relative z-10">
                                 @csrf
-                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-600 py-3 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:shadow-lg hover:shadow-violet-500/25">
+                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-fin-primary to-fin-primary-dark py-3 text-[11px] font-bold uppercase tracking-widest text-white transition-all hover:shadow-lg hover:shadow-violet-500/25">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M20 6 9 17l-5-5"/>
                                     </svg>
@@ -331,7 +331,7 @@
                             <p class="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Orders</p>
                             <p class="mt-1 text-2xl font-bold">{{ $restaurantActiveOrders }}</p>
                         </div>
-                        <div class="rounded-xl bg-gradient-to-br from-violet-600 to-cyan-600 p-4 shadow-lg shadow-violet-500/20">
+                        <div class="rounded-xl bg-gradient-to-br from-fin-primary to-fin-primary-dark p-4 shadow-lg shadow-violet-500/20">
                             <p class="text-[10px] font-bold uppercase tracking-widest text-white/80">Ready</p>
                             <p class="mt-1 text-2xl font-bold">{{ $readyToServeOrders }}</p>
                         </div>

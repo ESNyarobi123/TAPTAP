@@ -28,7 +28,7 @@
                     <option value="">All periods</option>
                     @foreach($months as $m)<option value="{{ $m }}" @selected(request('period_month') === $m)>{{ $m }}</option>@endforeach
                 </select>
-                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl text-sm font-semibold">Filter</button>
+                <button type="submit" class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl text-sm font-semibold">Filter</button>
             </form>
         </div>
         <div class="overflow-x-auto custom-scrollbar">

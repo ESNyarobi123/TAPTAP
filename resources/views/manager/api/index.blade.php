@@ -27,7 +27,7 @@
                     </svg>
                 </div>
                 <p class="text-sm font-medium text-white/40 uppercase tracking-wider mb-5">Table #05 QR Code</p>
-                <button class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Download PDF Pack</button>
+                <button class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Download PDF Pack</button>
             </div>
 
             <div class="space-y-3">

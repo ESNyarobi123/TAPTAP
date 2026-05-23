@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="pt-4 border-t border-white/10">
-                <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all">Create Order</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all">Create Order</button>
             </div>
         </form>
     </div>

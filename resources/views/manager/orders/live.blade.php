@@ -96,7 +96,7 @@
                                     @csrf
                                     @method('PUT')
                                     <input type="hidden" name="status" value="preparing">
-                                    <button type="submit" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white p-2 rounded-lg hover:shadow-lg hover:shadow-violet-500/25 transition-all" title="Start Preparing">
+                                    <button type="submit" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white p-2 rounded-lg hover:shadow-lg hover:shadow-violet-500/25 transition-all" title="Start Preparing">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polygon points="5 3 19 12 5 21 5 3"/>
                                         </svg>
@@ -253,7 +253,7 @@
 
                             @if(! $isWhatsAppOrder || $billAlreadySent)
                                 <button onclick="openPaymentModal({{ $order->id }}, {{ $order->total_amount }})"
-                                        class="flex-1 min-w-[120px] bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                                        class="flex-1 min-w-[120px] bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-2.5 rounded-xl font-semibold text-sm hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                                     Process Payment
                                 </button>
                                 <form action="{{ route('manager.orders.update', $order) }}" method="POST" class="inline" onsubmit="return confirm('Confirm customer has paid (e.g. via WhatsApp/cash)?');">
@@ -395,7 +395,7 @@
                 </div>
 
                 <div class="pt-4 border-t border-white/10">
-                    <button type="submit" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+                    <button type="submit" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-bold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                         Create Order
                     </button>
                 </div>
@@ -478,7 +478,7 @@
                         <input type="text" id="customerName" required placeholder="e.g. John Doe" 
                                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl font-medium text-white placeholder-white/30 focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all">
                     </div>
-                    <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center justify-center gap-2">
+                    <button type="submit" id="payButton" class="w-full bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white py-3.5 rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>
                         </svg>

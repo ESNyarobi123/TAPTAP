@@ -21,6 +21,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @include('partials.portal-theme')
 
         <style>
             * {
@@ -34,7 +35,7 @@
             }
 
             body:not(.has-hero-background) {
-                background: #0f0a1e;
+                background: #12101c;
             }
 
             .login-hero-bg {
@@ -123,8 +124,8 @@
             }
             
             @keyframes pulse-glow {
-                0%, 100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
-                50% { box-shadow: 0 0 60px rgba(139, 92, 246, 0.5); }
+                0%, 100% { box-shadow: 0 0 30px rgba(140, 113, 246, 0.3); }
+                50% { box-shadow: 0 0 60px rgba(140, 113, 246, 0.5); }
             }
 
             .animate-float { animation: float 6s ease-in-out infinite; }
@@ -156,7 +157,7 @@
             ::-webkit-scrollbar { width: 6px; }
             ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
             ::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, rgba(139, 92, 246, 0.5) 0%, rgba(6, 182, 212, 0.5) 100%);
+                background: linear-gradient(180deg, rgba(140, 113, 246, 0.5) 0%, rgba(109, 82, 232, 0.5) 100%);
                 border-radius: 10px;
             }
         </style>

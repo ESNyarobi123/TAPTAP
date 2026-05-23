@@ -2,7 +2,7 @@
     <div class="max-w-2xl mx-auto">
         <!-- Progress Bar -->
         <div class="mb-8 bg-white/5 h-2 rounded-full overflow-hidden border border-white/10">
-            <div id="progress-bar" class="bg-gradient-to-r from-violet-600 to-cyan-600 h-full transition-all duration-500" style="width: 15%"></div>
+            <div id="progress-bar" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark h-full transition-all duration-500" style="width: 15%"></div>
         </div>
 
         <div id="chat-container" class="flex flex-col min-h-[400px]">
@@ -114,7 +114,7 @@
                         Go back
                     </button>
                     
-                    <button type="button" id="next-btn" class="bg-gradient-to-r from-violet-600 to-cyan-600 text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 ml-auto">
+                    <button type="button" id="next-btn" class="bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl shadow-violet-500/25 hover:shadow-violet-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 ml-auto">
                         Endelea
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m9 18 6-6-6-6"/>

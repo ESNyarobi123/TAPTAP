@@ -12,23 +12,23 @@
 
     <style>
         .admin-dash-hero {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(6, 182, 212, 0.08) 45%, rgba(15, 10, 30, 0.95) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.25);
+            background: linear-gradient(135deg, rgba(140, 113, 246, 0.15) 0%, rgba(109, 82, 232, 0.08) 45%, rgba(15, 10, 30, 0.95) 100%);
+            border: 1px solid rgba(140, 113, 246, 0.25);
         }
-        .admin-stat-glow-violet { box-shadow: 0 0 40px -12px rgba(139, 92, 246, 0.55); }
-        .admin-stat-glow-cyan { box-shadow: 0 0 40px -12px rgba(6, 182, 212, 0.5); }
+        .admin-stat-glow-violet { box-shadow: 0 0 40px -12px rgba(140, 113, 246, 0.55); }
+        .admin-stat-glow-cyan { box-shadow: 0 0 40px -12px rgba(109, 82, 232, 0.5); }
         .admin-stat-glow-emerald { box-shadow: 0 0 40px -12px rgba(16, 185, 129, 0.45); }
         .admin-bar-revenue {
-            background: linear-gradient(to top, #4c1d95, #7c3aed 40%, #06b6d4 100%);
+            background: linear-gradient(to top, #4c1d95, #6D52E8 40%, #6D52E8 100%);
             border-radius: 8px 8px 0 0;
-            box-shadow: 0 -6px 20px rgba(139, 92, 246, 0.35);
+            box-shadow: 0 -6px 20px rgba(140, 113, 246, 0.35);
             transition: transform 0.25s ease, filter 0.25s ease;
         }
         .admin-bar-revenue:hover { transform: scaleY(1.02); filter: brightness(1.15); }
         .admin-bar-orders {
-            background: linear-gradient(to top, #0e7490, #06b6d4 50%, #67e8f9 100%);
+            background: linear-gradient(to top, #0e7490, #6D52E8 50%, #67e8f9 100%);
             border-radius: 8px 8px 0 0;
-            box-shadow: 0 -6px 18px rgba(6, 182, 212, 0.35);
+            box-shadow: 0 -6px 18px rgba(109, 82, 232, 0.35);
         }
         .admin-ring-track { stroke: rgba(255,255,255,0.06); }
         @keyframes admin-bar-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }

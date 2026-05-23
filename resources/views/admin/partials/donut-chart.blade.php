@@ -7,7 +7,7 @@
     foreach ($segments as $segment) {
         $pct = ($segment['value'] / $total) * 100;
         $end = min(100, $cursor + $pct);
-        $gradientParts[] = ($segment['color'] ?? '#8b5cf6').' '.$cursor.'% '.$end.'%';
+        $gradientParts[] = ($segment['color'] ?? '#8C71F6').' '.$cursor.'% '.$end.'%';
         $cursor = $end;
     }
     $gradient = count($gradientParts) > 0

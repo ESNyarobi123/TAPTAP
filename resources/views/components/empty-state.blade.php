@@ -21,7 +21,7 @@
     <h3 class="text-lg font-semibold text-white mb-2">{{ $title }}</h3>
     <p class="text-sm text-white/50 max-w-sm mx-auto mb-6">{{ $description }}</p>
     @if($actionUrl && $actionLabel)
-        <a href="{{ $actionUrl }}" class="inline-flex items-center justify-center min-h-[44px] px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]">
+        <a href="{{ $actionUrl }}" class="inline-flex items-center justify-center min-h-[44px] px-6 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white font-semibold rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]">
             {{ $actionLabel }}
         </a>
     @endif

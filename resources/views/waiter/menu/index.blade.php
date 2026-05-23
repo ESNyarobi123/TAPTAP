@@ -5,7 +5,7 @@
 
     <div class="mb-8">
         <div class="flex gap-3 overflow-x-auto pb-3 hide-scrollbar">
-            <button class="px-5 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-violet-500/20">All Items</button>
+            <button class="px-5 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold shadow-lg shadow-violet-500/20">All Items</button>
             @foreach($categories as $category)
                 <button class="px-5 py-2.5 glass text-white/60 rounded-xl font-semibold hover:text-white hover:bg-white/10 transition-all whitespace-nowrap">{{ $category->name }}</button>
             @endforeach

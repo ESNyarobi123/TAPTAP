@@ -26,18 +26,18 @@
 
     <style>
         .venue-hero {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.18) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(15, 10, 30, 0.9) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, rgba(140, 113, 246, 0.18) 0%, rgba(109, 82, 232, 0.1) 50%, rgba(15, 10, 30, 0.9) 100%);
+            border: 1px solid rgba(140, 113, 246, 0.3);
         }
         .venue-tab-active {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 100%);
+            background: linear-gradient(180deg, rgba(140, 113, 246, 0.25) 0%, rgba(140, 113, 246, 0.05) 100%);
             border-bottom: 2px solid #a78bfa;
             color: #e9d5ff;
         }
         .venue-bar {
-            background: linear-gradient(to top, #5b21b6, #8b5cf6 45%, #06b6d4);
+            background: linear-gradient(to top, #5b21b6, #8C71F6 45%, #6D52E8);
             border-radius: 6px 6px 0 0;
-            box-shadow: 0 -4px 16px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 -4px 16px rgba(140, 113, 246, 0.4);
             transition: filter 0.2s ease;
         }
         .venue-bar:hover { filter: brightness(1.15); }

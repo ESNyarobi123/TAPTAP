@@ -14,6 +14,7 @@
     @include('partials.brand-icons')
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('partials.portal-theme')
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
@@ -23,7 +24,7 @@
         }
         
         body { 
-            background: #0f0a1e;
+            background: #12101c;
             min-height: 100vh;
         }
 
@@ -36,11 +37,11 @@
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.5) 0%, rgba(6, 182, 212, 0.5) 100%);
+            background: linear-gradient(180deg, rgba(140, 113, 246, 0.5) 0%, rgba(109, 82, 232, 0.5) 100%);
             border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(139, 92, 246, 0.8) 0%, rgba(6, 182, 212, 0.8) 100%);
+            background: linear-gradient(180deg, rgba(140, 113, 246, 0.8) 0%, rgba(109, 82, 232, 0.8) 100%);
         }
 
         /* Glassmorphism Effects */
@@ -59,12 +60,12 @@
         }
 
         .bg-surface-900 {
-            background: #0f0a1e;
+            background: #12101c;
         }
 
         /* Sidebar Styling */
         .sidebar-gradient {
-            background: #0f0a1e;
+            background: #12101c;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
         }
@@ -75,12 +76,12 @@
         }
         
         .sidebar-link:hover {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(140, 113, 246, 0.1) 0%, transparent 100%);
             color: #fff;
         }
         
         .sidebar-link-active {
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(140, 113, 246, 0.2) 0%, transparent 100%);
             color: #fff !important;
         }
         
@@ -92,13 +93,13 @@
             transform: translateY(-50%);
             width: 3px;
             height: 60%;
-            background: linear-gradient(180deg, #8b5cf6 0%, #06b6d4 100%);
+            background: linear-gradient(180deg, #8C71F6 0%, #6D52E8 100%);
             border-radius: 0 4px 4px 0;
         }
 
         /* Gradient Text */
         .gradient-text {
-            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            background: linear-gradient(135deg, #8C71F6 0%, #6D52E8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -111,8 +112,8 @@
         }
         
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.5); }
+            0%, 100% { box-shadow: 0 0 20px rgba(140, 113, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(140, 113, 246, 0.5); }
         }
 
         .animate-float { animation: float 6s ease-in-out infinite; }
@@ -132,7 +133,7 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .sidebar-link { min-height: 44px; }
-        .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #0f0a1e, 0 0 0 4px rgba(139, 92, 246, 0.6); }
+        .sidebar-link:focus { outline: none; box-shadow: 0 0 0 2px #12101c, 0 0 0 4px rgba(140, 113, 246, 0.6); }
         #mobile-sidebar { transition: transform 0.3s ease-out, width 0.3s ease-out; }
         #mobile-sidebar.sidebar-closed-mobile { transform: translateX(-100%) !important; }
         #mobile-sidebar.sidebar-open { transform: translateX(0) !important; visibility: visible !important; }
@@ -159,7 +160,7 @@
     </style>
 </head>
 <body class="font-sans antialiased text-white min-h-screen pt-[env(safe-area-inset-top)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)]">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#0f0a1e] focus:outline-none">Skip to main content</a>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-violet-600 focus:text-white focus:rounded-xl focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-[#12101c] focus:outline-none">Skip to main content</a>
     
     <!-- Overlay (mobile only) -->
     <div id="sidebar-overlay" onclick="closeSidebar()" class="fixed inset-0 bg-black/60 z-40 backdrop-blur-sm hidden md:hidden transition-opacity duration-300 opacity-0 cursor-pointer" aria-hidden="true"></div>
@@ -178,11 +179,11 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
-                    <button type="button" id="sidebar-toggle" class="hidden md:flex min-h-[44px] min-w-[44px] items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Collapse sidebar" title="Collapse sidebar">
+                    <button type="button" id="sidebar-toggle" class="hidden md:flex min-h-[44px] min-w-[44px] items-center justify-center p-2.5 text-white/40 hover:text-white hover:bg-white/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Collapse sidebar" title="Collapse sidebar">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-collapse" title="Collapse"><path d="m15 18-6-6 6-6"/></svg>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="sidebar-toggle-icon-expand" class="hidden" title="Expand"><path d="m9 18 6-6-6-6"/></svg>
                     </button>
-                    <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Close menu">
+                    <button type="button" onclick="closeSidebar()" class="md:hidden min-h-[44px] min-w-[44px] inline-flex items-center justify-center p-2.5 text-white/40 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Close menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
                         </svg>
@@ -315,9 +316,9 @@
                 <div class="glass-card rounded-lg p-3 flex items-center gap-2" x-data="{ open: false }" @click="open = !open" @click.outside="open = false">
                     @if(Auth::user()->profilePhotoUrl())
                         <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="waiter-sidebar-avatar w-10 h-10 rounded-lg object-cover border border-violet-500/20 shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="waiter-sidebar-avatar-fallback w-10 h-10 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0 hidden" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                        <div class="waiter-sidebar-avatar-fallback w-10 h-10 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-violet-500/20 shrink-0 hidden" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
                     @else
-                        <div class="w-8 h-8 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-lg shadow-violet-500/20 shrink-0">
+                        <div class="w-8 h-8 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-lg flex items-center justify-center font-bold text-white text-xs shadow-lg shadow-violet-500/20 shrink-0">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                     @endif
@@ -354,7 +355,7 @@
             <!-- Mobile Header -->
             <div class="md:hidden glass sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#0f0a1e]" aria-label="Open menu">
+                    <button type="button" onclick="openSidebar()" class="min-h-[44px] min-w-[44px] inline-flex items-center justify-center gap-2 px-3 py-2.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-[#12101c]" aria-label="Open menu">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
                         </svg>
@@ -378,9 +379,9 @@
                         <button type="button" onclick="var m=document.getElementById('waiterProfileModal'); if(m){ m.classList.remove('hidden'); m.classList.add('flex'); }" class="flex items-center gap-3 p-2 rounded-xl hover:bg-white/10 transition-all text-left">
                             @if(Auth::user()->profilePhotoUrl())
                                 <img src="{{ Auth::user()->profilePhotoUrl() }}" alt="" class="w-9 h-9 rounded-lg object-cover border border-violet-500/20" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg hidden flex items-center justify-center font-bold text-white text-sm" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
+                                <div class="w-9 h-9 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-lg hidden flex items-center justify-center font-bold text-white text-sm" style="display:none;">{{ substr(Auth::user()->name, 0, 1) }}</div>
                             @else
-                                <div class="w-9 h-9 bg-gradient-to-br from-violet-600 to-cyan-500 rounded-lg flex items-center justify-center font-bold text-white text-sm">
+                                <div class="w-9 h-9 bg-gradient-to-br from-fin-primary to-fin-primary-dark rounded-lg flex items-center justify-center font-bold text-white text-sm">
                                     {{ substr(Auth::user()->name, 0, 1) }}
                                 </div>
                             @endif
@@ -460,9 +461,9 @@
                         <div class="flex flex-col items-center mb-6">
                             @if($layoutPhotoUrl)
                                 <img src="{{ $layoutPhotoUrl }}" alt="" class="profile-modal-photo w-24 h-24 rounded-2xl object-cover border-2 border-violet-500/30 mb-3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="profile-modal-photo-fallback w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 hidden flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3" style="display:none;">{{ substr($layoutWaiter->name, 0, 1) }}</div>
+                                <div class="profile-modal-photo-fallback w-24 h-24 rounded-2xl bg-gradient-to-br from-fin-primary to-fin-primary-dark hidden flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3" style="display:none;">{{ substr($layoutWaiter->name, 0, 1) }}</div>
                             @else
-                                <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3">
+                                <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-fin-primary to-fin-primary-dark flex items-center justify-center font-bold text-3xl text-white border-2 border-violet-500/30 mb-3">
                                     {{ substr($layoutWaiter->name, 0, 1) }}
                                 </div>
                             @endif
@@ -491,7 +492,7 @@
                                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
-                            <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Save changes</button>
+                            <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">Save changes</button>
                         </form>
                     </div>
                 </div>

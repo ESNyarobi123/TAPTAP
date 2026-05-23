@@ -32,7 +32,7 @@
             </div>
             <h3 class="text-xl font-bold text-white mb-2">No payments yet</h3>
             <p class="text-white/50 max-w-sm mx-auto mb-6">Confirm payments for waiters on the Payroll page, then history will appear here.</p>
-            <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
+            <a href="{{ route('manager.payroll.index') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-fin-primary to-fin-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition-all">
                 Go to Payroll
             </a>
         </div>

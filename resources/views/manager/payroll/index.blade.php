@@ -78,14 +78,14 @@
 
         .acc-avatar {
             width:42px; height:42px; border-radius:13px; flex-shrink:0;
-            background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(6,182,212,.4));
+            background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(109, 82, 232,.4));
             border:1px solid rgba(255,255,255,.1);
             display:flex; align-items:center; justify-content:center;
             font-family:'Syne',sans-serif; font-size:17px; font-weight:800; color:#fff;
         }
         .acc-info { flex:1; min-width:0; }
         .acc-name { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; color:#fff; }
-        .acc-gw   { font-family:'DM Mono',monospace; font-size:11px; color:rgba(6,182,212,.7); margin-top:2px; }
+        .acc-gw   { font-family:'DM Mono',monospace; font-size:11px; color:rgba(109, 82, 232,.7); margin-top:2px; }
         .acc-pill {
             font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
             padding:3px 9px; border-radius:20px; flex-shrink:0;
@@ -141,7 +141,7 @@
         .btn-confirm {
             width:100%; padding:13px 14px; border-radius:13px;
             font-family:'Syne',sans-serif; font-size:13px; font-weight:700; letter-spacing:.04em;
-            background:linear-gradient(135deg,#7c3aed,#0891b2); color:#fff; border:none; cursor:pointer;
+            background:linear-gradient(135deg,#6D52E8,#0891b2); color:#fff; border:none; cursor:pointer;
             transition:transform .15s, box-shadow .2s, opacity .15s;
             box-shadow:0 4px 18px rgba(124,58,237,.28);
         }
@@ -170,7 +170,7 @@
         .chip-u { background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.2); color:#fcd34d; }
 
         .progress-track { height:4px; border-radius:99px; background:rgba(255,255,255,.06); margin-top:14px; overflow:hidden; }
-        .progress-fill  { height:100%; border-radius:99px; background:linear-gradient(90deg,#7c3aed,#10b981); transition:width .6s ease; }
+        .progress-fill  { height:100%; border-radius:99px; background:linear-gradient(90deg,#6D52E8,#10b981); transition:width .6s ease; }
 
         .form-grid { display:grid; grid-template-columns:1fr 1fr auto; gap:14px; align-items:start; }
         .two-col   { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -259,7 +259,7 @@
                 </div>
                 <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#fff;margin:0 0 7px;">No linked waiters</h3>
                 <p style="color:rgba(255,255,255,.38);font-size:14px;max-width:300px;margin:0 auto 20px;line-height:1.6;">Link waiters in Waiters &amp; Staff first.</p>
-                <a href="{{ route('manager.waiters.index') }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:linear-gradient(135deg,#7c3aed,#0891b2);color:#fff;border-radius:13px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-decoration:none;">
+                <a href="{{ route('manager.waiters.index') }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;background:linear-gradient(135deg,#6D52E8,#0891b2);color:#fff;border-radius:13px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-decoration:none;">
                     Go to Waiters &amp; Staff
                 </a>
             </div>
