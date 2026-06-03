@@ -16,6 +16,16 @@ test('serve-storage returns menu image from public disk', function () {
     $response->assertHeader('content-disposition');
 });
 
+test('serve-storage returns menu pdf from public disk', function () {
+    Storage::fake('public');
+
+    Storage::disk('public')->put('menu_pdfs/test-menu.pdf', '%PDF-1.4 fake');
+
+    $response = $this->get(route('storage.serve', ['path' => 'menu_pdfs/test-menu.pdf']));
+
+    $response->assertSuccessful();
+});
+
 test('serve-storage rejects paths outside allowed folders', function () {
     Storage::fake('public');
 
