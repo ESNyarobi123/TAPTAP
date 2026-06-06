@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'core/config.dart';
 import 'providers/app_providers.dart';
 import 'providers/settings_provider.dart';
-import 'screens/root_gate.dart';
+import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/api_service.dart';
 import 'services/storage_service.dart';
 import 'theme/app_theme.dart';
@@ -28,7 +29,6 @@ void main() {
   );
 }
 
-/// Reads [SettingsProvider] below [MultiProvider] (safe for hot reload).
 class TiptapManagerWalletApp extends StatelessWidget {
   const TiptapManagerWalletApp({super.key});
 
@@ -53,7 +53,11 @@ class TiptapManagerWalletApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: const RootGate(),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const SplashScreen(),
+        '/login': (_) => const LoginScreen(),
+      },
     );
   }
 }
